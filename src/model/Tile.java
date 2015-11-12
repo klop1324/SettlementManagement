@@ -13,4 +13,10 @@ public enum Tile {
 		//TODO: load images based on the integer representation number
 		
 	}
+	public int getIntRepresentation(){
+		return intRep;
+	}
+	public char getCharRepresentation(){
+		return charRep;
+	}
 }

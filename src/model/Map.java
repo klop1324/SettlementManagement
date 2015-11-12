@@ -1,12 +1,14 @@
 package model;
 
+import java.awt.Graphics;
+
 public class Map {
 	
-	short[][] map;
+	int[][] map;
 	int xLength, yLength;
 
 	public Map(int i, int j) {
-		this.map = new short[i][j];
+		this.map = new int[i][j];
 		this.xLength = i;
 		this.yLength = j;
 		this.generate();
@@ -21,6 +23,14 @@ public class Map {
 			}
 		}
 		
+	}
+	
+	public void paintComponent(Graphics g){
+		for(int i = 0; i < xLength; i++){
+			for(int j = 0; j < yLength; j++){
+				//TODO paint all the tiles
+			}
+		}
 	}
 
 }
