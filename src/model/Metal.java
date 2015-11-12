@@ -1,7 +1,7 @@
 package model;
 import java.awt.Point;
 
-public class Metal extends Resource{
+public class Metal extends AbstractResource{
 
 
 	public Metal(int startAmount, Point origin_point) {

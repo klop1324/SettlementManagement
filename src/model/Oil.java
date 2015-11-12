@@ -1,7 +1,7 @@
 package model;
 import java.awt.Point;
 
-public class Oil extends Resource{
+public class Oil extends AbstractResource{
 
 
 	public Oil(int startAmount, Point origin_point) {
