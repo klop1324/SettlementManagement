@@ -1,6 +1,9 @@
 package model;
 
 public enum Tile {
+	//===============================
+	//==> DO NOT SKIP NUMBERS!!!! <==
+	//===============================
 	OIL(0, 'o'), PLATING(1, ' '), GRAVEL(2, 'G');
 	
 	int intRep;
