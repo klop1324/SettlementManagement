@@ -88,21 +88,18 @@ public class Map {
 		
 	}
 	
-	public void paintComponent(Graphics g){
-		for(int i = 0; i < xLength; i++){
-			for(int j = 0; j < yLength; j++){
-				//draws each tile, based on map representation, getting image from the Tile enum
-				Graphics g2 = (Graphics2D) g;
-				g2.drawImage(Tile.values()[map[i][j]].getImage(), i, j, null);
-				//TODO paint all the tiles
-			}
-		}
-	}
-	
 	// primarily for debugging, but returns the value of map at x,y
 	public int get(int x, int y){
 		if(x<0 || x>= xLength || y<0 || y >= yLength) throw new RuntimeException("crap");
 		return map[x][y];
+	}
+	
+	public int getXLength(){
+		return xLength;
+	}
+	
+	public int getYLength(){
+		return yLength;
 	}
 	
 	// for point objects because comparing with doubles can be... problematic
