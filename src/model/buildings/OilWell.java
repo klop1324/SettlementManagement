@@ -13,6 +13,7 @@ public class OilWell extends AbstractBuilding{
 		super(name, capacity, passiveProvider, passiveRate, resourceType, location);
 		name = "Oil Well";
 		resourceType = Resources.OIL;
+		passiveProvider = true;
 	}
 
 	@Override
