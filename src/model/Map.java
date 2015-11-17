@@ -1,7 +1,7 @@
 package model;
 
 import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,9 +18,10 @@ public class Map {
 		this.yLength = j;
 		this.generate();
 	}
+	
 	// makes the map
 	private void generate(){
-
+		
 		ArrayList<Node> points = new ArrayList<Node>();
 		
 		Random random = new Random();
@@ -90,6 +91,9 @@ public class Map {
 	public void paintComponent(Graphics g){
 		for(int i = 0; i < xLength; i++){
 			for(int j = 0; j < yLength; j++){
+				//draws each tile, based on map representation, getting image from the Tile enum
+				Graphics g2 = (Graphics2D) g;
+				g2.drawImage(Tile.values()[map[i][j]].getImage(), i, j, null);
 				//TODO paint all the tiles
 			}
 		}
@@ -116,6 +120,7 @@ public class Map {
 		}
 		
 	}
+	
 	
 	@Override
 	public String toString(){
