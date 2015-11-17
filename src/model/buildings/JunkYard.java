@@ -11,8 +11,8 @@ public class JunkYard extends AbstractBuilding{
 	public JunkYard(String name, int capacity, boolean passiveProvider, double passiveRate,
 			AbstractResource resourceType, Point location) {
 		super(name, capacity, passiveProvider, passiveRate, resourceType, location);
-		// TODO Auto-generated constructor stub
-	}
+		name = "Junk Yard";
+		}
 
 	@Override
 	public void doBuildingJob() {

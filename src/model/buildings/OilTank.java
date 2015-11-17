@@ -10,7 +10,7 @@ public class OilTank extends AbstractBuilding{
 	public OilTank(String name, int capacity, boolean passiveProvider, double passiveRate,
 			AbstractResource resourceType, Point location) {
 		super(name, capacity, passiveProvider, passiveRate, resourceType, location);
-		// TODO Auto-generated constructor stub
+		name = "Oil Tank";
 	}
 
 	@Override
