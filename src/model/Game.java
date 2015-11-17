@@ -15,7 +15,7 @@ public class Game {
 	private Map map;
 
 	public Game() {
-		this.map = new Map(100,100);
+		this.map = new Map(GlobalSettings.MAP_SIZE_X, GlobalSettings.MAP_SIZE_Y);
 		this.buildings = new ArrayList<AbstractBuilding>();
 		this.resources = new ArrayList<AbstractResource>();
 		this.agents = new ArrayList<AbstractAgent>();
