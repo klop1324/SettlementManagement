@@ -2,6 +2,10 @@ package model;
 
 import java.util.ArrayList;
 
+import model.agents.AbstractAgent;
+import model.buildings.AbstractBuilding;
+import model.resources.AbstractResource;
+
 public class Game {
 	
 	private ArrayList<AbstractBuilding> buildings;

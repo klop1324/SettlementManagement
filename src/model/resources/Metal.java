@@ -1,4 +1,4 @@
-package model;
+package model.resources;
 import java.awt.Point;
 
 public class Metal extends AbstractResource{

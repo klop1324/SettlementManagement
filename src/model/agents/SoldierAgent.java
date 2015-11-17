@@ -1,6 +1,6 @@
-package model;
+package model.agents;
 
-public class WorkerAgent extends AbstractAgent{
+public class SoldierAgent extends AbstractAgent{
 
 	@Override
 	public void doWork() {

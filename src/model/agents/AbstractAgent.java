@@ -1,4 +1,4 @@
-package model;
+package model.agents;
 
 public abstract class AbstractAgent {
 	protected int energy;

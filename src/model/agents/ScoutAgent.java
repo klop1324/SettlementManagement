@@ -1,4 +1,4 @@
-package model;
+package model.agents;
 
 public class ScoutAgent extends AbstractAgent{
 

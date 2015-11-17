@@ -11,6 +11,7 @@ public class Map {
 	int[][] map;
 	int xLength, yLength;
 	
+	// debugging code
 	/*
 	public static void main(String args[]){
 		Map map = new Map(100, 100);
