@@ -15,12 +15,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 class SettlementGUI extends JFrame implements Observer {
 
-	private GraphicalView mapArea = new GraphicalView();
+	//private GraphicalView mapArea = new GraphicalView();
 	// private TextArea mapArea = new TextArea();
+	private ViewController mapArea = new ViewController();
 	private TextArea notificationArea = new TextArea();
 	// ButtonGroup
 	private JButton collectEnergy = new JButton("Collect Energy");
@@ -54,7 +56,7 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		JPanel mapPanel = new JPanel();
 		mapPanel.setBackground(Color.GRAY);
-		mapPanel.add(mapArea);
+		//mapPanel.add(mapArea);
 
 		JPanel notifierPanel = new JPanel();
 		notifierPanel.setBorder(new TitledBorder("Notifications"));
@@ -78,11 +80,17 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.add(collectPanel);
 		infoPanel.add(energyAmount);
 		infoPanel.add(oilAmount);
+		
+		JScrollPane cs = new JScrollPane(mapArea);
+		cs.setPreferredSize(new Dimension(this.getSize()));
+		cs.setVisible(false);
+		this.add(cs);
 
 		registerListeners();
 
-		this.add(mapLabel);
-		this.add(mapPanel);
+		//this.add(mapLabel);
+		//this.add(mapPanel);
+		//this.add(mapArea);
 		this.add(notifierPanel, BorderLayout.SOUTH);
 		this.add(infoPanel, BorderLayout.EAST);
 	}
