@@ -2,17 +2,17 @@ package model.buildings;
 
 import java.awt.Point;
 
-import model.resources.AbstractResource;
+import model.resources.Resources;
 
 public abstract class AbstractBuilding {
 	protected String name;
 	protected int capacity;
 	protected boolean passiveProvider;
 	protected double passiveRate;
-	protected AbstractResource resourceType;
+	protected Resources resourceType;
 	protected Point location;
 	
-	public AbstractBuilding(String name, int capacity, boolean passiveProvider, double passiveRate, AbstractResource resourceType, Point location){
+	public AbstractBuilding(String name, int capacity, boolean passiveProvider, double passiveRate, Resources resourceType, Point location){
 		this.name = name;
 		this.capacity = capacity;
 		this.passiveProvider = passiveProvider;
@@ -41,7 +41,7 @@ public abstract class AbstractBuilding {
 		return location;
 	}
 	
-	public AbstractResource getResourceType(){
+	public Resources getResourceType(){
 		return resourceType;
 	}
 	
