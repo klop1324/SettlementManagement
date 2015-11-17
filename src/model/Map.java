@@ -10,20 +10,6 @@ public class Map {
 	
 	int[][] map;
 	int xLength, yLength;
-	
-	// debugging code
-	/*
-	public static void main(String args[]){
-		Map map = new Map(100, 100);
-		for(int i = 0; i < 100; i++){
-			for(int j = 0; j < 100; j++){
-				System.out.print(map.get(i, j));
-				
-			}
-			System.out.println();
-		}
-	}
-	*/
 
 	public Map(int i, int j) {
 		if(i < 2 || j < 2) throw new RuntimeException("I got passed something less than 2! Here's what was passed to me i = " +i + " j = " +j);
@@ -129,6 +115,19 @@ public class Map {
 			return y;
 		}
 		
+	}
+	
+	@Override
+	public String toString(){
+		Map map = new Map(100, 100);
+		String result = "";
+		for(int i = 0; i < 100; i++){
+			for(int j = 0; j < 100; j++){
+				result.concat(map.get(i,j)+"");
+			}
+			result.concat("\n");
+		}
+		return result;
 	}
 
 }
