@@ -8,15 +8,23 @@ import java.util.Random;
 public class Map {
 	
 	
-	int[][] map;
-	int xLength, yLength;
+	private int[][] map;
+	private boolean[][] isVisible;
+	private int xLength, yLength;
 
 	public Map(int i, int j) {
 		if(i < 2 || j < 2) throw new RuntimeException("I got passed something less than 2! Here's what was passed to me i = " +i + " j = " +j);
 		this.map = new int[i][j];
+		this.isVisible = new boolean[i][j];
 		this.xLength = i;
 		this.yLength = j;
 		this.generate();
+		
+		for(int k = 0; k < xLength; k++){
+			for(int t = 0; t < yLength; t++){
+				isVisible[k][t] = false;
+			}
+		}
 	}
 	
 	// makes the map
