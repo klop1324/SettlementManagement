@@ -26,11 +26,6 @@ public class Game {
 		
 		//TODO intitial agent generation
 	}
-	public void paintComponent(Graphics g){
-		map.paintComponent(g);
-		
-		
-	}
 
 	public Map getMap() {
 		return map;
