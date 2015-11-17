@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import model.agents.AbstractAgent;
@@ -24,6 +25,11 @@ public class Game {
 		//TODO intitial resource generation
 		
 		//TODO intitial agent generation
+	}
+	public void paintComponent(Graphics g){
+		map.paintComponent(g);
+		
+		
 	}
 
 	public Map getMap() {

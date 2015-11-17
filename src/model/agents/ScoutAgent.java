@@ -1,5 +1,7 @@
 package model.agents;
 
+import java.awt.Graphics;
+
 public class ScoutAgent extends AbstractAgent{
 
 	@Override
@@ -7,5 +9,6 @@ public class ScoutAgent extends AbstractAgent{
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

@@ -1,7 +1,7 @@
 package model;
 
 import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,20 +10,6 @@ public class Map {
 	
 	int[][] map;
 	int xLength, yLength;
-	
-	// debugging code
-	/*
-	public static void main(String args[]){
-		Map map = new Map(100, 100);
-		for(int i = 0; i < 100; i++){
-			for(int j = 0; j < 100; j++){
-				System.out.print(map.get(i, j));
-				
-			}
-			System.out.println();
-		}
-	}
-	*/
 
 	public Map(int i, int j) {
 		if(i < 2 || j < 2) throw new RuntimeException("I got passed something less than 2! Here's what was passed to me i = " +i + " j = " +j);
@@ -32,9 +18,10 @@ public class Map {
 		this.yLength = j;
 		this.generate();
 	}
+	
 	// makes the map
 	private void generate(){
-
+		
 		ArrayList<Node> points = new ArrayList<Node>();
 		
 		Random random = new Random();
@@ -104,6 +91,9 @@ public class Map {
 	public void paintComponent(Graphics g){
 		for(int i = 0; i < xLength; i++){
 			for(int j = 0; j < yLength; j++){
+				//draws each tile, based on map representation, getting image from the Tile enum
+				Graphics g2 = (Graphics2D) g;
+				g2.drawImage(Tile.values()[map[i][j]].getImage(), i, j, null);
 				//TODO paint all the tiles
 			}
 		}
@@ -129,6 +119,20 @@ public class Map {
 			return y;
 		}
 		
+	}
+	
+	
+	@Override
+	public String toString(){
+		Map map = new Map(100, 100);
+		String result = "";
+		for(int i = 0; i < 100; i++){
+			for(int j = 0; j < 100; j++){
+				result.concat(map.get(i,j)+"");
+			}
+			result.concat("\n");
+		}
+		return result;
 	}
 
 }
