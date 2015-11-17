@@ -25,8 +25,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private ViewController mapArea = new ViewController();
 	private TextArea notificationArea = new TextArea();
 	// ButtonGroup
-	private JButton collectEnergy = new JButton("Collect Energy");
-	private JButton collectOil = new JButton("Collect Oil");
+	private JButton collectButton = new JButton("Collect Resource");
 	private JButton nextButton = new JButton(">>");
 	private JLabel energyAmount = new JLabel("Energy: ");
 	private JLabel oilAmount = new JLabel("Oil: ");
@@ -75,8 +74,7 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.setBackground(Color.BLACK);
 		JPanel collectPanel = new JPanel();
 		collectPanel.setBackground(Color.BLACK);
-		collectPanel.add(collectEnergy);
-		collectPanel.add(collectOil);
+		collectPanel.add(collectButton);
 		infoPanel.add(collectPanel);
 		infoPanel.add(energyAmount);
 		infoPanel.add(oilAmount);
@@ -97,20 +95,11 @@ class SettlementGUI extends JFrame implements Observer {
 
 	public void registerListeners() {
 
-		collectEnergy.addActionListener(new CollectEnergyListener());
-		collectOil.addActionListener(new CollectOilListener());
+		collectButton.addActionListener(new CollectButtonListener());
 		nextButton.addActionListener(new NextButtonListener());
 	}
 
-	private class CollectEnergyListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-
-		}
-	}
-
-	private class CollectOilListener implements ActionListener {
+	private class CollectButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
