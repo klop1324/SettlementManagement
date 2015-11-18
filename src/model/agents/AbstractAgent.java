@@ -19,7 +19,7 @@ public abstract class AbstractAgent {
 		this.position = position;
 		destination = new Point(0,0);
 	}
-	
+		
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}

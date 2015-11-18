@@ -2,16 +2,16 @@ package model.buildings;
 
 import java.awt.Point;
 
-import model.resources.Resources;
+import model.resources.Electricity;
 
 // Charges Robots
 public class ChargingStation extends AbstractBuilding{
 
-	public ChargingStation(String name, int capacity, boolean passiveProvider, double passiveRate,
-			Resources resourceType, Point location) {
-		super(name, capacity, passiveProvider, passiveRate, resourceType, location);
-		name = "Charging Station";
-		resourceType = Resources.ELECTRICITY;
+	public ChargingStation(String name, int capacity, Point location) {
+		super(name, capacity, location);
+		super.passiveProvider = true;
+		setPassiveRate(3.0);
+		resources.put(Electricity.class, 0);
 	}
 
 	@Override
@@ -19,5 +19,6 @@ public class ChargingStation extends AbstractBuilding{
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

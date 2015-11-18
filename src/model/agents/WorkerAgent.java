@@ -3,7 +3,6 @@ package model.agents;
 import java.awt.Point;
 
 public class WorkerAgent extends AbstractAgent {
-
 	public WorkerAgent(Point position) {
 		super(position);
 		filename = "???";
@@ -25,4 +24,5 @@ public class WorkerAgent extends AbstractAgent {
 	void decrementOil() {
 		oil = oil - 2;	
 	}
+
 }

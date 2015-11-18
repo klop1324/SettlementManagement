@@ -1,24 +1,26 @@
 package model.buildings;
 
 import java.awt.Point;
-
-import model.resources.Resources;
+import model.resources.*;
 
 
 // Holds all metal resources
 public class JunkYard extends AbstractBuilding{
-
-
-	public JunkYard(String name, int capacity, boolean passiveProvider, double passiveRate, Resources resourceType,
-			Point location) {
-		super(name, capacity, passiveProvider, passiveRate, resourceType, location);
-		name = "Junk Yard";
-		resourceType = Resources.COAL;
+	
+	
+	public JunkYard(String name, int capacity, Point location,
+			Object resource) {
+		super(name, capacity, location);
+		resources.put(Copper.class, 0);
+		resources.put(Iron.class, 0);
+		resources.put(Gold.class, 0);
+		
 	}
+	
 
 	@Override
 	public void doBuildingJob() {
-		// TODO Auto-generated method stub
+		System.out.println(resources);
 		
 	}
 
