@@ -19,30 +19,31 @@ import model.Game;
 import model.Map;
 import model.Tile;
 
-public class ViewController extends JPanel implements Observer{
+public class ViewController extends JPanel implements Observer {
 	private Game game;
-	private Image image;
+	private Map map;
+	private Image oil, solar;
 	private int x;
 	private int y;
 	private Timer timer = new Timer(50, new TimerListener());
 	private int tic;
-	
-	public ViewController(){
+
+	public ViewController() {
 		this.setVisible(true);
 	}
-	
-	public ViewController(Game game){
+
+	public ViewController(Game game) {
 		this.game = game;
 
 		try {
-			image = ImageIO.read(new File("./ImageSet/0.png"));
-			System.out.println("This is running");
+			oil = ImageIO.read(new File("./ImageSet/0.png"));
+			solar = ImageIO.read(new File("./ImageSet/solar.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		repaint();
 	}
-	
+
 	private class TimerListener implements ActionListener {
 
 		@Override
@@ -50,19 +51,37 @@ public class ViewController extends JPanel implements Observer{
 			repaint();
 		}
 	}
-	
-	public void PaintComponent(Graphics g){
-		paintMap(g, game.getMap());
-	}
-	
-	private void paintMap(Graphics g, Map map){
-		//draws each tile, based on map representation, getting image from the Tile enum
+
+	/*
+	 * public void PaintComponent(Graphics g){ paintMap(g, game.getMap()); }
+	 * 
+	 * private void paintMap(Graphics g, Map map){ //draws each tile, based on
+	 * map representation, getting image from the Tile enum Graphics g2 =
+	 * (Graphics2D) g; this.map = map; for(int i = 0; i < map.getXLength();
+	 * i++){ for(int j = 0; j < map.getYLength(); j++){ if (map.get(i, j) == 0)
+	 * { g2.drawImage(image, i*50, j*50, null); } else if (map.get(i, j) == 1) {
+	 * g2.drawImage(image, i*50, j*50, null); } else { g2.drawImage(image, i*50,
+	 * j*50, null); } //g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i,
+	 * j, null); //TODO paint all the tiles } } }
+	 */
+
+	public void paintComponent(Graphics g) {
+		// draws each tile, based on map representation, getting image from the
+		// Tile enum
 		Graphics g2 = (Graphics2D) g;
-		for(int i = 0; i < map.getXLength(); i++){
-			for(int j = 0; j < map.getYLength(); j++){
-				//g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i, j, null);
-				g2.drawImage(image, i*50, j*50, null);
-				//TODO paint all the tiles
+		map = game.getMap();
+		for (int i = 0; i < map.getXLength(); i++) {
+			for (int j = 0; j < map.getYLength(); j++) {
+				if (map.get(i, j) == 0) {
+					g2.drawImage(oil, i * 50, j * 50, null);
+				} else if (map.get(i, j) == 1) {
+					g2.drawImage(oil, i * 50, j * 50, null);
+				} else {
+					g2.drawImage(oil, i * 50, j * 50, null);
+				}
+				// g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i, j,
+				// null);
+				// TODO paint all the tiles
 			}
 		}
 	}
@@ -71,9 +90,9 @@ public class ViewController extends JPanel implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		drawBoardWithAnimation();
 	}
-	
+
 	private void drawBoardWithAnimation() {
 		tic = 0;
 		timer.start();
-	}	
+	}
 }
