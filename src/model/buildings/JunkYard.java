@@ -8,8 +8,7 @@ import model.resources.*;
 public class JunkYard extends AbstractBuilding{
 	
 	
-	public JunkYard(String name, int capacity, Point location,
-			Object resource) {
+	public JunkYard(String name, int capacity, Point location) {
 		super(name, capacity, location);
 		resources.put(Copper.class, 0);
 		resources.put(Iron.class, 0);
