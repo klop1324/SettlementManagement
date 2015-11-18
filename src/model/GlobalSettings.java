@@ -2,8 +2,11 @@ package model;
 
 public class GlobalSettings {
 	
-	public static int MapSizeX = 1024;
-	public static int MapSizeY = 1024;
+	public static int MAP_SIZE_X = 100;
+	public static int MAP_SIZE_Y = 100;
 	//resource distribution settings to be here;
+	
+	public static int MAP_RICHNESS = 2;
+	
 
 }

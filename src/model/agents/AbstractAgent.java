@@ -1,23 +1,26 @@
 package model.agents;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 public abstract class AbstractAgent {
-	int energy, condition, carriedResources;
-	Point position, destination;
+	int energy, condition, oil, carriedResources, MAX_RESOURCES;
+	Point position, destination, nearestOilTank, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
-	boolean switchFlag;
+	boolean switchFlag; // TODO temp
 	String filename;
-	char textRep;
+	char textRep; // TODO temp
 	
 	public AbstractAgent(Point position) {
 		energy = 2000;
 		condition = 2000;
+		oil = 2000;
 		carriedResources = 0;
 		AI = new AgentLogic();
 		this.position = position;
+		destination = new Point(0,0);
 	}
-	
+		
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}
@@ -30,10 +33,12 @@ public abstract class AbstractAgent {
 		return position;
 	}
 	
-	public void sendCommand(Command c, Point p) {
-		/* 
-		 * This will call AgentLogic to queue this command.
-		 */
+	public char getTextRep() {
+		return textRep;
+	}
+	
+	public void sendCommand(AgentCommandWithDestination c) {
+		AI.recieveCommand(c);
 	}
 	
 	public void move() {
@@ -81,16 +86,30 @@ public abstract class AbstractAgent {
 		}
 	}
 	
-	// Hardcoded to move randomly
-	abstract void tic();
+	/*
+	 * (non-Javadoc)
+	 * @see model.AbstractAgent#tic()
+	 * Moves towards destination each tic. If destination has been reached,
+	 * destination is changed. Current pathfinding: four-way directional
+	 * movement, chooses how to get to diagonal target randomly each move.
+	 */
+	public void tic() {
+		AI.assessCurrentDestination();
+		move();
+		decrementEnergy();
+		decrementCondition();
+		decrementOil();
+	}
+	
 	abstract void decrementEnergy();
 	abstract void decrementCondition();
+	abstract void decrementOil();
 	
 	public class AgentLogic {
 		
 		/*
 		 * Agent should be doing things in this priority:
-		 * 1. Addressing critically low energy and/or condition
+		 * 1. Addressing critically low needs
 		 * 2. Depositing Resource if it's at carrying capacity
 		 * 3. Following user commands in the order they are issued
 		 * 
@@ -108,21 +127,21 @@ public abstract class AbstractAgent {
 		 * This could be accounted for, or it might just be up to the user to
 		 * notice an unproductive robot waffling between commands and needs.
 		 */
+		
+		private ArrayList<AgentCommandWithDestination> actionQueue;
+		
 		public AgentLogic() {
-			
+			actionQueue = new ArrayList<AgentCommandWithDestination>();
 		}
 		
-		public void recieveCommand(Command c, Point p) {
-			
+		public void recieveCommand(AgentCommandWithDestination c) {
+			actionQueue.add(c);
 		}
 		
 		public void assessCurrentDestination() {
-			if(position.x == destination.x && position.y == destination.y && switchFlag) {
-				setDestination(new Point(13, 7));
-				switchFlag = false;
-			} else if(position.x == destination.x && position.y == destination.y && !switchFlag) {
-				setDestination(new Point(0, 0));
-				switchFlag = true;
+			if(position.x == destination.x && position.y == destination.y) {
+				actionQueue.remove(0);
+				setDestination(actionQueue.get(0).getCommandDestination());
 			}
 		}
 	}
