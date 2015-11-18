@@ -20,15 +20,17 @@ import javax.swing.border.TitledBorder;
 
 class SettlementGUI extends JFrame implements Observer {
 
-	//private GraphicalView mapArea = new GraphicalView();
-	// private TextArea mapArea = new TextArea();
 	private ViewController mapArea = new ViewController();
 	private TextArea notificationArea = new TextArea();
 	// ButtonGroup
 	private JButton collectButton = new JButton("Collect Resource");
 	private JButton nextButton = new JButton(">>");
-	private JLabel energyAmount = new JLabel("Energy: ");
-	private JLabel oilAmount = new JLabel("Oil: ");
+	private JLabel electricityAmount = new JLabel("Electricity: ");
+	private JLabel oilAmount = new JLabel("Oil: ");	
+	private JLabel coalAmount = new JLabel("Coal: ");
+	private JLabel copperAmount = new JLabel("Copper: ");
+	private JLabel ironAmount = new JLabel("Iron: ");
+	private JLabel goldAmount = new JLabel("Gold: ");	
 	// comboBox with container and int size
 	// add keyListener and mouseMotionListener for the map
 
@@ -47,15 +49,8 @@ class SettlementGUI extends JFrame implements Observer {
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = screensize.width / 2 - this.getSize().width / 2;
 		int height = screensize.height / 2 - this.getSize().height / 2;
+		this.add(new JLabel("Hi"));
 		this.setLocation(width, height);
-
-		JLabel mapLabel = new JLabel("the map goes here");
-		mapLabel.setLocation(250, 40);
-		mapLabel.setSize(150, 50);
-		
-		JPanel mapPanel = new JPanel();
-		mapPanel.setBackground(Color.GRAY);
-		//mapPanel.add(mapArea);
 
 		JPanel notifierPanel = new JPanel();
 		notifierPanel.setBorder(new TitledBorder("Notifications"));
@@ -64,33 +59,34 @@ class SettlementGUI extends JFrame implements Observer {
 		notificationArea.setPreferredSize(new Dimension(700, 150));
 		notificationArea.setEditable(false);
 		notifierPanel.add(notificationArea);
-		//nextButton.setBackground(Color.);
 		notifierPanel.add(nextButton);
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setPreferredSize(new Dimension(200, 40));
-		infoPanel.setLayout(new GridLayout(3, 1));
+		infoPanel.setLayout(new GridLayout(7, 1));
 		infoPanel.setBorder(new TitledBorder("Information"));
 		infoPanel.setBackground(Color.BLACK);
 		JPanel collectPanel = new JPanel();
 		collectPanel.setBackground(Color.BLACK);
 		collectPanel.add(collectButton);
 		infoPanel.add(collectPanel);
-		infoPanel.add(energyAmount);
-		infoPanel.add(oilAmount);
+		infoPanel.add(electricityAmount);
+		infoPanel.add(oilAmount);	
+		infoPanel.add(coalAmount);
+		infoPanel.add(copperAmount);
+		infoPanel.add(ironAmount);
+		infoPanel.add(goldAmount);
+		
+		registerListeners();
 		
 		JScrollPane cs = new JScrollPane(mapArea);
 		cs.setPreferredSize(new Dimension(this.getSize()));
-		cs.setVisible(false);
-		this.add(cs);
+		cs.setVisible(true);
+		//this.add(cs);
 
-		registerListeners();
-
-		//this.add(mapLabel);
-		//this.add(mapPanel);
-		//this.add(mapArea);
-		this.add(notifierPanel, BorderLayout.SOUTH);
-		this.add(infoPanel, BorderLayout.EAST);
+		this.add(mapArea);
+		//this.add(notifierPanel, BorderLayout.SOUTH);
+		//this.add(infoPanel, BorderLayout.EAST);
 	}
 
 	public void registerListeners() {

@@ -33,12 +33,9 @@ public class ViewController extends JPanel implements Observer{
 	
 	public ViewController(Game game){
 		this.game = game;
-		//x = ;
-		//y = ;
 
-		this.setPreferredSize(new Dimension(500, 500));
 		try {
-			image = ImageIO.read(new File("./images/Blood.png"));
+			image = ImageIO.read(new File("./ImageSet/0.png"));
 			System.out.println("This is running");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,7 +47,7 @@ public class ViewController extends JPanel implements Observer{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			repaint();
 		}
 	}
 	
@@ -59,11 +56,12 @@ public class ViewController extends JPanel implements Observer{
 	}
 	
 	private void paintMap(Graphics g, Map map){
+		//draws each tile, based on map representation, getting image from the Tile enum
+		Graphics g2 = (Graphics2D) g;
 		for(int i = 0; i < map.getXLength(); i++){
 			for(int j = 0; j < map.getYLength(); j++){
-				//draws each tile, based on map representation, getting image from the Tile enum
-				Graphics g2 = (Graphics2D) g;
-				g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i, j, null);
+				//g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i, j, null);
+				g2.drawImage(image, i*50, j*50, null);
 				//TODO paint all the tiles
 			}
 		}
