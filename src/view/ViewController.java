@@ -31,12 +31,12 @@ public class ViewController extends JPanel implements Observer {
 	private int y;
 	private Timer timer = new Timer(50, new TimerListener());
 	private int tic;
-	private ChargingStation charge = new ChargingStation("Charge", 100, new Point(0, 0));
-	private OilTank oilTank = new OilTank("Oil", 100, new Point(0, 2));
-	private Resource electric = new Resource(20, new Point(1, 0), ResourceType.ELECTRICITY);
-	private Resource oils = new Resource(20, new Point(1, 2), ResourceType.OIL);
-	private WorkerAgent firstAgent = new WorkerAgent(new Point(10,12));
-	private WorkerAgent secondAgent = new WorkerAgent(new Point(6, 11));
+	private ChargingStation charge = new ChargingStation("Charge", 1000, new Point(10, 5));
+	private OilTank oilTank = new OilTank("Oil", 1000, new Point(10, 4));
+	private Resource electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
+	private Resource oils = new Resource(20, new Point(0, 2), ResourceType.OIL);
+	private WorkerAgent firstAgent = new WorkerAgent(new Point(11,4));
+	private WorkerAgent secondAgent = new WorkerAgent(new Point(6, 6));
 
 	public ViewController() {
 		this.setVisible(true);
@@ -87,6 +87,9 @@ public class ViewController extends JPanel implements Observer {
 		map = game.getMap();
 		game.addBuilding(charge, new Point(0, 0));
 		game.addBuilding(oilTank, new Point(0, 2));
+		int agentX = secondAgent.getPosition().x;
+		int agentY = secondAgent.getPosition().y;
+		secondAgent.setDestination(new Point(0, 0));
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
 				if (map.get(i, j) == 0) {
@@ -97,16 +100,29 @@ public class ViewController extends JPanel implements Observer {
 					g2.drawImage(ground, i * 50, j * 50, null);
 				}
 				g2.drawImage(agent1, 11*50, 4*50, null);
-				g2.drawImage(agent2, 6*50, 6*50, null);
 				g2.drawImage(building1, 10*50, 4*50, null);
 				g2.drawImage(building2, 10*50, 5*50, null);
-				g2.drawImage(oil, 0, 0, null);
-				g2.drawImage(solar, 0, 2*50, null);
+				g2.drawImage(oil, 0, 2*50, null);
+				g2.drawImage(solar, 0, 0, null);
 				// g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i, j,
 				// null);
 				// TODO paint all the tiles
 			}
 		}
+		/*for (int k = 0; k < 50; k++) {
+			if (secondAgent.getPosition() != secondAgent.getDestination()) {
+				secondAgent.setDestination(electric.getLocation());
+				g2.drawImage(agent2, agentX*50, agentY*50, null);
+				secondAgent.tic();
+				repaint();
+			}
+			else {
+				secondAgent.setDestination(charge.getLocation());
+				g2.drawImage(agent2, agentX*50, agentY*50, null);
+				secondAgent.tic();
+				repaint();
+			}
+		}*/
 	}
 
 	@Override
