@@ -2,12 +2,13 @@ package model;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import model.agents.AbstractAgent;
 import model.buildings.AbstractBuilding;
 import model.resources.AbstractResource;
 
-public class Game {
+public class Game extends Observable {
 	
 	private ArrayList<AbstractBuilding> buildings;
 	private	ArrayList<AbstractResource> resources;

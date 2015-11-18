@@ -3,9 +3,10 @@ package model;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 
-public class Map {
+public class Map extends Observable{
 	
 	
 	private int[][] map;
@@ -133,9 +134,9 @@ public class Map {
 		String result = "";
 		for(int i = 0; i < 100; i++){
 			for(int j = 0; j < 100; j++){
-				result.concat(map.get(i,j)+"");
+				result += map.get(i,j);
 			}
-			result.concat("\n");
+			result += "\n";
 		}
 		return result;
 	}

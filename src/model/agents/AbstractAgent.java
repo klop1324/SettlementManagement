@@ -3,7 +3,7 @@ package model.agents;
 import java.awt.Point;
 
 public abstract class AbstractAgent {
-	int energy, condition, carriedResources;
+	int energy, condition, oil, carriedResources, MAX_RESOURCES;
 	Point position, destination;
 	AgentLogic AI;
 	boolean switchFlag;
@@ -13,9 +13,11 @@ public abstract class AbstractAgent {
 	public AbstractAgent(Point position) {
 		energy = 2000;
 		condition = 2000;
+		oil = 2000;
 		carriedResources = 0;
 		AI = new AgentLogic();
 		this.position = position;
+		destination = new Point(0,0);
 	}
 	
 	public void setDestination(Point destination) {
@@ -30,7 +32,11 @@ public abstract class AbstractAgent {
 		return position;
 	}
 	
-	public void sendCommand(Command c, Point p) {
+	public char getTextRep() {
+		return textRep;
+	}
+	
+	public void sendCommand(Point p) {
 		/* 
 		 * This will call AgentLogic to queue this command.
 		 */
@@ -81,10 +87,24 @@ public abstract class AbstractAgent {
 		}
 	}
 	
-	// Hardcoded to move randomly
-	abstract void tic();
+	/*
+	 * (non-Javadoc)
+	 * @see model.AbstractAgent#tic()
+	 * Moves towards destination each tic. If destination has been reached,
+	 * destination is changed. Current pathfinding: four-way directional
+	 * movement, chooses how to get to diagonal target randomly each move.
+	 */
+	public void tic() {
+		AI.assessCurrentDestination();
+		move();
+		decrementEnergy();
+		decrementCondition();
+		decrementOil();
+	}
+	
 	abstract void decrementEnergy();
 	abstract void decrementCondition();
+	abstract void decrementOil();
 	
 	public class AgentLogic {
 		
@@ -112,7 +132,7 @@ public abstract class AbstractAgent {
 			
 		}
 		
-		public void recieveCommand(Command c, Point p) {
+		public void recieveCommand(Point p) {
 			
 		}
 		

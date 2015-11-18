@@ -2,16 +2,16 @@ package model.buildings;
 
 import java.awt.Point;
 
-import model.resources.AbstractResource;
+import model.resources.Resources;
 
 // Builds basic workers and holds small amount of basic resource
 public class HomeDepot extends AbstractBuilding{
 
 
-	public HomeDepot(String name, int capacity, boolean passiveProvider, double passiveRate,
-			AbstractResource resourceType, Point location) {
+	public HomeDepot(String name, int capacity, boolean passiveProvider, double passiveRate, Resources resourceType,
+			Point location) {
 		super(name, capacity, passiveProvider, passiveRate, resourceType, location);
-		name = "Home Depot";
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override

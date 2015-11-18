@@ -1,13 +1,29 @@
 package model.agents;
 
-import java.awt.Graphics;
+import java.awt.Point;
 
-public class ScoutAgent extends AbstractAgent{
+public class ScoutAgent extends AbstractAgent {
+
+	public ScoutAgent(Point position) {
+		super(position);
+		filename = "???";
+		textRep = 's';
+		MAX_RESOURCES = 500;
+	}
 
 	@Override
-	public void doWork() {
-		// TODO Auto-generated method stub
-		
+	void decrementEnergy() {
+		energy--;	
+	}
+
+	@Override
+	void decrementCondition() {
+		condition--;
+	}
+
+	@Override
+	void decrementOil() {
+		oil--;	
 	}
 
 
