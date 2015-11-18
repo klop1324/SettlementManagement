@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Observable;
+import java.util.Random;
 
 import javax.swing.Timer;
 
@@ -32,17 +32,32 @@ public class Game extends Observable {
 		
 		timer = new Timer(50, new TickActionListener());
 		
-		
-		//TODO intitial resource generation
+		generateResources();
 		
 		//TODO intitial agent generation
+		
+		
+		
 	}
+	
+	private void generateResources(){
+		// generates log(sqrt(MapSizeX*MapSizeY))* MapRichness\
+		Random r = new Random();
+		for(int i = 0; i < Math.log(Math.sqrt(GlobalSettings.MAP_SIZE_X * GlobalSettings.MAP_SIZE_Y)) * GlobalSettings.MAP_RICHNESS; i++){
+			int totalNumOfResources = r.nextInt(Resources.values().length);
+			Resources resource = Resources.values()[totalNumOfResources];
+			
+			//TODO: actually generate resources
+			
+		}
+	}
+	
 
 	public Map getMap() {
 		return map;
 	}
 	
-	public void BuildBuilding(AbstractBuilding b, Point p){
+	public void addBuilding(AbstractBuilding b, Point p){
 		this.buildings.add(b);
 	}
 
@@ -78,9 +93,6 @@ public class Game extends Observable {
 					
 				}
 			}
-			
-			
-			
 		}
 		
 	}
