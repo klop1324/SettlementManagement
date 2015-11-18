@@ -8,6 +8,12 @@ import java.util.Random;
 
 public class Map extends Observable{
 	
+	public static void main(String args[]){
+		Map map = new Map(100,100);
+		System.out.println(map.toString());
+		
+	}
+	
 	
 	private int[][] map;
 	private boolean[][] isVisible;
