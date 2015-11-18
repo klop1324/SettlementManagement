@@ -55,6 +55,7 @@ public class Game extends Observable {
 		// generates log(sqrt(MapSizeX*MapSizeY))* MapRichness\
 		Random r = new Random();
 		for(int i = 0; i < Math.log(Math.sqrt(GlobalSettings.MAP_SIZE_X * GlobalSettings.MAP_SIZE_Y)) * GlobalSettings.MAP_RICHNESS; i++){
+			
 			//TODO: actually generate resources
 			
 		}
