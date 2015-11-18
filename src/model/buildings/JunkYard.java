@@ -10,9 +10,9 @@ public class JunkYard extends AbstractBuilding{
 	
 	public JunkYard(String name, int capacity, Point location) {
 		super(name, capacity, location);
-		resources.put(Copper.class, 0);
-		resources.put(Iron.class, 0);
-		resources.put(Gold.class, 0);
+		resources.put(ResourceType.COPPER, 0);
+		resources.put(ResourceType.IRON, 0);
+		resources.put(ResourceType.GOLD, 0);
 		
 	}
 	

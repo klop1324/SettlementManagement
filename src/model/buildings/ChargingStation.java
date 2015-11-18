@@ -2,7 +2,7 @@ package model.buildings;
 
 import java.awt.Point;
 
-import model.resources.Electricity;
+import model.resources.ResourceType;
 
 // Charges Robots
 public class ChargingStation extends AbstractBuilding{
@@ -11,7 +11,7 @@ public class ChargingStation extends AbstractBuilding{
 		super(name, capacity, location);
 		super.passiveProvider = true;
 		setPassiveRate(3.0);
-		resources.put(Electricity.class, 0);
+		resources.put(ResourceType.ELECTRICITY, 0);
 	}
 
 	@Override

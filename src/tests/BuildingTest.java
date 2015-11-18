@@ -9,10 +9,8 @@ import org.junit.Test;
 import model.agents.WorkerAgent;
 import model.buildings.ChargingStation;
 import model.buildings.JunkYard;
-import model.resources.Electricity;
-import model.resources.Iron;
-import model.resources.Oil;
-import model.resources.Resources;
+import model.resources.Resource;
+import model.resources.ResourceType;
 
 public class BuildingTest {
 	WorkerAgent agent = new WorkerAgent(new Point(1,2));
@@ -20,8 +18,8 @@ public class BuildingTest {
 	@Test
 	public void junkYardTest() {
 		JunkYard junkyard = new JunkYard("Junk yard", 100, new Point(1,2));
-		Oil oil = new Oil(10, new Point(0,0));
-		Iron iron = new Iron(10, new Point(1,1));
+		Resource oil = new Resource(10, new Point(12, 3), ResourceType.OIL);
+		Resource iron = new Resource(10, new Point(12, 3), ResourceType.IRON);
 		assertFalse(junkyard.getResources().containsKey(oil));
 		assertTrue(junkyard.getResources().containsKey(iron.getClass()));
 		junkyard.agentAddCapacity(iron.getClass(), 20, agent);
@@ -37,7 +35,7 @@ public class BuildingTest {
 		System.out.println(agent.getDestination());
 		System.out.println(agent.getPosition());
 		ChargingStation charge = new ChargingStation(null, 90, point);
-		Electricity electricSlide = new Electricity(10, point);
+		Resource electricSlide = new Resource(10, new Point(13,7), ResourceType.ELECTRICITY);
 		assertEquals((int) charge.getResources().get(electricSlide.getClass()), 0);
 		charge.agentAddCapacity(electricSlide.getClass(), 9, agent);
 		assertEquals((int) charge.getResources().get(electricSlide.getClass()), 9);
@@ -48,12 +46,12 @@ public class BuildingTest {
 		charge.agentAddCapacity(electricSlide.getClass(), 10000, agent);
 		assertEquals((int) charge.getResources().get(electricSlide.getClass()), 6);
 		charge.passiveCheck();
-		System.out.println(Resources.COAL.name());
+		System.out.println(ResourceType.COAL.name());
 	}
 	
 	@Test
 	public void locationCheck(){
-		Iron iron = new Iron(10, new Point(4, 30));
+		Resource iron = new Resource(10, new Point(4, 30), ResourceType.IRON);
 		JunkYard junkyard = new JunkYard("Junk Yard", 40, new Point(30, 20));
 		assertEquals(iron.getLocation(), new Point(4, 30));
 		assertEquals(junkyard.getLocation(), new Point(30, 20));
