@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -18,15 +19,24 @@ import javax.swing.Timer;
 import model.Game;
 import model.Map;
 import model.Tile;
+import model.buildings.*;
+import model.agents.*;
+import model.resources.*;
 
 public class ViewController extends JPanel implements Observer {
 	private Game game;
 	private Map map;
-	private Image oil, solar;
+	private Image agent1, agent2, building1, building2, oil, solar, ground;
 	private int x;
 	private int y;
 	private Timer timer = new Timer(50, new TimerListener());
 	private int tic;
+	private ChargingStation charge = new ChargingStation("Charge", 100, new Point(0, 0));
+	private OilTank oilTank = new OilTank("Oil", 100, new Point(0, 2));
+	private Resource electric = new Resource(20, new Point(1, 0), ResourceType.ELECTRICITY);
+	private Resource oils = new Resource(20, new Point(1, 2), ResourceType.OIL);
+	private WorkerAgent firstAgent = new WorkerAgent(new Point(10,12));
+	private WorkerAgent secondAgent = new WorkerAgent(new Point(6, 11));
 
 	public ViewController() {
 		this.setVisible(true);
@@ -36,8 +46,13 @@ public class ViewController extends JPanel implements Observer {
 		this.game = game;
 
 		try {
-			oil = ImageIO.read(new File("./ImageSet/0.png"));
+			agent1 = ImageIO.read(new File("./ImageSet/agent1.png"));
+			agent2 = ImageIO.read(new File("./ImageSet/agent2.png"));
+			building1 = ImageIO.read(new File("./ImageSet/building1.png"));
+			building2 = ImageIO.read(new File("./ImageSet/building2.png"));
+			oil = ImageIO.read(new File("./ImageSet/oil.png"));
 			solar = ImageIO.read(new File("./ImageSet/solar.png"));
+			ground = ImageIO.read(new File("./ImageSet/0.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -70,15 +85,23 @@ public class ViewController extends JPanel implements Observer {
 		// Tile enum
 		Graphics g2 = (Graphics2D) g;
 		map = game.getMap();
+		game.addBuilding(charge, new Point(0, 0));
+		game.addBuilding(oilTank, new Point(0, 2));
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
 				if (map.get(i, j) == 0) {
-					g2.drawImage(oil, i * 50, j * 50, null);
+					g2.drawImage(ground, i * 50, j * 50, null);
 				} else if (map.get(i, j) == 1) {
-					g2.drawImage(oil, i * 50, j * 50, null);
+					g2.drawImage(ground, i * 50, j * 50, null);
 				} else {
-					g2.drawImage(oil, i * 50, j * 50, null);
+					g2.drawImage(ground, i * 50, j * 50, null);
 				}
+				g2.drawImage(agent1, 11*50, 4*50, null);
+				g2.drawImage(agent2, 6*50, 6*50, null);
+				g2.drawImage(building1, 10*50, 4*50, null);
+				g2.drawImage(building2, 10*50, 5*50, null);
+				g2.drawImage(oil, 0, 0, null);
+				g2.drawImage(solar, 0, 2*50, null);
 				// g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i, j,
 				// null);
 				// TODO paint all the tiles
