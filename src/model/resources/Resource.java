@@ -1,14 +1,16 @@
 package model.resources;
 import java.awt.Point;
 
-public abstract class AbstractResource {
+public class Resource {
 	protected int amount;
 	protected Point location;
+	ResourceType resources;
 	
 	// Starting amount for resource
-	public AbstractResource(int startAmount, Point origin_point){
+	public Resource(int startAmount, Point origin_point, ResourceType resources){
 		this.amount = startAmount;
 		this.location = origin_point;
+		this.resources = resources;
 	}
 	
 	// Returns the amount
@@ -16,14 +18,15 @@ public abstract class AbstractResource {
 		return amount;
 	}
 	
+	public ResourceType getType(){
+		return resources;
+	}
+	
 	// Returns location of resource
 	public Point getLocation(){
 		return location;
 	}
-	
-	// Void method to use each resource
-	public abstract void use();
-	
+		
 	// Add amount to resource
 	public void addResource(int addAmount){
 		amount+=addAmount;

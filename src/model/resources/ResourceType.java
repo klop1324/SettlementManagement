@@ -1,6 +1,6 @@
 package model.resources;
 
-public enum Resources {
+public enum ResourceType {
 	
 	COAL(1),
 	COPPER(2),
@@ -11,7 +11,7 @@ public enum Resources {
 	
 	private int value;
 
-	Resources(int value){
+	ResourceType(int value){
 		this.value = value;
 	}
 	

@@ -2,7 +2,7 @@ package model.buildings;
 
 import java.awt.Point;
 
-import model.resources.Oil;
+import model.resources.ResourceType;
 
 // Holds all oil resources
 public class OilTank extends AbstractBuilding{
@@ -11,7 +11,7 @@ public class OilTank extends AbstractBuilding{
 	public OilTank(String name, int capacity, Point location) {
 		super(name, capacity, location);
 		name = "Oil Tank";
-		resources.put(Oil.class, 0);
+		resources.put(ResourceType.OIL, 0);
 	}
 
 	@Override

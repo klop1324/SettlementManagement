@@ -2,7 +2,7 @@ package model.buildings;
 
 import java.awt.Point;
 
-import model.resources.Oil;
+import model.resources.ResourceType;
 
 // Extracts resource from map
 public class OilWell extends AbstractBuilding{
@@ -11,7 +11,7 @@ public class OilWell extends AbstractBuilding{
 		super(name, capacity, location);
 		passiveProvider = true;
 		setPassiveRate(2.3);
-		resources.put(Oil.class, 0);
+		resources.put(ResourceType.OIL, 0);
 	}
 
 	@Override

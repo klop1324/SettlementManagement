@@ -15,16 +15,14 @@ import model.agents.AbstractAgent;
 import model.agents.WorkerAgent;
 import model.buildings.AbstractBuilding;
 import model.buildings.JunkYard;
-import model.resources.AbstractResource;
-
-
-import model.resources.Resources;
+import model.resources.Resource;
+import model.resources.ResourceType;
 
 public class Game extends Observable {
 	
 	private Game game = this;
 	private ArrayList<AbstractBuilding> buildings;
-	private	ArrayList<AbstractResource> resources;
+	private	ArrayList<Resource> resources;
 	private ArrayList<AbstractAgent> agents;
 	private Map map;
 	
@@ -34,7 +32,7 @@ public class Game extends Observable {
 	public Game() {
 		this.map = new Map(GlobalSettings.MAP_SIZE_X, GlobalSettings.MAP_SIZE_Y);
 		this.buildings = new ArrayList<AbstractBuilding>();
-		this.resources = new ArrayList<AbstractResource>();
+		this.resources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
 
 		//TODO implement tick system
@@ -74,7 +72,7 @@ public class Game extends Observable {
 		return agents;
 	}
 
-	public ArrayList<AbstractResource> getResources() {
+	public ArrayList<Resource> getResources() {
 		return resources;
 	}
 
