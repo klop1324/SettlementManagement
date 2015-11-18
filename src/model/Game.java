@@ -45,7 +45,8 @@ public class Game extends Observable {
 		Random r = new Random();
 		for(int i = 0; i < Math.log(Math.sqrt(GlobalSettings.MAP_SIZE_X * GlobalSettings.MAP_SIZE_Y)) * GlobalSettings.MAP_RICHNESS; i++){
 			int totalNumOfResources = r.nextInt(Resources.values().length);
-			Resources resource = Resources.values()[totalNumOfResources];
+			
+			
 			
 			//TODO: actually generate resources
 			
@@ -89,7 +90,6 @@ public class Game extends Observable {
 			for(int i = 0; i < buildings.size(); i++){
 				AbstractBuilding b = buildings.get(i);
 				if(b.isPassiveProvider()){
-					
 					
 				}
 			}
