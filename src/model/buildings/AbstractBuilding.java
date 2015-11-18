@@ -2,8 +2,12 @@ package model.buildings;
 
 import java.awt.Point;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import javax.swing.Timer;
+
+import model.agents.AbstractAgent;
+import sun.management.Agent;
+
 
 
 public abstract class AbstractBuilding {
@@ -14,6 +18,7 @@ public abstract class AbstractBuilding {
 	protected Point location;
 	protected HashMap<Object, Integer> resources;
 	protected Object resource;
+	protected Timer myTimer;
 
 	public AbstractBuilding(String name, int capacity, Point location){
 		this.name = name;
@@ -22,11 +27,13 @@ public abstract class AbstractBuilding {
 		resources = new HashMap<Object, Integer>();
 	}
 
-
 	public void passiveCheck(){
 		if (passiveProvider){
 			resource = resources.keySet().toArray()[0];
 			System.out.println(resource);
+		}
+		else {
+			return;
 		}
 	}
 
@@ -72,13 +79,18 @@ public abstract class AbstractBuilding {
 		}
 	}
 
-	public void agentAddCapacity(Object o, int amount) {
-		int newResourceAmount = resources.get(o) + amount;
-		if (newResourceAmount < capacity){
-			resources.put(o, resources.get(o) + amount);
+	public void agentAddCapacity(Object o, int amount, AbstractAgent agent) {
+		if (agent.getPosition().equals(getLocation())){
+			int newResourceAmount = resources.get(o) + amount;
+			if (newResourceAmount < capacity){
+				resources.put(o, resources.get(o) + amount);
+			}
+			else {
+				System.out.println("You cannot hold that much! Please upgrade your storage to hold more.");
+			}
 		}
 		else {
-			System.out.println("You cannot hold that much! Please upgrade your storage to hold more.");
+			System.out.println("Not here");
 		}
 	}
 
