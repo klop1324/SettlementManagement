@@ -2,8 +2,9 @@ package model.agents;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Observable;
 
-public abstract class AbstractAgent {
+public abstract class AbstractAgent{
 	int energy, condition, oil, carriedResources, MAX_RESOURCES;
 	Point position, destination, nearestOilTank, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
@@ -24,10 +25,16 @@ public abstract class AbstractAgent {
 		this.position = position;
 	}
 	
-	/**
-	 * hjkdsfjkhsdfhkjlfsdahjk
-	 * @param destination
-	 */
+	// Added getter that can be changed later down the road
+	public int getAmountCarried(){
+		return carriedResources;
+	}
+	
+	// Added carriedResources setter can be changed later
+	public void pickedUpResource(int amount){
+		carriedResources = amount;
+	}
+	
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}

@@ -24,6 +24,7 @@ public enum Tile {
 			this.image = ImageIO.read(new File("ImageSet/"+ this.intRep +".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
+			//Tile.values()[int]
 		}
 		
 	}

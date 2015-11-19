@@ -6,6 +6,8 @@ import java.util.HashMap;
 import javax.swing.Timer;
 
 import model.agents.AbstractAgent;
+import model.resources.Resource;
+import model.resources.ResourceType;
 import sun.management.Agent;
 
 
@@ -16,7 +18,7 @@ public abstract class AbstractBuilding {
 	protected boolean passiveProvider = false;
 	protected double passiveRate;
 	protected Point location;
-	protected HashMap<Object, Integer> resources;
+	protected HashMap<ResourceType, Integer> resources;
 	protected Object resource;
 	protected Timer myTimer;
 
@@ -24,11 +26,15 @@ public abstract class AbstractBuilding {
 		this.name = name;
 		this.capacity = capacity;
 		this.location = location;
-		resources = new HashMap<Object, Integer>();
+		resources = new HashMap<ResourceType, Integer>();
 	}
 
 	public void passiveCheck(){
 		if (passiveProvider){
+			// Gathers the HashMap keys and turns them into an array
+			// Will then grab first index (passive providers should
+			// only have one resource) which is the key, and then
+			// that variable it's stored in can be used to get the value.
 			resource = resources.keySet().toArray()[0];
 			System.out.println(resource);
 		}
@@ -48,7 +54,8 @@ public abstract class AbstractBuilding {
 	public boolean isPassiveProvider(){
 		return passiveProvider;
 	}
-
+	
+	// Can set rate if passive provider
 	public void setPassiveRate(double rate){
 		if(isPassiveProvider()){
 			passiveRate = rate;
@@ -66,35 +73,42 @@ public abstract class AbstractBuilding {
 		return location;
 	}
 
-	public HashMap<Object, Integer> getResources(){
+	public HashMap<ResourceType, Integer> getResources(){
 		return resources;
 	}
-	public void agentRemoveCapacity(Object o, int amount) {
+	
+	// Allows agents to remove amount of resources from building
+	public void agentRemoveCapacity(ResourceType o, int amount) {
 		int newResourceAmount = resources.get(o) - amount;
 		if (newResourceAmount > 0){
-			resources.put(o, resources.get(o) - amount);
+			resources.put(o, newResourceAmount);
 		}
 		else {
 			System.out.println("You don't have that many resources!");
 		}
 	}
 
-	public void agentAddCapacity(Object o, int amount, AbstractAgent agent) {
-		if (agent.getPosition().equals(getLocation())){
-			int newResourceAmount = resources.get(o) + amount;
-			if (newResourceAmount < capacity){
-				resources.put(o, resources.get(o) + amount);
-			}
-			else {
-				System.out.println("You cannot hold that much! Please upgrade your storage to hold more.");
-			}
+	// Allows agents to add their resource to the building
+	public void agentAddCapacity(ResourceType resourceType, int amount) {
+		int newResourceAmount = resources.get(resourceType) + amount;
+		if (newResourceAmount < capacity){
+			resources.put(resourceType, newResourceAmount);
 		}
 		else {
-			System.out.println("Not here");
+			System.out.println("You cannot hold that much! Please upgrade your storage to hold more.");
 		}
 	}
 
-
+	// Goes through each resource and turns it into a string
+	public String resourcesToString(){
+		String allResources = "";
+		for (int i = 0; i < resources.size(); i++){
+			ResourceType key = (ResourceType) resources.keySet().toArray()[i];
+			allResources += key.toString() + ": " + resources.get(key).toString()+ "\n";
+		}
+		return allResources;
+	}
+	
 	public abstract void doBuildingJob();
 
 }
