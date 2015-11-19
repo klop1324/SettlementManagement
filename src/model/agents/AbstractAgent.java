@@ -2,8 +2,9 @@ package model.agents;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Observable;
 
-public abstract class AbstractAgent {
+public abstract class AbstractAgent{
 	int energy, condition, oil, carriedResources, MAX_RESOURCES;
 	Point position, destination, nearestOilTank, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;

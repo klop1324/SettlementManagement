@@ -30,13 +30,14 @@ public class ViewController extends JPanel implements Observer {
 	private int x;
 	private int y;
 	private Timer timer = new Timer(50, new TimerListener());
-	private int tic;
+	private int tic = 0;
 	private ChargingStation charge = new ChargingStation("Charge", 1000, new Point(10, 5));
 	private OilTank oilTank = new OilTank("Oil", 1000, new Point(10, 4));
 	private Resource electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
 	private Resource oils = new Resource(20, new Point(0, 2), ResourceType.OIL);
 	private WorkerAgent firstAgent = new WorkerAgent(new Point(11,4));
 	private WorkerAgent secondAgent = new WorkerAgent(new Point(6, 6));
+	private boolean isAnimating = false;
 
 	public ViewController() {
 		this.setVisible(true);
@@ -44,7 +45,6 @@ public class ViewController extends JPanel implements Observer {
 
 	public ViewController(Game game) {
 		this.game = game;
-
 		try {
 			agent1 = ImageIO.read(new File("./ImageSet/agent1.png"));
 			agent2 = ImageIO.read(new File("./ImageSet/agent2.png"));
@@ -63,22 +63,22 @@ public class ViewController extends JPanel implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			isAnimating = true;
+			tic++;
+			System.out.println("" + tic + " " + secondAgent.getPosition() + " " + secondAgent.getDestination());
+			if (tic > 20) {
+				isAnimating = false;
+				timer.stop();
+				return;
+			}
+			secondAgent.move();
 			repaint();
 		}
 	}
-
-	/*
-	 * public void PaintComponent(Graphics g){ paintMap(g, game.getMap()); }
-	 * 
-	 * private void paintMap(Graphics g, Map map){ //draws each tile, based on
-	 * map representation, getting image from the Tile enum Graphics g2 =
-	 * (Graphics2D) g; this.map = map; for(int i = 0; i < map.getXLength();
-	 * i++){ for(int j = 0; j < map.getYLength(); j++){ if (map.get(i, j) == 0)
-	 * { g2.drawImage(image, i*50, j*50, null); } else if (map.get(i, j) == 1) {
-	 * g2.drawImage(image, i*50, j*50, null); } else { g2.drawImage(image, i*50,
-	 * j*50, null); } //g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i,
-	 * j, null); //TODO paint all the tiles } } }
-	 */
+	
+	public boolean isAnimating() {
+		return isAnimating;
+	}
 
 	public void paintComponent(Graphics g) {
 		// draws each tile, based on map representation, getting image from the
@@ -89,7 +89,7 @@ public class ViewController extends JPanel implements Observer {
 		game.addBuilding(oilTank, new Point(0, 2));
 		int agentX = secondAgent.getPosition().x;
 		int agentY = secondAgent.getPosition().y;
-		secondAgent.setDestination(new Point(0, 0));
+		//secondAgent.setDestination(new Point(0, 0));
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
 				if (map.get(i, j) == 0) {
@@ -109,20 +109,15 @@ public class ViewController extends JPanel implements Observer {
 				// TODO paint all the tiles
 			}
 		}
-		/*for (int k = 0; k < 50; k++) {
-			if (secondAgent.getPosition() != secondAgent.getDestination()) {
-				secondAgent.setDestination(electric.getLocation());
-				g2.drawImage(agent2, agentX*50, agentY*50, null);
-				secondAgent.tic();
-				repaint();
-			}
-			else {
+		if (secondAgent.getPosition() == secondAgent.getDestination()) {
+			timer.stop();
+			if (secondAgent.getDestination() == electric.getLocation())
 				secondAgent.setDestination(charge.getLocation());
-				g2.drawImage(agent2, agentX*50, agentY*50, null);
-				secondAgent.tic();
-				repaint();
-			}
-		}*/
+			else if (secondAgent.getDestination() == charge.getLocation())
+				secondAgent.setDestination(electric.getLocation());
+		}
+			g2.drawImage(agent2, agentX*50, agentY*50, null);
+			drawBoardWithAnimation();
 	}
 
 	@Override
@@ -131,7 +126,7 @@ public class ViewController extends JPanel implements Observer {
 	}
 
 	private void drawBoardWithAnimation() {
-		tic = 0;
+		//tic = 0;
 		timer.start();
 	}
 }
