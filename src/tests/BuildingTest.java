@@ -56,6 +56,10 @@ public class BuildingTest {
 		assertEquals(junkyard.getLocation(), new Point(30, 20));
 	}
 	
+	@Test
+	public void agentInteraction(){
+		
+	}
 	
 
 }

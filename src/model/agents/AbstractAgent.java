@@ -22,9 +22,12 @@ public abstract class AbstractAgent{
 		destination = new Point(0,0);
 	}
 	
+	// Added getter that can be changed later down the road
 	public int getAmountCarried(){
 		return carriedResources;
 	}
+	
+	// Added carriedResources setter can be changed later
 	public void pickedUpResource(int amount){
 		carriedResources = amount;
 	}

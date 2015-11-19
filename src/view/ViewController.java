@@ -75,7 +75,7 @@ public class ViewController extends JPanel implements Observer {
 				}
 				else if (secondAgent.getDestination().equals(charge.getLocation())){
 					charge.agentAddCapacity(ResourceType.ELECTRICITY, secondAgent.getAmountCarried());
-					System.out.println(charge.getResources());
+					System.out.println(charge.resourcesToString());
 					secondAgent.setDestination(electric.getLocation());
 				}
 				repaint();
@@ -129,7 +129,7 @@ public class ViewController extends JPanel implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		drawBoardWithAnimation();
 	}
-
+	
 	private void drawBoardWithAnimation() {
 		//tic = 0;
 		timer.start();

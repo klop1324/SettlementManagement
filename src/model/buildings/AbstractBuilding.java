@@ -81,7 +81,7 @@ public abstract class AbstractBuilding {
 	public void agentRemoveCapacity(ResourceType o, int amount) {
 		int newResourceAmount = resources.get(o) - amount;
 		if (newResourceAmount > 0){
-			resources.put(o, resources.get(o) - amount);
+			resources.put(o, newResourceAmount);
 		}
 		else {
 			System.out.println("You don't have that many resources!");
@@ -92,14 +92,23 @@ public abstract class AbstractBuilding {
 	public void agentAddCapacity(ResourceType resourceType, int amount) {
 		int newResourceAmount = resources.get(resourceType) + amount;
 		if (newResourceAmount < capacity){
-			resources.put(resourceType, resources.get(resourceType) + amount);
+			resources.put(resourceType, newResourceAmount);
 		}
 		else {
 			System.out.println("You cannot hold that much! Please upgrade your storage to hold more.");
 		}
 	}
 
-
+	// Goes through each resource and turns it into a string
+	public String resourcesToString(){
+		String allResources = "";
+		for (int i = 0; i < resources.size(); i++){
+			ResourceType key = (ResourceType) resources.keySet().toArray()[i];
+			allResources += key.toString() + ": " + resources.get(key).toString()+ "\n";
+		}
+		return allResources;
+	}
+	
 	public abstract void doBuildingJob();
 
 }

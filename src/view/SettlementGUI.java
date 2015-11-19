@@ -173,7 +173,6 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
 		}
 	}
 
@@ -187,6 +186,5 @@ class SettlementGUI extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-
 	}
 }
