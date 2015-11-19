@@ -35,7 +35,7 @@ public class ViewController extends JPanel implements Observer {
 	private OilTank oilTank = new OilTank("Oil", 1000, new Point(10, 4));
 	private Resource electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
 	private Resource oils = new Resource(20, new Point(0, 2), ResourceType.OIL);
-	private WorkerAgent firstAgent = new WorkerAgent(new Point(11,4));
+	private SoldierAgent firstAgent = new SoldierAgent(new Point(11,4));
 	private WorkerAgent secondAgent = new WorkerAgent(new Point(6, 6));
 	private boolean isAnimating = false;
 
@@ -65,13 +65,20 @@ public class ViewController extends JPanel implements Observer {
 		public void actionPerformed(ActionEvent e) {
 			isAnimating = true;
 			tic++;
-			System.out.println("" + tic + " " + secondAgent.getPosition() + " " + secondAgent.getDestination());
-			if (tic > 20) {
-				isAnimating = false;
+			if (secondAgent.getPosition().x == secondAgent.getDestination().x &&
+					secondAgent.getPosition().y == secondAgent.getDestination().y) {
 				timer.stop();
-				return;
+				if (secondAgent.getDestination().x == electric.getLocation().x &&
+						secondAgent.getDestination().y == electric.getLocation().y)
+					secondAgent.setDestination(charge.getLocation());
+				else if (secondAgent.getDestination().x == charge.getLocation().x &&
+						secondAgent.getDestination().y == charge.getLocation().y)
+					secondAgent.setDestination(electric.getLocation());
+				repaint();
+				//return;
 			}
-			secondAgent.move();
+			else
+				secondAgent.move();
 			repaint();
 		}
 	}
@@ -89,7 +96,6 @@ public class ViewController extends JPanel implements Observer {
 		game.addBuilding(oilTank, new Point(0, 2));
 		int agentX = secondAgent.getPosition().x;
 		int agentY = secondAgent.getPosition().y;
-		//secondAgent.setDestination(new Point(0, 0));
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
 				if (map.get(i, j) == 0) {
@@ -108,13 +114,6 @@ public class ViewController extends JPanel implements Observer {
 				// null);
 				// TODO paint all the tiles
 			}
-		}
-		if (secondAgent.getPosition() == secondAgent.getDestination()) {
-			timer.stop();
-			if (secondAgent.getDestination() == electric.getLocation())
-				secondAgent.setDestination(charge.getLocation());
-			else if (secondAgent.getDestination() == charge.getLocation())
-				secondAgent.setDestination(electric.getLocation());
 		}
 			g2.drawImage(agent2, agentX*50, agentY*50, null);
 			drawBoardWithAnimation();
