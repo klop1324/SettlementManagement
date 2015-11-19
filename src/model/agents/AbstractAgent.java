@@ -21,7 +21,13 @@ public abstract class AbstractAgent{
 		this.position = position;
 		destination = new Point(0,0);
 	}
-		
+	
+	public int getAmountCarried(){
+		return carriedResources;
+	}
+	public void pickedUpResource(int amount){
+		carriedResources = amount;
+	}
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}

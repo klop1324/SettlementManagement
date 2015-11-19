@@ -66,9 +66,11 @@ public class ViewController extends JPanel implements Observer {
 			isAnimating = true;
 			tic++;
 			System.out.println("" + tic + " " + secondAgent.getPosition() + " " + secondAgent.getDestination());
-			if (tic > 20) {
+			if (tic > 29) {
 				isAnimating = false;
 				timer.stop();
+				System.out.println("Left over resource: " + electric.getAmount());
+				System.out.println(charge.getResources());
 				return;
 			}
 			secondAgent.move();
@@ -109,12 +111,20 @@ public class ViewController extends JPanel implements Observer {
 				// TODO paint all the tiles
 			}
 		}
-		if (secondAgent.getPosition() == secondAgent.getDestination()) {
-			timer.stop();
-			if (secondAgent.getDestination() == electric.getLocation())
+		
+		if (secondAgent.getPosition().equals(secondAgent.getDestination())) {
+			System.out.println("HI");
+			//timer.stop();
+			if (secondAgent.getDestination().equals(electric.getLocation())){
+				electric.removeResource(10, secondAgent);
+				System.out.println("Amount carried: " + secondAgent.getAmountCarried());
 				secondAgent.setDestination(charge.getLocation());
-			else if (secondAgent.getDestination() == charge.getLocation())
+			}
+			else if (secondAgent.getDestination().equals(charge.getLocation())){
+				charge.agentAddCapacity(ResourceType.OIL, secondAgent.getAmountCarried());
+				System.out.println(charge.getResources());
 				secondAgent.setDestination(electric.getLocation());
+			}
 		}
 			g2.drawImage(agent2, agentX*50, agentY*50, null);
 			drawBoardWithAnimation();

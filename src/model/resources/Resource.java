@@ -1,6 +1,8 @@
 package model.resources;
 import java.awt.Point;
 
+import model.agents.AbstractAgent;
+
 public class Resource {
 	protected int amount;
 	protected Point location;
@@ -33,7 +35,8 @@ public class Resource {
 	}
 	
 	// Remove amount
-	public void removeResource(int removeAmount){
+	public void removeResource(int removeAmount, AbstractAgent agent){
+		agent.pickedUpResource(removeAmount);
 		amount-=removeAmount;
 	}
 }
