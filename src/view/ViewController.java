@@ -35,7 +35,7 @@ public class ViewController extends JPanel implements Observer {
 	private OilTank oilTank = new OilTank("Oil", 1000, new Point(10, 4));
 	private Resource electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
 	private Resource oils = new Resource(20, new Point(0, 2), ResourceType.OIL);
-	private WorkerAgent firstAgent = new WorkerAgent(new Point(11,4));
+	private SoldierAgent firstAgent = new SoldierAgent(new Point(11,4));
 	private WorkerAgent secondAgent = new WorkerAgent(new Point(6, 6));
 	private boolean isAnimating = false;
 
@@ -65,19 +65,28 @@ public class ViewController extends JPanel implements Observer {
 		public void actionPerformed(ActionEvent e) {
 			isAnimating = true;
 			tic++;
-			System.out.println("" + tic + " " + secondAgent.getPosition() + " " + secondAgent.getDestination());
-			if (tic > 29) {
-				isAnimating = false;
+
+			if (secondAgent.getPosition().equals(secondAgent.getDestination())) {
 				timer.stop();
-				System.out.println("Left over resource: " + electric.getAmount());
-				System.out.println(charge.getResources());
-				return;
+				if (secondAgent.getDestination().equals(electric.getLocation())){
+					electric.removeResource(10, secondAgent);
+					System.out.println("Amount carried: " + secondAgent.getAmountCarried());
+					secondAgent.setDestination(charge.getLocation());
+				}
+				else if (secondAgent.getDestination().equals(charge.getLocation())){
+					charge.agentAddCapacity(ResourceType.ELECTRICITY, secondAgent.getAmountCarried());
+					System.out.println(charge.getResources());
+					secondAgent.setDestination(electric.getLocation());
+				}
+				repaint();
+				//return;
 			}
-			secondAgent.move();
+			else
+				secondAgent.move();
 			repaint();
 		}
 	}
-	
+
 	public boolean isAnimating() {
 		return isAnimating;
 	}
@@ -91,7 +100,6 @@ public class ViewController extends JPanel implements Observer {
 		game.addBuilding(oilTank, new Point(0, 2));
 		int agentX = secondAgent.getPosition().x;
 		int agentY = secondAgent.getPosition().y;
-		//secondAgent.setDestination(new Point(0, 0));
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
 				if (map.get(i, j) == 0) {
@@ -111,23 +119,10 @@ public class ViewController extends JPanel implements Observer {
 				// TODO paint all the tiles
 			}
 		}
-		
-		if (secondAgent.getPosition().equals(secondAgent.getDestination())) {
-			System.out.println("HI");
-			//timer.stop();
-			if (secondAgent.getDestination().equals(electric.getLocation())){
-				electric.removeResource(10, secondAgent);
-				System.out.println("Amount carried: " + secondAgent.getAmountCarried());
-				secondAgent.setDestination(charge.getLocation());
-			}
-			else if (secondAgent.getDestination().equals(charge.getLocation())){
-				charge.agentAddCapacity(ResourceType.OIL, secondAgent.getAmountCarried());
-				System.out.println(charge.getResources());
-				secondAgent.setDestination(electric.getLocation());
-			}
-		}
-			g2.drawImage(agent2, agentX*50, agentY*50, null);
-			drawBoardWithAnimation();
+
+
+		g2.drawImage(agent2, agentX*50, agentY*50, null);
+		drawBoardWithAnimation();
 	}
 
 	@Override

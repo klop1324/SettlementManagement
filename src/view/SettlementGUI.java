@@ -62,24 +62,42 @@ class SettlementGUI extends JFrame implements Observer {
 		int height = screensize.height / 2 - this.getSize().height / 2;
 		this.add(new JLabel("Hi"));
 		this.setLocation(width, height);
+		
+		Font courier = new Font("Courier", Font.PLAIN, 12);
 
 		//JPanel notifierPanel = new JPanel();
+		TitledBorder noticeBorder = new TitledBorder("Notifications");
+		noticeBorder.setTitleColor(Color.WHITE);
 		notifierPanel.setOpaque(true);
-		notifierPanel.setBorder(new TitledBorder("Notifications"));
+		notifierPanel.setBorder(noticeBorder);
 		notifierPanel.setBackground(Color.DARK_GRAY);
 		notifierPanel.setPreferredSize(new Dimension(800, 190));
 		notifierPanel.setLocation(0, 440);
 		notificationArea.setBackground(Color.BLACK);
 		notificationArea.setPreferredSize(new Dimension(700, 150));
 		notificationArea.setEditable(false);
+		notificationArea.setFont(courier);
+		notificationArea.setForeground(Color.GREEN);
+		notificationArea.setText("solar panel = solar panel \nblood = oil \nslime pit" + ""
+				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
+				"hunter = worker agent");
 		notifierPanel.add(notificationArea);
 		notifierPanel.add(nextButton);
+		
+		electricityAmount.setForeground(Color.WHITE);
+		oilAmount.setForeground(Color.WHITE);
+		coalAmount.setForeground(Color.WHITE);
+		copperAmount.setForeground(Color.WHITE);
+		ironAmount.setForeground(Color.WHITE);
+		goldAmount.setForeground(Color.WHITE);
 
 		//JPanel infoPanel = new JPanel();
+		TitledBorder infoBorder = new TitledBorder("Information");
+		infoBorder.setTitleColor(Color.WHITE);
 		infoPanel.setOpaque(true);
 		infoPanel.setPreferredSize(new Dimension(150, 400));
 		infoPanel.setLayout(new GridLayout(7, 1));
-		infoPanel.setBorder(new TitledBorder("Information"));
+		infoPanel.setBorder(infoBorder);
 		infoPanel.setBackground(Color.BLACK);
 		infoPanel.setLocation(650, 0);
 		JPanel collectPanel = new JPanel();
