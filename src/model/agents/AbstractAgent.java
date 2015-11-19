@@ -11,6 +11,10 @@ public abstract class AbstractAgent {
 	String filename;
 	char textRep; // TODO temp
 	
+	/**
+	 * Creates a new AbstractAgent at a given position.
+	 * @param Point position
+	 */
 	public AbstractAgent(Point position) {
 		energy = 2000;
 		condition = 2000;
@@ -18,9 +22,12 @@ public abstract class AbstractAgent {
 		carriedResources = 0;
 		AI = new AgentLogic();
 		this.position = position;
-		destination = new Point(0,0);
 	}
-		
+	
+	/**
+	 * hjkdsfjkhsdfhkjlfsdahjk
+	 * @param destination
+	 */
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}
