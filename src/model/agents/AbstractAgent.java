@@ -2,7 +2,6 @@ package model.agents;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Observable;
 
 public abstract class AbstractAgent{
 	int energy, condition, oil, carriedResources, MAX_RESOURCES;
@@ -22,6 +21,7 @@ public abstract class AbstractAgent{
 		oil = 2000;
 		carriedResources = 0;
 		AI = new AgentLogic();
+		destination = new Point(0,0);
 		this.position = position;
 	}
 	
