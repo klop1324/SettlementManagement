@@ -7,7 +7,7 @@ public class WorkShop extends AbstractBuilding{
 
 
 	public WorkShop(String name, int capacity, Point location) {
-		super(name, capacity, location);
+		super(name, capacity, location, BuildingType.WORKSHOP);
 		// TODO: Will create tools
 	}
 

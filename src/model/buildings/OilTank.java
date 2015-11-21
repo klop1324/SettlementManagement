@@ -9,7 +9,7 @@ public class OilTank extends AbstractBuilding{
 
 
 	public OilTank(String name, int capacity, Point location) {
-		super(name, capacity, location);
+		super(name, capacity, location, BuildingType.OILTANK);
 		name = "Oil Tank";
 		resources.put(ResourceType.OIL, 0);
 	}

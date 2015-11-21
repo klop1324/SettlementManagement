@@ -3,6 +3,8 @@ package model.agents;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import model.resources.ResourceType;
+
 public abstract class AbstractAgent{
 	int energy, condition, oil, carriedResources, MAX_RESOURCES;
 	Point position, destination, nearestOilTank, nearestChargingStation, nearestJunkYard;
@@ -10,6 +12,7 @@ public abstract class AbstractAgent{
 	boolean switchFlag; // TODO temp
 	String filename;
 	char textRep; // TODO temp
+	ResourceType carriedResourceType;
 	
 	/**
 	 * Creates a new AbstractAgent at a given position.
@@ -30,9 +33,18 @@ public abstract class AbstractAgent{
 		return carriedResources;
 	}
 	
+	public ResourceType getCarriedResource(){
+		return carriedResourceType;
+	}
+	
+	public void setCarriedResources(int a) {
+		carriedResources = a;
+	}
+	
 	// Added carriedResources setter can be changed later
-	public void pickedUpResource(int amount){
-		carriedResources = amount;
+	public void setPickedUpResource(ResourceType resource){
+		setCarriedResources(10); // Change later when max carry limit is set up
+		carriedResourceType = resource;
 	}
 	
 	public void setDestination(Point destination) {
@@ -107,6 +119,7 @@ public abstract class AbstractAgent{
 	 * destination is changed. Current pathfinding: four-way directional
 	 * movement, chooses how to get to diagonal target randomly each move.
 	 */
+	
 	public void tic() {
 		AI.assessCurrentDestination();
 		move();
@@ -150,6 +163,10 @@ public abstract class AbstractAgent{
 		
 		public void recieveCommand(AgentCommandWithDestination c) {
 			actionQueue.add(c);
+		}
+		
+		public ArrayList<AgentCommandWithDestination> getActionQueue(){
+			return actionQueue;
 		}
 		
 		public void assessCurrentDestination() {

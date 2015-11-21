@@ -1,14 +1,13 @@
 package view;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,25 +17,18 @@ import javax.swing.Timer;
 
 import model.Game;
 import model.Map;
-import model.Tile;
-import model.buildings.*;
 import model.agents.*;
-import model.resources.*;
 
 public class ViewController extends JPanel implements Observer {
 	private Game game;
 	private Map map;
 	private Image agent1, agent2, building1, building2, oil, solar, ground;
-	private int x;
-	private int y;
+	private int agentX;
+	private int agentY;
+	private ArrayList<AbstractAgent> agents;
 	private Timer timer = new Timer(50, new TimerListener());
 	private int tic = 0;
-	private ChargingStation charge = new ChargingStation("Charge", 1000, new Point(10, 5));
-	private OilTank oilTank = new OilTank("Oil", 1000, new Point(10, 4));
-	private Resource electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
-	private Resource oils = new Resource(20, new Point(0, 2), ResourceType.OIL);
-	private SoldierAgent firstAgent = new SoldierAgent(new Point(11,4));
-	private WorkerAgent secondAgent = new WorkerAgent(new Point(6, 6));
+	
 	private boolean isAnimating = false;
 
 	public ViewController() {
@@ -65,41 +57,26 @@ public class ViewController extends JPanel implements Observer {
 		public void actionPerformed(ActionEvent e) {
 			isAnimating = true;
 			tic++;
-
-			if (secondAgent.getPosition().equals(secondAgent.getDestination())) {
-				timer.stop();
-				if (secondAgent.getDestination().equals(electric.getLocation())){
-					electric.removeResource(10, secondAgent);
-					System.out.println("Amount carried: " + secondAgent.getAmountCarried());
-					secondAgent.setDestination(charge.getLocation());
+			for (AbstractAgent agent: agents){ 
+				if(agent.getPosition().equals(agent.getDestination())){
+					timer.stop(); // will have to refactor this for multiple agents
+					repaint();
 				}
-				else if (secondAgent.getDestination().equals(charge.getLocation())){
-					charge.agentAddCapacity(ResourceType.ELECTRICITY, secondAgent.getAmountCarried());
-					System.out.println(charge.resourcesToString());
-					secondAgent.setDestination(electric.getLocation());
-				}
-				repaint();
-				//return;
 			}
-			else
-				secondAgent.move();
 			repaint();
+			
 		}
 	}
 
 	public boolean isAnimating() {
 		return isAnimating;
 	}
-
+	
 	public void paintComponent(Graphics g) {
 		// draws each tile, based on map representation, getting image from the
 		// Tile enum
 		Graphics g2 = (Graphics2D) g;
 		map = game.getMap();
-		game.addBuilding(charge, new Point(0, 0));
-		game.addBuilding(oilTank, new Point(0, 2));
-		int agentX = secondAgent.getPosition().x;
-		int agentY = secondAgent.getPosition().y;
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
 				if (map.get(i, j) == 0) {
@@ -126,12 +103,20 @@ public class ViewController extends JPanel implements Observer {
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1) {
+	public void update(Observable observable, Object arg1) {
+		// Gets notified from Game and changes the x and y position based on where the
+		// robot sprite is
+		game = (Game) observable;
+		agents = game.getAgents();
+		for(AbstractAgent a: agents){
+			agentX = a.getPosition().x;
+			agentY = a.getPosition().y;
+		}
 		drawBoardWithAnimation();
 	}
 	
 	private void drawBoardWithAnimation() {
 		//tic = 0;
-		timer.start();
+		timer.start();		
 	}
 }

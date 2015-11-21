@@ -8,7 +8,7 @@ import model.resources.ResourceType;
 public class OilWell extends AbstractBuilding{
 
 	public OilWell(String name, int capacity, Point location) {
-		super(name, capacity, location);
+		super(name, capacity, location, BuildingType.OILWELL);
 		passiveProvider = true;
 		setPassiveRate(2.3);
 		resources.put(ResourceType.OIL, 0);

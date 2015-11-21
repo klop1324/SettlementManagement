@@ -22,7 +22,7 @@ public class BuildingTest {
 		Resource iron = new Resource(10, new Point(12, 3), ResourceType.IRON);
 		assertFalse(junkyard.getResources().containsKey(oil.getType()));
 		assertTrue(junkyard.getResources().containsKey(iron.getType()));
-		junkyard.agentAddCapacity(iron.getType(), 20);
+		junkyard.agentAddCapacity(iron.getType(), 20, agent);
 		assertEquals((int)junkyard.getResources().get(iron.getType()), 20);
 		junkyard.agentRemoveCapacity(iron.getType(), 10);
 		assertEquals((int)junkyard.getResources().get(iron.getType()), 10);
@@ -36,13 +36,13 @@ public class BuildingTest {
 		ChargingStation charge = new ChargingStation(null, 90, point);
 		Resource electricSlide = new Resource(10, new Point(13,7), ResourceType.ELECTRICITY);
 		assertEquals((int) charge.getResources().get(electricSlide.getType()), 0);
-		charge.agentAddCapacity(electricSlide.getType(), 9);
+		charge.agentAddCapacity(electricSlide.getType(), 9, agent);
 		assertEquals((int) charge.getResources().get(electricSlide.getType()), 9);
 		charge.agentRemoveCapacity(electricSlide.getType(), 3);
 		assertEquals((int) charge.getResources().get(electricSlide.getType()), 6);
 		charge.agentRemoveCapacity(electricSlide.getType(), 10000);
 		assertEquals((int) charge.getResources().get(electricSlide.getType()), 6);
-		charge.agentAddCapacity(electricSlide.getType(), 10000);
+		charge.agentAddCapacity(electricSlide.getType(), 10000, agent);
 		assertEquals((int) charge.getResources().get(electricSlide.getType()), 6);
 		charge.passiveCheck();
 		System.out.println(ResourceType.COAL.name());

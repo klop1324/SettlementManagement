@@ -6,7 +6,7 @@ public class Armory extends AbstractBuilding{
 
 
 	public Armory(String name, int capacity, Point location) {
-		super(name, capacity, location);
+		super(name, capacity, location, BuildingType.ARMORY);
 		// TODO Will store weapons
 	}
 

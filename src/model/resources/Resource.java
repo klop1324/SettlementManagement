@@ -6,6 +6,7 @@ import model.agents.AbstractAgent;
 public class Resource {
 	protected int startAmount;
 	protected Point location;
+	protected String agentResourceNotify;
 	ResourceType resources;
 
 	// Starting amount for resource
@@ -46,12 +47,16 @@ public class Resource {
 	// Remove amount
 	public void removeResource(int removeAmount, AbstractAgent agent){
 		if (checkResource()){
-			agent.pickedUpResource(removeAmount);
-			startAmount-=removeAmount;
+			agent.setPickedUpResource(resources);
+			startAmount-= removeAmount;
+			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
 		}
 		else {
-			System.out.println("You've used up all of this resource. D:");
-			agent.pickedUpResource(0);
+			agentResourceNotify = ("You've used up all of this resource. D:");
 		}
+	}
+	
+	public String getNotification(){
+		return agentResourceNotify;
 	}
 }

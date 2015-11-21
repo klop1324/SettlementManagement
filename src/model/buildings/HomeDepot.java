@@ -6,7 +6,7 @@ import java.awt.Point;
 public class HomeDepot extends AbstractBuilding{
 
 	public HomeDepot(String name, int capacity, Point location) {
-		super(name, capacity, location);
+		super(name, capacity, location, BuildingType.HOMEDEPOT);
 		setPassiveRate(3.5);
 	}
 

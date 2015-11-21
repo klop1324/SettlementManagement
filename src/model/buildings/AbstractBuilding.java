@@ -6,14 +6,13 @@ import java.util.HashMap;
 import javax.swing.Timer;
 
 import model.agents.AbstractAgent;
-import model.resources.Resource;
 import model.resources.ResourceType;
-import sun.management.Agent;
 
 
 
 public abstract class AbstractBuilding {
 	protected String name;
+	protected BuildingType building;
 	protected int capacity;
 	protected boolean passiveProvider = false;
 	protected double passiveRate;
@@ -22,11 +21,16 @@ public abstract class AbstractBuilding {
 	protected Object resource;
 	protected Timer myTimer;
 
-	public AbstractBuilding(String name, int capacity, Point location){
+	public AbstractBuilding(String name, int capacity, Point location, BuildingType building){
 		this.name = name;
 		this.capacity = capacity;
 		this.location = location;
+		this.building = building;
 		resources = new HashMap<ResourceType, Integer>();
+	}
+	
+	public BuildingType getType(){
+		return building;
 	}
 
 	public void passiveCheck(){
@@ -81,7 +85,7 @@ public abstract class AbstractBuilding {
 	public void agentRemoveCapacity(ResourceType o, int amount) {
 		int newResourceAmount = resources.get(o) - amount;
 		if (newResourceAmount > 0){
-			resources.put(o, newResourceAmount);
+			resources.replace(o, newResourceAmount);
 		}
 		else {
 			System.out.println("You don't have that many resources!");
@@ -89,10 +93,11 @@ public abstract class AbstractBuilding {
 	}
 
 	// Allows agents to add their resource to the building
-	public void agentAddCapacity(ResourceType resourceType, int amount) {
+	public void agentAddCapacity(ResourceType resourceType, int amount, AbstractAgent a) {
 		int newResourceAmount = resources.get(resourceType) + amount;
 		if (newResourceAmount < capacity){
-			resources.put(resourceType, newResourceAmount);
+			resources.replace(resourceType, newResourceAmount);
+			a.setCarriedResources(0);
 		}
 		else {
 			System.out.println("You cannot hold that much! Please upgrade your storage to hold more.");

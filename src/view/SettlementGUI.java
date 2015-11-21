@@ -5,10 +5,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,10 +26,16 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import model.*;
+import model.agents.AgentCommand;
+import model.agents.AgentCommandWithDestination;
+import model.buildings.AbstractBuilding;
+import model.resources.Resource;
+import model.resources.ResourceType;
 
 class SettlementGUI extends JFrame implements Observer {
 
-	private ViewController mapArea = new ViewController(new Game());
+	private ViewController mapArea;
+	private Game game;
 	private TextArea notificationArea = new TextArea();
 	// ButtonGroup
 	private JButton collectButton = new JButton("Collect Resource");
@@ -44,13 +54,16 @@ class SettlementGUI extends JFrame implements Observer {
 	private int two = 0;
 	// comboBox with container and int size
 	// add keyListener and mouseMotionListener for the map
+	private ArrayList<AbstractBuilding> gameBuildings;
 
 	public static void main(String[] args) {
 		(new SettlementGUI()).setVisible(true);
+		
 	}
 
 	public SettlementGUI() {
-
+		game = new Game();
+		mapArea = new ViewController(game);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setTitle("Game Name Goes Here");
@@ -125,8 +138,13 @@ class SettlementGUI extends JFrame implements Observer {
 		//this.add(twoButton);
 		//this.add(notifierPanel);
 		//this.add(infoPanel);
-		this.add(notifierPanel, BorderLayout.SOUTH);
-		this.add(infoPanel, BorderLayout.EAST);
+		add(notifierPanel, BorderLayout.SOUTH);
+		add(infoPanel, BorderLayout.EAST);
+	}
+	
+	public void addObservers(){ // Adds observers to game
+		game.addObserver(mapArea);
+		game.addObserver(this);
 	}
 
 	public void registerListeners() {
@@ -135,6 +153,8 @@ class SettlementGUI extends JFrame implements Observer {
 		nextButton.addActionListener(new NextButtonListener());
 		oneButton.addActionListener(new OneButtonListener());
 		twoButton.addActionListener(new TwoButtonListener());
+		mapArea.addMouseListener(new ClickerListener());
+		addObservers();
 	}
 	
 	private class OneButtonListener implements ActionListener {
@@ -168,11 +188,47 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 		}
 	}
+	
+	private class ClickerListener implements MouseListener {
 
+		@Override
+		public void mouseClicked(MouseEvent e) { // Gets coordinates of mouse clicks according to game points.
+			int testPointX = (int) Math.floor(e.getPoint().x/50);
+			int testPointY = (int) Math.floor(e.getPoint().y/50);
+			Point agentDest = new Point(testPointX, testPointY);
+			game.agentToResource(agentDest);
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	private class CollectButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
 		}
 	}
 
@@ -186,5 +242,38 @@ class SettlementGUI extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
+		game = (Game) o;
+		gameBuildings = game.getBuildings();
+		for (AbstractBuilding b: gameBuildings){
+			switch (b.getType()) { // Checks for each building in the arraylist and set's its info.
+			case ARMORY:
+				break;
+			case CHARGINGSTATION:
+				electricityAmount.setText("Electricity: " + b.getResources().get(ResourceType.ELECTRICITY));
+				validate();
+				repaint();
+				break;
+			case HOMEDEPOT:
+				break;
+			case JUNKYARD:
+				break;
+			case OILTANK:
+				break;
+			case OILWELL:
+				break;
+			case WORKSHOP:
+				break;
+			default:
+				break;
+
+			}
+		}
+		String resourceNotification = "solar panel = solar panel \nblood = oil \nslime pit" + ""
+				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
+				"hunter = worker agent";
+		for (Resource r: game.getResources()){
+			resourceNotification += "\n" + r.getNotification();
+		}
+		notificationArea.setText(resourceNotification);
 	}
 }
