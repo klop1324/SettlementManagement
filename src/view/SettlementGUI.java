@@ -128,7 +128,9 @@ class SettlementGUI extends JFrame implements Observer {
 		registerListeners();
 		
 		JScrollPane cs = new JScrollPane(mapArea);
-		cs.setPreferredSize(new Dimension(this.getSize()));
+		mapArea.setPreferredSize(new Dimension(800, 700));
+		mapArea.setBounds(6, 6, 400, 590);
+		//cs.setPreferredSize(new Dimension(this.getSize()));
 		this.add(cs);
 		
 		//mapArea.repaint();
