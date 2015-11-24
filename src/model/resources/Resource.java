@@ -10,8 +10,9 @@ public class Resource {
 	ResourceType resources;
 
 	// Starting amount for resource
-	public Resource(int resourceAmount, Point origin_point, ResourceType resources){
-		this.resourceAmount = resourceAmount;
+
+	public Resource(int startAmount, Point origin_point, ResourceType resources){
+		this.resourceAmount = startAmount;
 		this.location = origin_point;
 		this.resources = resources;
 	}
@@ -35,7 +36,7 @@ public class Resource {
 		resourceAmount+=addAmount;
 	}
 
-	public boolean hasResource(){
+	public boolean hasResources(){
 		if (resourceAmount <= 0){
 			return false;
 		}
@@ -46,19 +47,20 @@ public class Resource {
 
 	// Remove amount
 	public void removeResource(int removeAmount, AbstractAgent agent){
-		if (hasResource()){
+		if (hasResources()){
+
 			agent.setPickedUpResource(resources);
 			resourceAmount-= removeAmount;
 			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
-			if (!hasResource()){
+			if (!hasResources()){
 				agentResourceNotify = ("Agent removed: " + removeAmount + " \nYou have used all of this " + resources + " resource");
 			}
-		}
-		else {
-			agentResourceNotify = ("You've used up all of this resource. D:");
+			else {
+				agentResourceNotify = ("You've used up all of this resource. D:");
+			}
 		}
 	}
-	
+
 	public String getNotification(){
 		return agentResourceNotify;
 	}

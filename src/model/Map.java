@@ -36,6 +36,7 @@ public class Map extends Observable{
 	
 	// makes the map
 	private void generate(){
+		System.out.println("called");
 		
 		ArrayList<Node> points = new ArrayList<Node>();
 		
@@ -43,8 +44,9 @@ public class Map extends Observable{
 		
 		int numOfSites = 0;
 		while(numOfSites < Math.sqrt(Math.sqrt(xLength * yLength))){
-			 numOfSites = xLength * yLength * random.nextInt(xLength);
+			numOfSites = (int) Math.sqrt(xLength * yLength * random.nextInt(xLength))/40;
 		}
+		System.out.println("Sites: " +numOfSites);
 		
 		//makes sure there is less than log(Xlength) sites, so that we don't get, for example, 50 sites in a 2x2 array
 		while(numOfSites > Math.log(xLength)){
@@ -61,6 +63,22 @@ public class Map extends Observable{
 			// adds to the list of sites, and sets that site to a random tile type
 			if(flag){
 				points.add(p);
+				double sum = 0;
+				int tileType;
+				Tile tileValues[] = Tile.values();
+				// spawn rate calculating
+				for(int i = 0; i < tileValues.length;i++){
+					sum += tileValues[i].getSpawnRate();
+				}
+				double temp = random.nextDouble()*sum;
+				double buffer = 0;
+				for(int i = 0; i < tileValues.length; i++){
+					if(buffer + tileValues[i].getSpawnRate() < temp) map[p.getX()][p.getY()] = tileValues[i].getIntRepresentation();
+					else{
+						buffer+= tileValues[i].getSpawnRate();
+					}
+				}
+				
 				map[p.getX()][p.getY()] = random.nextInt(Tile.values().length);
 			}
 		}

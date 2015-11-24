@@ -10,16 +10,17 @@ public enum Tile {
 	//===============================
 	//==> DO NOT SKIP NUMBERS!!!! <==
 	//===============================
-	OIL(0, 'o'), PLATING(1, ' '), GRAVEL(2, 'G');
+	PLATING(0, 'o',10.0), OIL(1, ' ', 1.0), GRAVEL(2, 'G', 5.0);
 	
-	int intRep;
-	char charRep;
-	Image image;
+	private int intRep;
+	private char charRep;
+	private Image image;
+	private double spawnRate;
 	
-	Tile(int i, char c){
+	Tile(int i, char c, double chance){
 		this.intRep = i;
 		this.charRep = c;
-		
+		this.spawnRate = chance;
 		try {
 			this.image = ImageIO.read(new File("ImageSet/"+ this.intRep +".png"));
 		} catch (IOException e) {
@@ -36,5 +37,8 @@ public enum Tile {
 	}
 	public Image getImage(){
 		return image;
+	}
+	public double getSpawnRate(){
+		return spawnRate;
 	}
 }
