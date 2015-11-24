@@ -72,16 +72,26 @@ public class Game extends Observable {
 			for (Resource r: resources){
 				for (AbstractBuilding b: buildings){
 					if (a.getPosition().equals(r.getLocation())){ // if agent at a resource
+						System.out.println(a.getPosition());
 						r.removeResource(10, a); // remove 10 unit resource
+						if (b.getResources().containsKey(r.getType())){
+							Point buildingDest = new Point(b.getLocation());
+							a.setDestination(buildingDest);
+							System.out.println("whoa2");
+						}
 						System.out.println(r.getNotification());
 					}
 					else if (a.getPosition().equals(b.getLocation())) { // if agent at building
 						b.agentAddCapacity(a.getCarriedResource(), a.getAmountCarried(), a); // agent adds their resource to building 
 						System.out.println(b.resourcesToString());
+						a.setDestination(resourcePointClicked);
+						System.out.println("whoa");
+					}
+					else {
+						System.out.println("I'm here!");
 					}
 				}
 			}
-			a.setDestination(resourcePointClicked);
 			timer.start();
 		}
 	}
