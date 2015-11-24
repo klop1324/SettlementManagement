@@ -197,7 +197,6 @@ public class Game extends Observable {
 					resources.remove(i);
 					i--;
 				}
-<<<<<<< HEAD
 
 				if (collect){ // boolean to determine if agent still needs to collect from resource
 					agentToResource(resourcePointClicked);
@@ -205,16 +204,7 @@ public class Game extends Observable {
 					notifyObservers();
 				}
 
-=======
 			}
-			
-			if (collect){ // boolean to determine if agent still needs to collect from resource
-				agentToResource(resourcePointClicked);
->>>>>>> 3a5bcfeaa756ef00be8c0b8f77c6fc1a9f32de5b
-				setChanged();
-				notifyObservers();
-			}
-
 		}
 	}
 }
