@@ -191,20 +191,22 @@ public class Game extends Observable {
 
 				}
 			}
-			// removal of resources
-			for(int i = 0; i < resources.size(); i++){
-				if(!resources.get(i).hasResources()){
-					resources.remove(i);
-					i--;
-				}
+//			// removal of resources
+//			for(int i = 0; i < resources.size(); i++){
+//				if(!resources.get(i).hasResources()){
+//					resources.remove(i);
+//					i--;
+//				}
 
 				if (collect){ // boolean to determine if agent still needs to collect from resource
 					agentToResource(resourcePointClicked);
 					setChanged();
 					notifyObservers();
 				}
+				setChanged();
+				notifyObservers();
 
 			}
 		}
 	}
-}
+//}
