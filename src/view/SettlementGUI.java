@@ -54,6 +54,9 @@ class SettlementGUI extends JFrame implements Observer {
 	JPanel infoPanel = new JPanel();
 	private int one = 0;
 	private int two = 0;
+	private int clickX;
+	private int clickY;
+	private Point agentDest;
 	JLayeredPane backgroundPanel = new JLayeredPane();
 	// comboBox with container and int size
 	// add keyListener and mouseMotionListener for the map
@@ -205,10 +208,10 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void mouseClicked(MouseEvent e) { // Gets coordinates of mouse clicks according to game points.
-			int testPointX = (int) Math.floor(e.getPoint().x/50);
-			int testPointY = (int) Math.floor(e.getPoint().y/50);
-			Point agentDest = new Point(testPointX, testPointY);
-			game.agentToResource(agentDest);
+			clickX = (int) Math.floor(e.getPoint().x/50);
+			clickY = (int) Math.floor(e.getPoint().y/50);
+			agentDest = new Point(clickX, clickY);
+			
 		}
 
 		@Override
@@ -240,7 +243,14 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+			for (Resource r: game.getResources()){
+				if (r.getLocation().equals(agentDest)){
+					game.agentToResource(agentDest);
+				}
+				else {
+					notificationArea.setText("Please choose a resource");
+				}
+			}
 		}
 	}
 
@@ -283,9 +293,9 @@ class SettlementGUI extends JFrame implements Observer {
 		String resourceNotification = "solar panel = solar panel \nblood = oil \nslime pit" + ""
 				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
 				"hunter = worker agent";
-		for (Resource r: game.getResources()){
+		for (Resource r: game.getResources()) {
 			resourceNotification += "\n" + r.getNotification();
+			notificationArea.setText(resourceNotification);
 		}
-		notificationArea.setText(resourceNotification);
 	}
 }

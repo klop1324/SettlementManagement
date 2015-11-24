@@ -13,6 +13,7 @@ import model.resources.ResourceType;
 public abstract class AbstractBuilding {
 	protected String name;
 	protected BuildingType building;
+	protected static int max_capacity = 30;
 	protected int capacity;
 	protected boolean passiveProvider = false;
 	protected double passiveRate;
@@ -112,6 +113,15 @@ public abstract class AbstractBuilding {
 			allResources += key.toString() + ": " + resources.get(key).toString()+ "\n";
 		}
 		return allResources;
+	}
+	
+	public boolean isFull(){
+		if (capacity == max_capacity){
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public abstract void doBuildingJob();
