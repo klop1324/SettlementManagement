@@ -164,6 +164,14 @@ public class Game extends Observable {
 					
 				}
 			}
+			// removal of resources
+			for(int i = 0; i < resources.size(); i++){
+				if(!resources.get(i).hasResources()){
+					resources.remove(i);
+					i--;
+				}
+			}
+			
 			setChanged();
 			notifyObservers();
 		}
