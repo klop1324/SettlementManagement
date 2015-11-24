@@ -119,7 +119,6 @@ public abstract class AbstractAgent{
 	 * destination is changed. Current pathfinding: four-way directional
 	 * movement, chooses how to get to diagonal target randomly each move.
 	 */
-	
 	public void tic() {
 		AI.assessCurrentDestination();
 		move();
@@ -171,6 +170,12 @@ public abstract class AbstractAgent{
 		
 		public void assessCurrentDestination() {
 			if(position.x == destination.x && position.y == destination.y) {
+				if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_RESOURCE) &&
+						carriedResources <= MAX_RESOURCES) {
+					// TODO actual resource assignment
+					carriedResources += 10;
+					return;
+				}
 				actionQueue.remove(0);
 				setDestination(actionQueue.get(0).getCommandDestination());
 			}
