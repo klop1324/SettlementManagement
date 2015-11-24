@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -44,20 +45,24 @@ class SettlementGUI extends JFrame implements Observer {
 	private JButton nextButton = new JButton(">>");
 	private JButton infoButton = new JButton();
 	private JButton notifierButton = new JButton();
+	private JButton individualButton = new JButton();
 	private JLabel electricityAmount = new JLabel("Electricity: ");
 	private JLabel oilAmount = new JLabel("Oil: ");	
 	private JLabel coalAmount = new JLabel("Coal: ");
 	private JLabel copperAmount = new JLabel("Copper: ");
 	private JLabel ironAmount = new JLabel("Iron: ");
 	private JLabel goldAmount = new JLabel("Gold: ");
-	JPanel notifierPanel = new JPanel();
-	JPanel infoPanel = new JPanel();
+	private JLabel name = new JLabel("Click Something");
+	private JPanel notifierPanel = new JPanel();
+	private JPanel infoPanel = new JPanel();
+	private JPanel individual = new JPanel();
+	private Stats stats = new Stats();
 	private int one = 0;
 	private int two = 0;
 	private int clickX;
 	private int clickY;
 	private Point agentDest;
-	JLayeredPane backgroundPanel = new JLayeredPane();
+	private JLayeredPane backgroundPanel = new JLayeredPane();
 	// comboBox with container and int size
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
@@ -78,12 +83,14 @@ class SettlementGUI extends JFrame implements Observer {
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = screensize.width / 2 - this.getSize().width / 2;
 		int height = screensize.height / 2 - this.getSize().height / 2;
-		this.add(new JLabel("Hi"));
 		this.setLocation(width, height);
 		
 		Font courier = new Font("Courier", Font.PLAIN, 12);
 		
 		backgroundPanel.setBounds(0, 0, 800, 600);
+		
+		individual.setBounds(197, 0, 400, 20);
+		individual.setBackground(Color.BLACK);
 
 		TitledBorder noticeBorder = new TitledBorder("Notifications");
 		noticeBorder.setTitleColor(Color.WHITE);
@@ -131,8 +138,7 @@ class SettlementGUI extends JFrame implements Observer {
 		registerListeners();
 		
 		JScrollPane cs = new JScrollPane(mapArea);
-		//mapArea.setBounds(6, 6, 400, 590);
-		cs.setBounds(0, 0, 795, 572); // actual size of open area of jframe
+		cs.setBounds(0, 0, 795, 572);
 		mapArea.requestFocus();
 		mapArea.grabFocus();
 		JScrollBar vertical = cs.getVerticalScrollBar();
@@ -151,6 +157,7 @@ class SettlementGUI extends JFrame implements Observer {
 		notifierButton.setBounds(20, 392, 40, 10);
 		
 		this.add(backgroundPanel);
+		backgroundPanel.add(individual, new Integer(1), 0);
 		backgroundPanel.add(infoButton, new Integer(1), 0);
 		backgroundPanel.add(notifierButton, new Integer(1), 0);
 		backgroundPanel.add(notifierPanel, new Integer(1), 0);
@@ -168,6 +175,7 @@ class SettlementGUI extends JFrame implements Observer {
 		nextButton.addActionListener(new NextButtonListener());
 		infoButton.addActionListener(new InfoButtonListener());
 		notifierButton.addActionListener(new NotifierButtonListener());
+		individualButton.addActionListener(new IndividualButtonListener());
 		mapArea.addMouseListener(new ClickerListener());
 		addObservers();
 	}
@@ -201,6 +209,14 @@ class SettlementGUI extends JFrame implements Observer {
 				notifierPanel.setVisible(true);
 				notifierButton.setBounds(20, 392, 40, 10);
 			}
+		}
+	}
+	
+	private class IndividualButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			stats.setVisible(true);
 		}
 	}
 	
