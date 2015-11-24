@@ -4,21 +4,21 @@ import java.awt.Point;
 import model.agents.AbstractAgent;
 
 public class Resource {
-	protected int startAmount;
+	protected int resourceAmount;
 	protected Point location;
 	protected String agentResourceNotify;
 	ResourceType resources;
 
 	// Starting amount for resource
-	public Resource(int startAmount, Point origin_point, ResourceType resources){
-		this.startAmount = startAmount;
+	public Resource(int resourceAmount, Point origin_point, ResourceType resources){
+		this.resourceAmount = resourceAmount;
 		this.location = origin_point;
 		this.resources = resources;
 	}
 
 	// Returns the amount
 	public int getAmount(){
-		return startAmount;
+		return resourceAmount;
 	}
 
 	public ResourceType getType(){
@@ -32,11 +32,11 @@ public class Resource {
 
 	// Add amount to resource
 	public void addResource(int addAmount){
-		startAmount+=addAmount;
+		resourceAmount+=addAmount;
 	}
 
-	public boolean checkResource(){
-		if (startAmount <= 0){
+	public boolean hasResource(){
+		if (resourceAmount <= 0){
 			return false;
 		}
 		else {
@@ -46,10 +46,13 @@ public class Resource {
 
 	// Remove amount
 	public void removeResource(int removeAmount, AbstractAgent agent){
-		if (checkResource()){
+		if (hasResource()){
 			agent.setPickedUpResource(resources);
-			startAmount-= removeAmount;
+			resourceAmount-= removeAmount;
 			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
+			if (!hasResource()){
+				agentResourceNotify = ("Agent removed: " + removeAmount + " \nYou have used all this " + resources + " resource");
+			}
 		}
 		else {
 			agentResourceNotify = ("You've used up all of this resource. D:");

@@ -248,7 +248,7 @@ class SettlementGUI extends JFrame implements Observer {
 					game.agentToResource(agentDest);
 				}
 				else {
-					System.out.println("Please choose a resource");
+					notificationArea.setText("Please choose a resource");
 				}
 			}
 		}
@@ -293,9 +293,9 @@ class SettlementGUI extends JFrame implements Observer {
 		String resourceNotification = "solar panel = solar panel \nblood = oil \nslime pit" + ""
 				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
 				"hunter = worker agent";
-		for (Resource r: game.getResources()){
+		for (Resource r: game.getResources()) {
 			resourceNotification += "\n" + r.getNotification();
+			notificationArea.setText(resourceNotification);
 		}
-		notificationArea.setText(resourceNotification);
 	}
 }

@@ -39,6 +39,8 @@ public class Game extends Observable {
 	private Resource oils;
 	private SoldierAgent firstAgent;
 	private WorkerAgent secondAgent;
+	private boolean collect;
+	private Point resourcePointClicked;
 
 	public Game() {
 		this.map = new Map(GlobalSettings.MAP_SIZE_X, GlobalSettings.MAP_SIZE_Y);
@@ -61,39 +63,55 @@ public class Game extends Observable {
 		timer.start();
 	}
 	
-	// Ugly code, will need to be changed during refactorization
-	// Agent moves to location user clicks
-	// User clicks resource, will grab 10 and then if agent travels to 
-	// building that holds that resource it will add to that building
+	/*
+	 *  Ugly code, will need to be changed during refactorization
+	 *  Agent moves to resource user clicks
+     *	they will grab 10 and then if agent travels to 
+	 *	building that holds that resource it will add to that building
+	 */
+	 
 	public void agentToResource(Point resourcePointClicked) {
+		this.resourcePointClicked = resourcePointClicked;
+		collect = true;
 		for (AbstractAgent a: agents) {
 			AgentCommandWithDestination comm = new AgentCommandWithDestination(AgentCommand.COLLECT_RESOURCE, resourcePointClicked);
 			a.sendCommand(comm); // Was getting index out of bounds error until added these
-			for (Resource r: resources){
+			for (Resource r: resources) {
 				for (AbstractBuilding b: buildings){
 					if (a.getPosition().equals(r.getLocation())){ // if agent at a resource
-						System.out.println(a.getPosition());
 						r.removeResource(10, a); // remove 10 unit resource
-						if (b.getResources().containsKey(r.getType())){
-							Point buildingDest = new Point(b.getLocation());
-							a.setDestination(buildingDest);
-							System.out.println("whoa2");
-						}
 						System.out.println(r.getNotification());
+						setChanged();
+						notifyObservers(r); // Trying to get the notification panel to set to this...
+						if (b.getResources().containsKey(r.getType())) { // if the building contains the resource the
+							// agent is holding
+							Point buildingDest = new Point(b.getLocation());
+							a.setDestination(buildingDest); // Agent goes to that building
+						}
 					}
 					else if (a.getPosition().equals(b.getLocation())) { // if agent at building
 						b.agentAddCapacity(a.getCarriedResource(), a.getAmountCarried(), a); // agent adds their resource to building 
 						System.out.println(b.resourcesToString());
-						a.setDestination(resourcePointClicked);
-						System.out.println("whoa");
+						if (r.hasResource() == false) { // If the resource they were collecting from no longer has anything
+							collect = false; // It will stop the agent from moving/collecting
+							timer.stop();
+						}
+						else {
+							a.setDestination(resourcePointClicked); // If there is resource left, agent will go back to collect more
+						}
 					}
 					else {
-						System.out.println("I'm here!");
+						// Else case
 					}
 				}
 			}
 			timer.start();
 		}
+	}
+	
+	private void removeResourceGame(Resource r){
+		// Was giving a java.util.ConcurrentModificationException
+		resources.remove(r);
 	}
 
 	// Temporarily adds hardcoded resources, buildings, and agent to game.
@@ -111,6 +129,7 @@ public class Game extends Observable {
 			//TODO: actually generate resources
 			
 		}
+		
 		// Temporarily initializes the hardcoded resources
 		charge = new ChargingStation("Charge", 1000, new Point(10, 5));
 		oilTank = new OilTank("Oil", 1000, new Point(10, 4));
@@ -158,8 +177,6 @@ public class Game extends Observable {
 			//tick all the agents
 			for(int i = 0; i < agents.size(); i++) {
 				if (agents.get(i).getPosition().equals(agents.get(i).getDestination())){
-					setChanged();
-					notifyObservers();
 					timer.stop();
 				}
 				else {	
@@ -174,6 +191,13 @@ public class Game extends Observable {
 					
 				}
 			}
+			
+			if (collect){ // boolean to determine if agent still needs to collect from resource
+				agentToResource(resourcePointClicked);
+				setChanged();
+				notifyObservers();
+			}
+			
 			setChanged();
 			notifyObservers();
 		}
