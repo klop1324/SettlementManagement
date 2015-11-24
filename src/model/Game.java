@@ -197,6 +197,7 @@ public class Game extends Observable {
 					resources.remove(i);
 					i--;
 				}
+			}
 			
 			if (collect){ // boolean to determine if agent still needs to collect from resource
 				agentToResource(resourcePointClicked);
