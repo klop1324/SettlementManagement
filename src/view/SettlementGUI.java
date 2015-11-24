@@ -89,9 +89,12 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		backgroundPanel.setBounds(0, 0, 800, 600);
 		
+<<<<<<< HEAD
 		individual.setBounds(197, 0, 400, 20);
 		individual.setBackground(Color.BLACK);
 
+=======
+>>>>>>> dcfc43fd4f283bb08a45175a12684a5585299451
 		TitledBorder noticeBorder = new TitledBorder("Notifications");
 		noticeBorder.setTitleColor(Color.WHITE);
 		notifierPanel.setOpaque(true);
@@ -264,7 +267,7 @@ class SettlementGUI extends JFrame implements Observer {
 					game.agentToResource(agentDest);
 				}
 				else {
-					System.out.println("Please choose a resource");
+					notificationArea.setText("Please choose a resource");
 				}
 			}
 		}
@@ -309,9 +312,9 @@ class SettlementGUI extends JFrame implements Observer {
 		String resourceNotification = "solar panel = solar panel \nblood = oil \nslime pit" + ""
 				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
 				"hunter = worker agent";
-		for (Resource r: game.getResources()){
+		for (Resource r: game.getResources()) {
 			resourceNotification += "\n" + r.getNotification();
+			notificationArea.setText(resourceNotification);
 		}
-		notificationArea.setText(resourceNotification);
 	}
 }
