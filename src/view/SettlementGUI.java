@@ -89,12 +89,9 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		backgroundPanel.setBounds(0, 0, 800, 600);
 		
-<<<<<<< HEAD
 		individual.setBounds(197, 0, 400, 20);
 		individual.setBackground(Color.BLACK);
 
-=======
->>>>>>> dcfc43fd4f283bb08a45175a12684a5585299451
 		TitledBorder noticeBorder = new TitledBorder("Notifications");
 		noticeBorder.setTitleColor(Color.WHITE);
 		notifierPanel.setOpaque(true);

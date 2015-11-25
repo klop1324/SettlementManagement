@@ -191,7 +191,7 @@ public class Game extends Observable {
 
 				}
 			}
-//			// removal of resources
+//			// removal of resources // causes sprite to stop halfway
 //			for(int i = 0; i < resources.size(); i++){
 //				if(!resources.get(i).hasResources()){
 //					resources.remove(i);

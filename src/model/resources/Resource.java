@@ -56,7 +56,7 @@ public class Resource {
 				agentResourceNotify = ("Agent removed: " + removeAmount + " \nYou have used all of this " + resources + " resource");
 			}
 			else {
-				agentResourceNotify = ("You've used up all of this resource. D:");
+				//agentResourceNotify = ("You've used up all of this resource. D:");
 			}
 		}
 	}
