@@ -22,7 +22,7 @@ public enum Tile {
 		this.charRep = c;
 		this.spawnRate = chance;
 		try {
-			this.image = ImageIO.read(new File("ImageSet/"+ this.intRep +".png"));
+			this.image = ImageIO.read(new File("ImageSet/tile-"+ this.intRep +".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			//Tile.values()[int]

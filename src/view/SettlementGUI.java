@@ -185,7 +185,9 @@ class SettlementGUI extends JFrame implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			one++;
-			if (one % 2 != 0) {
+			
+			if (!infoPanel.isVisible()) {
+				infoPanel.isVisible();
 				infoPanel.setVisible(false);
 				infoButton.setBounds(785, 20, 10, 40);
 			}
