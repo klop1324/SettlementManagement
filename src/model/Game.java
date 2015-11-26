@@ -163,13 +163,6 @@ public class Game extends Observable {
 		addResource(electric);
 		addResource(oil);
 		addAgents(secondAgent);
-		resources.add(oil);
-		resources.add(electric);
-		resources.add(electric2);
-		resources.add(coal);
-		resources.add(copper);
-		resources.add(iron);
-		resources.add(gold);
 	}
 
 	private void generateResources(){
