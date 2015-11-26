@@ -268,7 +268,7 @@ class SettlementGUI extends JFrame implements Observer {
 					game.agentToResource(agentDest);
 				}
 				else {
-					notificationArea.setText("Please choose a resource");
+					//notificationArea.append("Please choose a resource");
 				}
 			}
 		}
@@ -305,7 +305,6 @@ class SettlementGUI extends JFrame implements Observer {
 				break;
 			case CHARGINGSTATION:
 				electricityAmount.setText("Electricity: " + b.getResources().get(ResourceType.ELECTRICITY));
-				validate();
 				repaint();
 				break;
 			case HOMEDEPOT:
@@ -313,24 +312,27 @@ class SettlementGUI extends JFrame implements Observer {
 			case JUNKYARD:
 				break;
 			case OILTANK:
+				oilAmount.setText("Oil: " + b.getResources().get(ResourceType.OIL));
 				break;
 			case OILWELL:
 				break;
 			case WORKSHOP:
+				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
+				copperAmount.setText("Copper: " + b.getResources().get(ResourceType.COPPER));
 				break;
 			default:
 				break;
 
 			}
 		}
-		String resourceNotification = "";
-		if (duringTutorial)
-			resourceNotification += "";
-		else {
-			for (Resource r: game.getResources()) {
-				resourceNotification += "\n" + r.getNotification();
-				notificationArea.setText(resourceNotification);
-			}
+		String resourceNotification = "solar panel = solar panel \nblood = oil \nslime pit" + ""
+				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
+				"hunter = worker agent";
+		for (Resource r: game.getResources()) {
+			resourceNotification += "\n" + r.getNotification();
+			notificationArea.setText(resourceNotification);
+			notificationArea.repaint();
 		}
+		repaint();
 	}
 }

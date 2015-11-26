@@ -48,16 +48,18 @@ public class Resource {
 	// Remove amount
 	public void removeResource(int removeAmount, AbstractAgent agent){
 		if (hasResources()){
-
 			agent.setPickedUpResource(resources);
 			resourceAmount-= removeAmount;
 			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
 			if (!hasResources()){
-				agentResourceNotify = ("Agent removed: " + removeAmount + " \nYou have used all of this " + resources + " resource");
+				agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources + " \nYou have used all of this " + resources + " resource");
 			}
 			else {
-				agentResourceNotify = ("You've used up all of this resource. D:");
+				//agentResourceNotify = ("You've used up all of this resource. D:");
 			}
+		}
+		else {
+			System.out.println("No more resource");
 		}
 	}
 
