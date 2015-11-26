@@ -24,7 +24,7 @@ public abstract class AbstractAgent{
 		oil = 2000;
 		carriedResources = 0;
 		AI = new AgentLogic();
-		destination = new Point(0,0);
+		destination = new Point(6, 6);
 		this.position = position;
 	}
 	
@@ -37,13 +37,13 @@ public abstract class AbstractAgent{
 		return carriedResourceType;
 	}
 	
-	public void setCarriedResources(int a) {
+	public void setAmountCarried(int a) {
 		carriedResources = a;
 	}
 	
 	// Added carriedResources setter can be changed later
 	public void setPickedUpResource(ResourceType resource){
-		setCarriedResources(10); // Change later when max carry limit is set up
+		setAmountCarried(10); // Change later when max carry limit is set up
 		carriedResourceType = resource;
 	}
 	
