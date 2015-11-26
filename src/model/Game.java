@@ -181,7 +181,7 @@ public class Game extends Observable {
 		armory = new Armory("Armory", 1000, new Point(12, 3));
 		homeDepot = new HomeDepot("HomeDepot", 1000, new Point(13, 6));
 		electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
-		electric = new Resource(20, new Point(0, 1), ResourceType.ELECTRICITY);
+		electric2 = new Resource(20, new Point(0, 1), ResourceType.ELECTRICITY);
 		oil = new Resource(20, new Point(0, 2), ResourceType.OIL);	
 		coal = new Resource(20, new Point(4, 7), ResourceType.COAL);
 		copper = new Resource(30, new Point(9, 8), ResourceType.COPPER);

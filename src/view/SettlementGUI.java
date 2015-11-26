@@ -231,6 +231,7 @@ class SettlementGUI extends JFrame implements Observer {
 			clickX = (int) Math.floor(e.getPoint().x/50);
 			clickY = (int) Math.floor(e.getPoint().y/50);
 			agentDest = new Point(clickX, clickY);
+			System.out.println(agentDest);
 			
 		}
 
@@ -263,6 +264,7 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			System.out.println(agentDest);
 			for (Resource r: game.getResources()){
 				if (r.getLocation().equals(agentDest)){
 					game.agentToResource(agentDest);

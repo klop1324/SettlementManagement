@@ -116,7 +116,7 @@ public class ViewController extends JPanel implements Observer {
 
 
 		g2.drawImage(agent2, agentX*50, agentY*50, null);
-		drawBoardWithAnimation();
+//		drawBoardWithAnimation();
 	}
 
 	@Override
