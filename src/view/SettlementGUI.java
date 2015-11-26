@@ -310,6 +310,7 @@ class SettlementGUI extends JFrame implements Observer {
 				repaint();
 				break;
 			case HOMEDEPOT:
+				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
 				break;
 			case JUNKYARD:
 				break;
@@ -319,7 +320,6 @@ class SettlementGUI extends JFrame implements Observer {
 			case OILWELL:
 				break;
 			case WORKSHOP:
-				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
 				copperAmount.setText("Copper: " + b.getResources().get(ResourceType.COPPER));
 				break;
 			default:
