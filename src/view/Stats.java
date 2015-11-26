@@ -49,7 +49,10 @@ public class Stats extends JPanel {
 	private JLabel capacity = new JLabel("Capacity: ");
 	private JLabel amount = new JLabel("Amount: ");
 	private JLabel amountLeft = new JLabel("Amount Left: ");
-	private boolean isAgent = true;
+	private JLabel blank1 = new JLabel("");
+	private JLabel blank2 = new JLabel("");
+	private JLabel blank3 = new JLabel("");
+	private boolean isAgent = false;
 	private boolean isBuilding = false;
 	private boolean isResource = false;
 	
@@ -61,17 +64,22 @@ public class Stats extends JPanel {
 
 	public Stats() {
 		game = new Game();
-		//this.setResizable(false);
-		//this.setLayout(new GridLayout(3, 2));
-		//this.setTitle("Information on Selected");
-		//this.setMinimumSize(new Dimension(300, 150));
-		//this.setMaximumSize(new Dimension(300, 150));
-		//Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		//int width = screensize.width / 2 - this.getSize().width / 2;
-		//int height = screensize.height / 2 - this.getSize().height / 2;
-		//this.setLocation(width, height-200);
+		this.setLayout(new GridLayout(1, 5));
+		this.setBounds(197, 0, 400, 20);
 		this.setBackground(Color.BLACK);
-		this.setForeground(Color.WHITE);
+		
+		agent.setForeground(Color.CYAN);
+		energy.setForeground(Color.CYAN);
+		condition.setForeground(Color.CYAN);
+		oil.setForeground(Color.CYAN);
+		carriedResources.setForeground(Color.CYAN);
+		
+		building.setForeground(Color.CYAN);
+		capacity.setForeground(Color.CYAN);
+		amount.setForeground(Color.CYAN);
+		
+		resource.setForeground(Color.CYAN);
+		amountLeft.setForeground(Color.CYAN);
 		
 		update();
 	}
@@ -86,12 +94,17 @@ public class Stats extends JPanel {
 		}
 		else if (isBuilding) {
 			this.add(building);
+			this.add(blank1);
 			this.add(capacity);
+			this.add(blank2);
 			this.add(amount);
 		}
 		else if (isResource) {
+			this.add(blank1);
 			this.add(resource);
+			this.add(blank2);
 			this.add(amountLeft);
+			this.add(blank3);
 		}
 	}
 }

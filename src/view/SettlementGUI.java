@@ -1,6 +1,7 @@
 package view;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -8,6 +9,7 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Observer;
 
 import javafx.scene.control.ComboBox;
 
+import javax.swing.AbstractAction;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -28,6 +31,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultEditorKit;
 
 import model.*;
 import model.agents.*;
@@ -55,14 +59,16 @@ class SettlementGUI extends JFrame implements Observer {
 	private JLabel name = new JLabel("Click Something");
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
-	private JPanel individual = new JPanel();
-	private Stats stats = new Stats();
+	//private JPanel individual = new JPanel();
+	private Stats individual = new Stats();
 	private int one = 0;
 	private int two = 0;
+	private int next = 0;
 	private int clickX;
 	private int clickY;
 	private Point agentDest;
 	private JLayeredPane backgroundPanel = new JLayeredPane();
+	private boolean duringTutorial = true;
 	// comboBox with container and int size
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
@@ -88,9 +94,6 @@ class SettlementGUI extends JFrame implements Observer {
 		Font courier = new Font("Courier", Font.PLAIN, 12);
 		
 		backgroundPanel.setBounds(0, 0, 800, 600);
-		
-		individual.setBounds(197, 0, 400, 20);
-		individual.setBackground(Color.BLACK);
 
 		TitledBorder noticeBorder = new TitledBorder("Notifications");
 		noticeBorder.setTitleColor(Color.WHITE);
@@ -103,9 +106,8 @@ class SettlementGUI extends JFrame implements Observer {
 		notificationArea.setEditable(false);
 		notificationArea.setFont(courier);
 		notificationArea.setForeground(Color.GREEN);
-		notificationArea.setText("solar panel = solar panel \nblood = oil \nslime pit" + ""
-				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
-				"hunter = worker agent");
+		//notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
+				//"button to continue this tutorial.\n");
 		notifierPanel.add(notificationArea);
 		notifierPanel.add(nextButton);
 		
@@ -137,20 +139,31 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		registerListeners();
 		
+//		JOptionPane tutorial = new JOptionPane();
+//		tutorial.showMessageDialog(this, "Please read the tutorial first.");
+//		tutorial.setVisible(false); // set to true
+		
+		this.setFocusable(false);
+		backgroundPanel.setFocusable(false);
+		mapArea.setFocusable(true);
+		notifierPanel.setFocusable(false);
+		infoPanel.setFocusable(false);
+		
 		JScrollPane cs = new JScrollPane(mapArea);
 		cs.setBounds(0, 0, 795, 572);
-		mapArea.requestFocus();
-		mapArea.grabFocus();
 		JScrollBar vertical = cs.getVerticalScrollBar();
 		JScrollBar horizontal = cs.getHorizontalScrollBar();
 		vertical.setPreferredSize(new Dimension(0, 0));
 		horizontal.setPreferredSize(new Dimension(0, 0));
-		InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		/*InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
 		imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
 		imH.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
-		imH.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+		imH.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");*/
+		InputMap input = mapArea.getInputMap();
+		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.PGDN);
+		input.put(key, vertical.getActionForKeyStroke(KeyStroke.getKeyStroke("DOWN")));
 		backgroundPanel.add(cs, new Integer(0), 0);
 		
 		infoButton.setBounds(635, 20, 10, 40);
@@ -175,7 +188,6 @@ class SettlementGUI extends JFrame implements Observer {
 		nextButton.addActionListener(new NextButtonListener());
 		infoButton.addActionListener(new InfoButtonListener());
 		notifierButton.addActionListener(new NotifierButtonListener());
-		individualButton.addActionListener(new IndividualButtonListener());
 		mapArea.addMouseListener(new ClickerListener());
 		addObservers();
 	}
@@ -184,12 +196,8 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			//one++;
-			//if (one % 2 != 0) {
 			one++;
-			
-			if (!infoPanel.isVisible()) {
-				infoPanel.isVisible();
+			if (one % 2 != 0) {
 				infoPanel.setVisible(false);
 				infoButton.setBounds(785, 20, 10, 40);
 			}
@@ -213,14 +221,6 @@ class SettlementGUI extends JFrame implements Observer {
 				notifierPanel.setVisible(true);
 				notifierButton.setBounds(20, 392, 40, 10);
 			}
-		}
-	}
-	
-	private class IndividualButtonListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			stats.setVisible(true);
 		}
 	}
 	
@@ -278,7 +278,20 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
+			//next++;
+			if (next == 1)
+				notificationArea.append("The panel at the top shows information about " +
+						"selected agents, buildings, and resources.\n");
+			if (next == 2) {
+				notificationArea.append("The panel to the right shows the amount of each resource " +
+						"collected.\nTo collect a resource, click on a resource and then " +
+						"the \"Collect Resource\" button.\nThe drop down menu shows all the active agents.");
+				duringTutorial = false;
+			}
+			if (next == 3 && !duringTutorial)
+				notificationArea.append("solar panel = solar panel \nblood = oil \nslime pit" + ""
+						+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
+						"hunter = worker agent");
 		}
 	}
 
@@ -310,12 +323,14 @@ class SettlementGUI extends JFrame implements Observer {
 
 			}
 		}
-		String resourceNotification = "solar panel = solar panel \nblood = oil \nslime pit" + ""
-				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
-				"hunter = worker agent";
-		for (Resource r: game.getResources()) {
-			resourceNotification += "\n" + r.getNotification();
-			notificationArea.setText(resourceNotification);
+		String resourceNotification = "";
+		if (duringTutorial)
+			resourceNotification += "";
+		else {
+			for (Resource r: game.getResources()) {
+				resourceNotification += "\n" + r.getNotification();
+				notificationArea.setText(resourceNotification);
+			}
 		}
 	}
 }

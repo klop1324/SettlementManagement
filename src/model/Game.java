@@ -16,10 +16,7 @@ import model.agents.AgentCommand;
 import model.agents.AgentCommandWithDestination;
 import model.agents.SoldierAgent;
 import model.agents.WorkerAgent;
-import model.buildings.AbstractBuilding;
-import model.buildings.ChargingStation;
-import model.buildings.JunkYard;
-import model.buildings.OilTank;
+import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
 
@@ -35,8 +32,16 @@ public class Game extends Observable {
 	private int[] currentResources;
 	private ChargingStation charge;
 	private OilTank oilTank;
+	private Armory armory;
+	private JunkYard junkYard;
+	private HomeDepot homeDepot;
 	private Resource electric;
-	private Resource oils;
+	private Resource electric2;
+	private Resource oil;
+	private Resource coal;
+	private Resource copper;
+	private Resource iron;
+	private Resource gold;
 	private SoldierAgent firstAgent;
 	private WorkerAgent secondAgent;
 	private boolean collect;
@@ -117,8 +122,25 @@ public class Game extends Observable {
 	// Temporarily adds hardcoded resources, buildings, and agent to game.
 	private void addToGameTemporary(){
 		addBuilding(charge);
+		addBuilding(oilTank);
+		addBuilding(junkYard);
+		addBuilding(armory);
+		addBuilding(homeDepot);
+		addResource(oil);
 		addResource(electric);
+		addResource(electric2);
+		addResource(coal);
+		addResource(copper);
+		addResource(iron);
+		addResource(gold);
 		addAgents(secondAgent);
+		resources.add(oil);
+		resources.add(electric);
+		resources.add(electric2);
+		resources.add(coal);
+		resources.add(copper);
+		resources.add(iron);
+		resources.add(gold);
 	}
 
 	private void generateResources(){
@@ -133,8 +155,16 @@ public class Game extends Observable {
 		// Temporarily initializes the hardcoded resources
 		charge = new ChargingStation("Charge", 1000, new Point(10, 5));
 		oilTank = new OilTank("Oil", 1000, new Point(10, 4));
+		junkYard = new JunkYard("JunkYard", 1000, new Point(11, 3));
+		armory = new Armory("Armory", 1000, new Point(12, 3));
+		homeDepot = new HomeDepot("HomeDepot", 1000, new Point(13, 6));
 		electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
-		oils = new Resource(20, new Point(0, 2), ResourceType.OIL);
+		electric = new Resource(20, new Point(0, 1), ResourceType.ELECTRICITY);
+		oil = new Resource(20, new Point(0, 2), ResourceType.OIL);	
+		coal = new Resource(20, new Point(4, 7), ResourceType.COAL);
+		copper = new Resource(30, new Point(9, 8), ResourceType.COPPER);
+		iron = new Resource(20, new Point(8, 6), ResourceType.IRON);
+		gold = new Resource(40, new Point(9, 6), ResourceType.GOLD);	
 		firstAgent = new SoldierAgent(new Point(11,4));
 		secondAgent = new WorkerAgent(new Point(6, 6));
 	}
