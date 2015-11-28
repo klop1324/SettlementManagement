@@ -106,8 +106,8 @@ class SettlementGUI extends JFrame implements Observer {
 		notificationArea.setEditable(false);
 		notificationArea.setFont(courier);
 		notificationArea.setForeground(Color.GREEN);
-		//notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
-				//"button to continue this tutorial.\n");
+		notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
+				"button to continue this tutorial.\n");
 		notifierPanel.add(notificationArea);
 		notifierPanel.add(nextButton);
 		
@@ -313,6 +313,9 @@ class SettlementGUI extends JFrame implements Observer {
 				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
 				break;
 			case JUNKYARD:
+				copperAmount.setText("Copper: " + b.getResources().get(ResourceType.COPPER));
+				goldAmount.setText("Gold: " + b.getResources().get(ResourceType.GOLD));
+				ironAmount.setText("Iron: " + b.getResources().get(ResourceType.IRON));
 				break;
 			case OILTANK:
 				oilAmount.setText("Oil: " + b.getResources().get(ResourceType.OIL));
@@ -320,20 +323,19 @@ class SettlementGUI extends JFrame implements Observer {
 			case OILWELL:
 				break;
 			case WORKSHOP:
-				copperAmount.setText("Copper: " + b.getResources().get(ResourceType.COPPER));
 				break;
 			default:
 				break;
 
 			}
 		}
-		String resourceNotification = "solar panel = solar panel \nblood = oil \nslime pit" + ""
-				+ " = oil tank \nslime = charging station \nwumpus = soldier agent \n" + 
-				"hunter = worker agent";
+		String resourceNotification = "";
 		for (Resource r: game.getResources()) {
-			resourceNotification += "\n" + r.getNotification();
-			notificationArea.setText(resourceNotification);
-			notificationArea.repaint();
+			if (r.getNotification() != null){
+				resourceNotification += r.getNotification() + "\n";
+				notificationArea.setText(resourceNotification);
+				notificationArea.repaint();
+			}
 		}
 		repaint();
 	}

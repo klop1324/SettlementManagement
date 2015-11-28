@@ -68,7 +68,7 @@ public class Game extends Observable {
 		addToGameTemporary();
 
 		timer = new Timer(50, new TickActionListener());
-		agentTimer = new Timer(50, new AgentListener());
+		agentTimer = new Timer(200, new AgentListener());
 		timer.start();
 
 	}
