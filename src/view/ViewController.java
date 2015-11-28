@@ -95,24 +95,24 @@ public class ViewController extends JPanel implements Observer {
 				} else {
 					g2.drawImage(ground, i * 50, j * 50, null);
 				}
-				g2.drawImage(agent1, 11*50, 4*50, null);
-				g2.drawImage(oilTank, 10*50, 4*50, null);
-				g2.drawImage(charge, 10*50, 5*50, null);
-				g2.drawImage(junkYard, 11*50, 3*50, null);
-				g2.drawImage(armory, 12*50, 3*50, null);
-				g2.drawImage(homeDepot, 13*50, 6*50, null);
-				g2.drawImage(oil, 0, 2*50, null);
-				g2.drawImage(solar, 0, 0, null);
-				g2.drawImage(solar, 0*50, 1*50, null);
-				g2.drawImage(coal, 4*50, 7*50, null);
-				g2.drawImage(copper, 9*50, 8*50, null);
-				g2.drawImage(iron, 8*50, 6*50, null);
-				g2.drawImage(gold, 9*50, 6*50, null);
 				// g2.drawImage(Tile.values()[map.get(i,j)].getImage(), i, j,
 				// null);
 				// TODO paint all the tiles
 			}
 		}
+		g2.drawImage(agent1, 11*50, 4*50, null);
+		g2.drawImage(oilTank, 10*50, 4*50, null);
+		g2.drawImage(charge, 10*50, 5*50, null);
+		g2.drawImage(junkYard, 11*50, 3*50, null);
+		g2.drawImage(armory, 12*50, 3*50, null);
+		g2.drawImage(homeDepot, 13*50, 6*50, null);
+		g2.drawImage(oil, 0, 2*50, null);
+		g2.drawImage(solar, 0, 0, null);
+		g2.drawImage(solar, 0*50, 1*50, null);
+		g2.drawImage(coal, 4*50, 7*50, null);
+		g2.drawImage(copper, 9*50, 8*50, null);
+		g2.drawImage(iron, 8*50, 6*50, null);
+		g2.drawImage(gold, 9*50, 6*50, null);
 
 
 		g2.drawImage(agent2, agentX*50, agentY*50, null);
