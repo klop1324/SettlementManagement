@@ -8,11 +8,13 @@ import java.util.Random;
 
 public class Map extends Observable{
 	
+	/*
 	public static void main(String args[]){
 		Map map = new Map(100,100);
 		System.out.println(map.toString());
 		
 	}
+	*/
 	
 	
 	private int[][] map;
@@ -154,11 +156,10 @@ public class Map extends Observable{
 	
 	@Override
 	public String toString(){
-		Map map = new Map(100, 100);
 		String result = "";
 		for(int i = 0; i < 100; i++){
 			for(int j = 0; j < 100; j++){
-				result += map.get(i,j);
+				result += "" + map[i][j];
 			}
 			result += "\n";
 		}
