@@ -92,7 +92,7 @@ public class PerlinNoise {
 	      float b = lerp(sy, t, u); // Interpolate Top-Right(t) and Down-Right(u) We can also call this RIGHT
 	      float h = lerp(sx, a, b); // Interpolate LEFT(a) and RIGHT(b). We can call this height(h)
 	      
-	      h *= 4; // Multiply here so adjust contrast.
+	      h *= 1.5; // Multiply here so adjust contrast.
 	      
 	      // Make sure it is -1 to 1. If you don't change contrast, you don't have to do this.
 	      if(h > 1) h = 1;
@@ -151,7 +151,7 @@ public class PerlinNoise {
 
 	      long time0 = System.nanoTime(); // Take a time stamp.
 	      
-	      int size = 16; // Perlin's noise map.
+	      int size = 6; // Perlin's noise map.
 	      PerlinNoise noise = new PerlinNoise(size, size);
 	      
 	      int width = 512; // Width of the finished image.
