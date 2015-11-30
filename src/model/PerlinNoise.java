@@ -1,3 +1,16 @@
+/*\
+ * THIS IS NOT OUR CODE
+ * 
+ * This is the pastebin we got the code from: http://www.java-gaming.org/index.php?action=pastebin&hex=3b0691d8474
+ * This is the fourm post about the code: http://www.java-gaming.org/index.php?topic=31567.0
+ * Date of fourm post: December 23, 2013
+ * 
+ * Author: trollwarrior1
+ * 
+ * AGAIN THIS IS NOT OUR CODE
+ * 
+ */
+
 package model;
 
 import java.awt.Color;
