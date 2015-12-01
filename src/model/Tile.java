@@ -10,19 +10,21 @@ public enum Tile {
 	//===============================
 	//==> DO NOT SKIP NUMBERS!!!! <==
 	//===============================
-	PLATING(0, 'o',10.0), OIL(1, ' ', 1.0), GRAVEL(2, 'G', 5.0);
+	PLATING(0, 'o',5.0, "Plating"), OIL(1, ' ', 5.0, "Oil"), SHALLOWS(2, 'S', 5.0, "Shallows"), GRAVEL(3, 'G', 5.0, "Gravel");
 	
 	private int intRep;
 	private char charRep;
 	private Image image;
 	private double spawnRate;
+	private String name;
 	
-	Tile(int i, char c, double chance){
+	Tile(int i, char c, double chance, String name){
 		this.intRep = i;
 		this.charRep = c;
+		this.name = name;
 		this.spawnRate = chance;
 		try {
-			this.image = ImageIO.read(new File("ImageSet/tile-"+ this.intRep +".png"));
+			this.image = ImageIO.read(new File("ImageSet/tile-"+ name +".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			//Tile.values()[int]

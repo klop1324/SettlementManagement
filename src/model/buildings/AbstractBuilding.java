@@ -1,6 +1,7 @@
 package model.buildings;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.HashMap;
 import javax.swing.Timer;
 
@@ -8,7 +9,7 @@ import model.resources.ResourceType;
 
 
 
-public abstract class AbstractBuilding {
+public abstract class AbstractBuilding implements Serializable{
 	protected String name;
 	protected BuildingType building;
 	protected static int max_capacity = 30;

@@ -19,12 +19,14 @@ import javax.swing.Timer;
 import model.Game;
 import model.Map;
 import model.agents.*;
+import model.buildings.AbstractBuilding;
+import model.resources.Resource;
 
 public class ViewController extends JPanel implements Observer {
 	private Game game;
 	private Map map;
 	private Image agent1, agent2, oilTank, charge, oil, solar, ground;
-	private Image junkYard, armory, homeDepot, coal, copper, iron, gold;
+	private Image junkYard, armory, homeDepot, coal, copper, iron, gold, oilWell, workShop;
 	private int agentX;
 	private int agentY;
 	private ArrayList<AbstractAgent> agents;
@@ -48,12 +50,15 @@ public class ViewController extends JPanel implements Observer {
 			armory = ImageIO.read(new File("./ImageSet/electric-furnace-base.png"));
 			homeDepot = ImageIO.read(new File("./ImageSet/market.png"));
 			oil = ImageIO.read(new File("./ImageSet/oil.png"));
-			solar = ImageIO.read(new File("./ImageSet/solar.png"));
+			solar = ImageIO.read(new File("./UnusedImages/graphics/technology/solar-energy.png"));
 			coal = ImageIO.read(new File("./ImageSet/singleCoal.png"));
 			copper = ImageIO.read(new File("./ImageSet/singleCopper.png"));
 			iron = ImageIO.read(new File("./ImageSet/singleStone.png"));
 			gold = ImageIO.read(new File("./ImageSet/singleIron.png"));
-			ground = ImageIO.read(new File("./ImageSet/tile-0.png"));
+			ground = ImageIO.read(new File("./ImageSet/tile-Plating.png"));
+			oilWell = ImageIO.read(new File("./UnusedImages/graphics/technology/oil-gathering.png"));
+			workShop = ImageIO.read(new File("./UnusedImages/graphics/technology/gates.png"));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -100,23 +105,64 @@ public class ViewController extends JPanel implements Observer {
 				// TODO paint all the tiles
 			}
 		}
-		g2.drawImage(agent1, 11*50, 4*50, null);
-		g2.drawImage(oilTank, 10*50, 4*50, null);
-		g2.drawImage(charge, 10*50, 5*50, null);
-		g2.drawImage(junkYard, 11*50, 3*50, null);
-		g2.drawImage(armory, 12*50, 3*50, null);
-		g2.drawImage(homeDepot, 13*50, 6*50, null);
-		g2.drawImage(oil, 0, 2*50, null);
-		g2.drawImage(solar, 0, 0, null);
-		g2.drawImage(solar, 0*50, 1*50, null);
-		g2.drawImage(coal, 4*50, 7*50, null);
-		g2.drawImage(copper, 9*50, 8*50, null);
-		g2.drawImage(iron, 8*50, 6*50, null);
-		g2.drawImage(gold, 9*50, 6*50, null);
+		
+		for (Resource r: game.getResources()){
+			switch (r.getType()){
+			case COAL:
+				g2.drawImage(coal, r.getLocation().x *50, r.getLocation().y*50, null);
+				break;
+			case COPPER:
+				g2.drawImage(copper, r.getLocation().x*50, r.getLocation().y*50, null);
+				break;
+			case ELECTRICITY:
+				g2.drawImage(solar, r.getLocation().x*50, r.getLocation().y*50, null);
+				break;
+			case GOLD:
+				g2.drawImage(gold, r.getLocation().x*50, r.getLocation().y*50, null);
+				break;
+			case IRON:
+				g2.drawImage(iron, r.getLocation().x*50, r.getLocation().y*50, null);
+				break;
+			case OIL:
+				g2.drawImage(oil, r.getLocation().x*50, r.getLocation().y*50, null);
+				break;
+			default:
+				break;
 
-
-		g2.drawImage(agent2, agentX*50, agentY*50, null);
-		//		drawBoardWithAnimation();
+			}
+		}
+		for (AbstractBuilding b: game.getBuildings()){
+			switch(b.getType()){
+			case ARMORY:
+				g2.drawImage(armory, b.getLocation().x*50, b.getLocation().y*50, null);
+				break;
+			case CHARGINGSTATION:
+				g2.drawImage(charge, b.getLocation().x*50, b.getLocation().y*50, null);
+				break;
+			case HOMEDEPOT:
+				g2.drawImage(homeDepot, b.getLocation().x*50, b.getLocation().y*50, null);
+				break;
+			case JUNKYARD:
+				g2.drawImage(junkYard, b.getLocation().x*50, b.getLocation().y*50, null);
+				break;
+			case OILTANK:
+				g2.drawImage(oilTank, b.getLocation().x*50, b.getLocation().y*50, null);
+				break;
+			case OILWELL:
+				g2.drawImage(oilWell, b.getLocation().x*50, b.getLocation().y*50, null);
+				break;
+			case WORKSHOP:
+				g2.drawImage(workShop, b.getLocation().x*50, b.getLocation().y*50, null);
+				break;
+			default:
+				break;
+			
+			}
+		}
+		
+		for (AbstractAgent a: game.getAgents()){
+			g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
+		}
 	}
 
 	@Override

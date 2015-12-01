@@ -48,6 +48,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private JButton notifierButton = new JButton();
 	private JButton individualButton = new JButton();
 	private JButton createButton = new JButton("Create/Build");
+	private JButton helpButton = new JButton("Help");
 	private JLabel electricityAmount = new JLabel("Electricity: ");
 	private JLabel oilAmount = new JLabel("Oil: ");	
 	private JLabel coalAmount = new JLabel("Coal: ");
@@ -57,9 +58,11 @@ class SettlementGUI extends JFrame implements Observer {
 	private JLabel name = new JLabel("Click Something");
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
+	private JPanel helpPanel = new JPanel();
 	private JComboBox selectAgent;
 	//private JPanel individual = new JPanel();
 	private Stats individual = new Stats();
+	private HelpMenu helpMenu = new HelpMenu();
 	private int one = 0;
 	private int two = 0;
 	private int next = 0;
@@ -117,6 +120,12 @@ class SettlementGUI extends JFrame implements Observer {
 		copperAmount.setForeground(Color.WHITE);
 		ironAmount.setForeground(Color.WHITE);
 		goldAmount.setForeground(Color.WHITE);
+		
+		helpButton.setBackground(Color.DARK_GRAY);
+		helpButton.setForeground(Color.BLACK);
+		helpPanel.setBackground(Color.DARK_GRAY);
+		helpPanel.add(helpButton);
+		helpPanel.setBounds(750, 542, 40, 25);
 		
 		selectAgent = new JComboBox(agentOrBuilding);
 		selectAgent.setSelectedIndex(0);
@@ -184,6 +193,7 @@ class SettlementGUI extends JFrame implements Observer {
 		backgroundPanel.add(notifierButton, new Integer(1), 0);
 		backgroundPanel.add(notifierPanel, new Integer(1), 0);
 		backgroundPanel.add(infoPanel, new Integer(1), 0);
+		backgroundPanel.add(helpPanel, new Integer(2), 0);
 	}
 	
 	public void addObservers(){ // Adds observers to game
@@ -199,6 +209,7 @@ class SettlementGUI extends JFrame implements Observer {
 		notifierButton.addActionListener(new NotifierButtonListener());
 		createButton.addActionListener(new CreateListener());
 		selectAgent.addActionListener(new DropDownListener());
+		helpButton.addActionListener(new HelpButtonListener());
 		mapArea.addMouseListener(new ClickerListener());
 		addObservers();
 	}
@@ -391,6 +402,14 @@ class SettlementGUI extends JFrame implements Observer {
 						"hunter = worker agent");
 		}
 	}
+	
+	private class HelpButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			helpMenu.setVisible(true);
+		}
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
@@ -405,12 +424,12 @@ class SettlementGUI extends JFrame implements Observer {
 				repaint();
 				break;
 			case HOMEDEPOT:
-				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
 				break;
 			case JUNKYARD:
 				copperAmount.setText("Copper: " + b.getResources().get(ResourceType.COPPER));
 				goldAmount.setText("Gold: " + b.getResources().get(ResourceType.GOLD));
 				ironAmount.setText("Iron: " + b.getResources().get(ResourceType.IRON));
+				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
 				break;
 			case OILTANK:
 				oilAmount.setText("Oil: " + b.getResources().get(ResourceType.OIL));

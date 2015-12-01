@@ -7,7 +7,9 @@ import java.awt.Point;
 import org.junit.Test;
 
 import model.Game;
+import model.agents.BuilderAgent;
 import model.agents.WorkerAgent;
+import model.buildings.AbstractBuilding;
 import model.buildings.Armory;
 import model.buildings.BuildingType;
 import model.buildings.ChargingStation;
@@ -20,7 +22,8 @@ public class BuildingTest {
 	WorkerAgent agent = new WorkerAgent(new Point(1,2));
 	@Test
 	public void newBuildingTest(){
-		Game game = new Game(); // turn the constructor back into private i guess
+		Game game = new Game(); // turn the constructor back into private when done
+		BuilderAgent bobTheBuilder = new BuilderAgent(new Point(12,3));
 		HomeDepot home = new HomeDepot(100, new Point(12, 3));
 		Resource coal = new Resource(10, null, ResourceType.COAL);
 		Resource gold = new Resource(10, new Point(12, 3), ResourceType.GOLD);
@@ -30,8 +33,9 @@ public class BuildingTest {
 		home.agentAddCapacity(gold.getType(), 100);
 		home.agentAddCapacity(iron.getType(), 100);
 		game.addBuildingInProcess(new Armory(10, new Point(10, 4)));
-//		game.createBuilding(new Point(12, 3), BuildingType.ARMORY);
-//		System.out.println(game.getBuildingsInProcess());
+		game.createBuilding(new Point(12, 3), BuildingType.ARMORY);
+		bobTheBuilder.incrementCompletionAmount(game.getBuildingsInProcess().get(0), 4);
+		assertEquals(game.getBuildingsInProcess().get(0).getCompletionAmount(), 4);
 		
 		
 	}

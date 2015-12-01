@@ -1,10 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Observable;
-import java.util.Random;
 
-public class Map extends Observable{
+public class Map extends Observable implements Serializable{
 	
 	
 	public static void main(String args[]){
@@ -24,13 +24,15 @@ public class Map extends Observable{
 		this.isVisible = new boolean[i][j];
 		this.xLength = i;
 		this.yLength = j;
-		this.generate();
 		
 		for(int k = 0; k < xLength; k++){
 			for(int t = 0; t < yLength; t++){
 				isVisible[k][t] = false;
+				map[k][t] = -1;
 			}
 		}
+		
+		this.generate();
 	}
 	
 	// makes the map
@@ -47,22 +49,27 @@ public class Map extends Observable{
 	            float xx = (float) x / this.xLength * size; // Where does the point lie in the noise space according to image space. 
 	            float yy = (float) y / this.yLength * size; // Where does the point lie in the noise space according to image space. 
 	            
-	            float n = (float) noise.noise(xx, yy, 1.6f); // Noise values from Perlin's noise.
-	            int generation = (int) ((n + 1) * Tile.values().length-1
-	            		* totalSpawnChance / 2f); // Since noise value returned is -1 to 1, we need it to be between 0 and Tile.values().length
-	            // uses visor 
-	            int divisor = 0;;
-	            for(int i = 0; i < Tile.values().length; i++){
-	            	if(generation < Tile.values()[i].getSpawnRate() + divisor){
-	            		map[x][y] = i;
+	            float n = (float) noise.noise(xx, yy, 3f); // Noise values from Perlin's noise.
+	            
+	            // Since noise value returned is -1 to 1, we need it to be between 0 and Tile.values().length * total Spawn Rate
+	            int generation = (int) (((n + 1) * totalSpawnChance) / 1.8f); 
+	            // sets the tile
+	            boolean flag = true;
+	            //System.out.println(generation);
+	            for(int i = 0; i < Tile.values().length && flag; i++){
+	            	if(generation <= Tile.values()[i].getSpawnRate()){
+	            		map[x][y] = Tile.values()[i].getIntRepresentation();
+	            		flag = false;
 	            	}
-	            	divisor += Tile.values()[i].getSpawnRate();
+	            	generation -= Tile.values()[i].getSpawnRate();
+	            	
 	            }
 	            
+	            if(map[x][y] == -1) map[x][y] = Tile.values()[Tile.values().length-1].getIntRepresentation();
 	            
 	            
 	         }
-	      }
+		}
 	}
 	
 	// primarily for debugging, but returns the value of map at x,y

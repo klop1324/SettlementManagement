@@ -4,6 +4,7 @@ package model;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
@@ -16,9 +17,10 @@ import model.resources.Resource;
 import model.resources.ResourceType;
 import model.tools.Tool;
 import model.agents.BuilderAgent;
+import model.agents.WorkerAgent;
 
 
-public class Game extends Observable{
+public class Game extends Observable implements Serializable{
 
 	private static Game game;
 	private ArrayList<AbstractBuilding> buildings;
@@ -46,6 +48,7 @@ public class Game extends Observable{
 		this.buildings = new ArrayList<AbstractBuilding>();
 		this.resources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
+		this.buildingsInProcess = new ArrayList<AbstractBuilding>();
 
 
 		//TODO intitial resource generation
@@ -151,6 +154,8 @@ public class Game extends Observable{
 	}
 
 	// Interacts with builder agents to create a building
+	// Will also have user interaction to send builder agents to
+	// build this building.
 	public void createBuilding(Point p, BuildingType b){
 		switch (b){
 		case ARMORY:
@@ -313,6 +318,20 @@ public class Game extends Observable{
 			//TODO: actually generate resources
 
 		}
+		resources.add(new Resource(40, new Point(5,3), ResourceType.IRON));
+		resources.add(new Resource(40, new Point(5,4), ResourceType.COPPER));
+		resources.add(new Resource(40, new Point(5,5), ResourceType.GOLD));
+		resources.add(new Resource(40, new Point(5,6), ResourceType.OIL));
+		resources.add(new Resource(40, new Point(10, 3), ResourceType.ELECTRICITY));
+
+		buildings.add(new Armory(500, new Point( 7,3)));
+		buildings.add(new JunkYard(500, new Point( 7,9)));
+		buildings.add(new OilWell(500, new Point(5, 6)));
+		addBuilding(new ChargingStation(500, new Point(3, 4)));
+		addBuilding(new OilTank(500, new Point(9, 2)));
+		
+		addAgents(new WorkerAgent(new Point(4, 9)));
+
 	}
 
 	public Map getMap() {
@@ -321,7 +340,7 @@ public class Game extends Observable{
 	public void addBuildingInProcess(AbstractBuilding b){
 		this.buildingsInProcess.add(b);
 	}
-	
+
 	public void addBuilding(AbstractBuilding b){
 		this.buildings.add(b);
 	}
@@ -345,7 +364,7 @@ public class Game extends Observable{
 	public ArrayList<AbstractBuilding> getBuildings() {
 		return buildings;
 	}
-	
+
 	public ArrayList<AbstractBuilding> getBuildingsInProcess() {
 		return buildingsInProcess;
 	}
@@ -396,10 +415,12 @@ public class Game extends Observable{
 
 			// Checks if buildings are completed and adds the completed ones to 
 			// the buildings list.
-			for (AbstractBuilding b: buildingsInProcess) {
-				if (b.isCompleted()){
-					buildings.add(b);
-					buildingsInProcess.remove(b);
+			if (!buildingsInProcess.isEmpty()){	
+				for (AbstractBuilding b: buildingsInProcess) {
+					if (b.isCompleted()){
+						buildings.add(b);
+						buildingsInProcess.remove(b);
+					}
 				}
 			}
 

@@ -16,12 +16,13 @@ package model;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-public class PerlinNoise {
+public class PerlinNoise implements Serializable{
 
 	   // Just a Random class object so I can fill my noise map with random directions.
 	   public static final Random random = new Random();
