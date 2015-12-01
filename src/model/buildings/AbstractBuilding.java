@@ -95,13 +95,11 @@ public abstract class AbstractBuilding implements Serializable{
 	}
 
 	// Allows agents to add their resource to the building
-	public void agentAddCapacity(ResourceType resourceType, int amount, AbstractAgent a) {
+	public void agentAddCapacity(ResourceType resourceType, int amount) {
 		if (resources.containsKey(resourceType)){
 			int newResourceAmount = resources.get(resourceType) + amount;
 			if (newResourceAmount < capacity){
 				resources.replace(resourceType, newResourceAmount);
-				a.setAmountCarried(0);
-				a.setPickedUpResource(null);
 			}
 			else {
 				System.out.println("You cannot hold that much! Please upgrade your storage to hold more.");
