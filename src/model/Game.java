@@ -31,7 +31,7 @@ public class Game extends Observable{
 	private Point resourcePointClicked;
 	private Resource resourceClicked = null;
 	
-	public static synchronized Game getGameInstance(){
+	public static synchronized Game getInstance(){
 		if(game == null){
 			game = new Game();
 		}
