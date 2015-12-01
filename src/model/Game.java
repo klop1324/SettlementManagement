@@ -95,7 +95,7 @@ public class Game extends Observable{
 		sendAgentsToBuilding(building);
 		for (AbstractAgent a: agents) {
 			if (a.getPosition().equals(building.getLocation())){
-				building.agentAddCapacity(r.getType(), a.getAmountCarried(), a);
+				building.agentAddCapacity(r.getType(), a.getAmountCarried());
 				collected = false;
 			}
 		}
