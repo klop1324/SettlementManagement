@@ -1,11 +1,5 @@
 package model;
 
-<<<<<<< HEAD
-=======
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
->>>>>>> 10bd02e14328cb5c193eddb53c5063e71a91e0cc
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;

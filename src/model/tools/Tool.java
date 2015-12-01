@@ -8,7 +8,7 @@ public class Tool {
 	public Tool(Resource res1, Resource res2){
 		ResourceType type1 = res1.getType();
 		ResourceType type2 = res2.getType();
-		
+
 		if ((type1.equals(ResourceType.IRON) || type1.equals(ResourceType.COAL)) && 
 				(type2.equals(ResourceType.COAL) || type2.equals(ResourceType.IRON)) &&
 				!type1.equals(type2)){
@@ -30,9 +30,9 @@ public class Tool {
 			typeTool = ToolType.WELDINGGUN;
 		}
 	}
-	
+
 	public ToolType getType(){
 		return typeTool;
 	}
-	
+
 }

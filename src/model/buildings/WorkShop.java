@@ -16,8 +16,10 @@ public class WorkShop extends AbstractBuilding{
 
 	@Override
 	public void upgrade() {
-		capacity += 10;
-		version +=1;
+		capacity+=10;
+		version += 1;
+		buildTime += 100;
+		completionAmount = 0;
 	}
 
 	@Override

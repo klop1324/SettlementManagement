@@ -30,7 +30,7 @@ public class ViewController extends JPanel implements Observer {
 	private ArrayList<AbstractAgent> agents;
 	private Timer timer = new Timer(50, new TimerListener());
 	private int tic = 0;
-	
+
 	private boolean isAnimating = false;
 
 	public ViewController() {
@@ -73,14 +73,14 @@ public class ViewController extends JPanel implements Observer {
 				}
 			}
 			repaint();
-			
+
 		}
 	}
 
 	public boolean isAnimating() {
 		return isAnimating;
 	}
-	
+
 	public void paintComponent(Graphics g) {
 		// draws each tile, based on map representation, getting image from the
 		// Tile enum
@@ -116,7 +116,7 @@ public class ViewController extends JPanel implements Observer {
 
 
 		g2.drawImage(agent2, agentX*50, agentY*50, null);
-//		drawBoardWithAnimation();
+		//		drawBoardWithAnimation();
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class ViewController extends JPanel implements Observer {
 		}
 		drawBoardWithAnimation();
 	}
-	
+
 	private void drawBoardWithAnimation() {
 		//tic = 0;
 		timer.start();		

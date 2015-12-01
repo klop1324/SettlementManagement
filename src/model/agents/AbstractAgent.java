@@ -4,15 +4,19 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import model.Game;
+import model.buildings.AbstractBuilding;
 import model.resources.ResourceType;
+import model.tools.Tool;
+import model.tools.ToolType;
 
 public abstract class AbstractAgent{
+	Tool tool;
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
 	String filename;
 	ResourceType carriedResourceType;
-	
+
 	/**
 	 * Creates a new AbstractAgent at a given position.
 	 * @param Point position
@@ -27,12 +31,53 @@ public abstract class AbstractAgent{
 		destination = new Point(6, 6);
 		this.position = position;
 	}
-	
+
+	public boolean hasPickAxe(){
+		if (tool.getType().equals(ToolType.PICKAXE)){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasArmor(){
+		if (tool.getType().equals(ToolType.ARMOR)){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasSpear(){
+		if (tool.getType().equals(ToolType.SPEAR)){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public boolean hasWeldingGun(){
+		if (tool.getType().equals(ToolType.WELDINGGUN)){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+	public void incrementCompletionAmount(AbstractBuilding b, int n){
+		b.incrementCompletionAmount(n);
+	}
+
 	// Added getter and setters for condition to interact with HomeDepot
 	public int getCondition(){
 		return condition;
 	}
-	
+
 	public void setCondition(int n){
 		if ((n + condition) > 2000){
 			condition = 2000;
@@ -41,49 +86,52 @@ public abstract class AbstractAgent{
 			condition += n;
 		}
 	}
-	
+
+	public void addTool(Tool t){
+		tool = t;
+	}
 	// Added getter that can be changed later down the road
 	public int getAmountCarried(){
 		return carriedResources;
 	}
-	
+
 	public ResourceType getCarriedResource(){
 		return carriedResourceType;
 	}
-	
+
 	public void setAmountCarried(int a) {
 		carriedResources = a;
 	}
-	
+
 	// Added carriedResources setter can be changed later
 	public void setPickedUpResource(ResourceType resource){
 		setAmountCarried(10); // Change later when max carry limit is set up
 		carriedResourceType = resource;
 	}
-	
+
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}
-	
+
 	public Point getDestination() {
 		return destination;
 	}
-	
+
 	public Point getPosition() {
 		return position;
 	}
-		
+
 	public void sendCommand(AgentCommandWithDestination c) {
 		AI.recieveCommand(c);
 	}
-	
+
 	public void move() {
 		if(atDestination()) return;
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
-		
+
 		int direction = (int) (Math.random() * 2);
-		
+
 		if(!pRightOfD && !pBelowD) {
 			if(position.x == destination.x)
 				position = new Point(position.x, position.y + 1);
@@ -122,7 +170,7 @@ public abstract class AbstractAgent{
 				position = new Point(position.x + 1, position.y);
 		}
 	}
-	
+
 	private boolean atDestination() {
 		if(position.x == destination.x && position.y == destination.y) return true;
 		return false;
@@ -140,13 +188,13 @@ public abstract class AbstractAgent{
 		decrementCondition();
 		decrementOil();
 	}
-	
+
 	abstract void decrementEnergy();
 	abstract void decrementCondition();
 	abstract void decrementOil();
-	
+
 	public class AgentLogic {
-		
+
 		/*
 		 * Agent should be doing things in this priority:
 		 * 1. Addressing critically low needs
@@ -167,21 +215,21 @@ public abstract class AbstractAgent{
 		 * This could be accounted for, or it might just be up to the user to
 		 * notice an unproductive robot waffling between commands and needs.
 		 */
-		
+
 		private ArrayList<AgentCommandWithDestination> actionQueue;
-		
+
 		public AgentLogic() {
 			actionQueue = new ArrayList<AgentCommandWithDestination>();
 		}
-		
+
 		public void recieveCommand(AgentCommandWithDestination c) {
 			actionQueue.add(c);
 		}
-		
+
 		public ArrayList<AgentCommandWithDestination> getActionQueue(){
 			return actionQueue;
 		}
-		
+
 		public void assessCurrentDestination() {
 			// Need low
 			if(oil < 100)
@@ -190,7 +238,7 @@ public abstract class AbstractAgent{
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 			else if(condition < 100)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestJunkYard));
-			
+
 			// At destination
 			if(atDestination()) {
 				if(!assessActionAtDestination()) {
@@ -199,7 +247,7 @@ public abstract class AbstractAgent{
 				}
 			}
 		}
-		
+
 		/**
 		 * Returns true if Agent won't need a new destination yet, returns false if
 		 * agent needs a new destination.
@@ -219,13 +267,13 @@ public abstract class AbstractAgent{
 				condition += 50;
 				return true;
 			}
-			
+
 			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
 				// kill rogue agent
 				condition -= 500;
 				return false;
 			}
-			
+
 			if(actionQueue.get(0).getAgentCommand().isCollect()) {
 				if(carriedResources <= MAX_RESOURCES - 50) {
 					carriedResources += 50;
@@ -252,7 +300,7 @@ public abstract class AbstractAgent{
 					}
 				}
 			}
-			
+
 			if(actionQueue.get(0).getAgentCommand().isDeposit()) {
 				// TODO --- SINNING CODE ZONE ---
 				Game g = Game.getInstance();
@@ -263,7 +311,7 @@ public abstract class AbstractAgent{
 						buildingIndex = i;
 					}
 				}
-								
+
 				if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COAL))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.COAL, carriedResources);
 				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COPPER))
@@ -276,10 +324,10 @@ public abstract class AbstractAgent{
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.GOLD, carriedResources);
 				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_OIL))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.OIL, carriedResources);
-				
+
 				setAmountCarried(0);
 			}
-			
+
 			return false;
 		}
 	}

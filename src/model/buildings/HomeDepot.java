@@ -14,12 +14,12 @@ public class HomeDepot extends AbstractBuilding{
 
 	public HomeDepot(int capacity, Point location) {
 		super(capacity, location, BuildingType.HOMEDEPOT);
-		cost.put(ResourceType.COAL, 5);
-		cost.put(ResourceType.IRON, 10);
-		cost.put(ResourceType.GOLD, 3);
+		resources.put(ResourceType.COAL, 0);
+		resources.put(ResourceType.IRON, 0);
+		resources.put(ResourceType.GOLD, 0);
 	}
 
-	
+
 	public void maintain(AbstractAgent a) {
 		a.setCondition(maintainAmount);
 	}
@@ -29,7 +29,9 @@ public class HomeDepot extends AbstractBuilding{
 	public void upgrade() {
 		maintainAmount+=10;
 		version += 1;
-		
+		buildTime += 100;
+		completionAmount = 0;
+
 	}
 
 
@@ -38,6 +40,6 @@ public class HomeDepot extends AbstractBuilding{
 		return cost;
 	}
 
-	
+
 
 }

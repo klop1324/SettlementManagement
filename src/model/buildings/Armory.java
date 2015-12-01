@@ -15,8 +15,10 @@ public class Armory extends AbstractBuilding{
 
 	@Override
 	public void upgrade() {
-		// TODO Auto-generated method stub
-		
+		capacity+=10;
+		version += 1;
+		buildTime += 100;
+		completionAmount = 0;
 	}
 
 	@Override

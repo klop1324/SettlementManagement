@@ -21,8 +21,10 @@ public class JunkYard extends AbstractBuilding{
 
 	@Override
 	public void upgrade() {
-		capacity += 10;
+		capacity+=10;
 		version += 1;
+		buildTime += 100;
+		completionAmount = 0;
 		
 	}
 

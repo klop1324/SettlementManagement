@@ -6,15 +6,35 @@ import java.awt.Point;
 
 import org.junit.Test;
 
+import model.Game;
 import model.agents.WorkerAgent;
+import model.buildings.Armory;
+import model.buildings.BuildingType;
 import model.buildings.ChargingStation;
+import model.buildings.HomeDepot;
 import model.buildings.JunkYard;
 import model.resources.Resource;
 import model.resources.ResourceType;
 
 public class BuildingTest {
 	WorkerAgent agent = new WorkerAgent(new Point(1,2));
-
+	@Test
+	public void newBuildingTest(){
+		Game game = new Game(); // turn the constructor back into private i guess
+		HomeDepot home = new HomeDepot(100, new Point(12, 3));
+		Resource coal = new Resource(10, null, ResourceType.COAL);
+		Resource gold = new Resource(10, new Point(12, 3), ResourceType.GOLD);
+		Resource iron = new Resource(10, new Point(12, 7), ResourceType.IRON);
+		game.addBuilding(home);
+		home.agentAddCapacity(coal.getType(), 100);
+		home.agentAddCapacity(gold.getType(), 100);
+		home.agentAddCapacity(iron.getType(), 100);
+		game.addBuildingInProcess(new Armory(10, new Point(10, 4)));
+//		game.createBuilding(new Point(12, 3), BuildingType.ARMORY);
+//		System.out.println(game.getBuildingsInProcess());
+		
+		
+	}
 	@Test
 	public void junkYardTest() {
 		JunkYard junkyard = new JunkYard(100, new Point(1,2));

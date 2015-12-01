@@ -20,8 +20,11 @@ public class SolarPanel extends AbstractBuilding{
 
 	@Override
 	public void upgrade() {
-		// TODO Auto-generated method stub
-		
+		capacity += 10;
+		setPassiveRate(passiveRate += 4.0);
+		version +=1;
+		buildTime += 100;
+		completionAmount = 0;
 	}
 
 }
