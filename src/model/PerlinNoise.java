@@ -57,7 +57,7 @@ public class PerlinNoise {
 	      
 	   }
 
-	   public float noise(float x, float y) {
+	   public float noise(float x, float y, float contrast) {
 
 	      // Grid cell coordinates in integer values.
 	      int gx0 = (int) (Math.floor(x)); // Top-Left
@@ -92,7 +92,7 @@ public class PerlinNoise {
 	      float b = lerp(sy, t, u); // Interpolate Top-Right(t) and Down-Right(u) We can also call this RIGHT
 	      float h = lerp(sx, a, b); // Interpolate LEFT(a) and RIGHT(b). We can call this height(h)
 	      
-	      h *= 1.5; // Multiply here so adjust contrast.
+	      h *= contrast; // Multiply here so adjust contrast.
 	      
 	      // Make sure it is -1 to 1. If you don't change contrast, you don't have to do this.
 	      if(h > 1) h = 1;
@@ -138,11 +138,11 @@ public class PerlinNoise {
 	   }
 
 	   public static void main(String args[]) {
-
-	      while (true) { // Hope you can click stop application from your IDE. :P
+		   int i = 0;
+	      while (i < 5) { // Hope you can click stop application from your IDE. :P
 
 	         display();
-
+	         i++;
 	      }
 
 	   }
@@ -165,7 +165,7 @@ public class PerlinNoise {
 	            float xx = (float) x / width * size; // Where does the point lie in the noise space according to image space. 
 	            float yy = (float) y / height * size; // Where does the point lie in the noise space according to image space. 
 	            
-	            float n = (float) noise.noise(xx, yy); // Noise values from Perlin's noise.
+	            float n = (float) noise.noise(xx, yy, 1f); // Noise values from Perlin's noise.
 	            int col = (int) ((n + 1) * 255 / 2f); // Since noise value returned is -1 to 1, we make it so that -1 is black, and 1 is white.
 	            
 	            Color color = new Color(col, col, col); // java.AWT color to get RGB from.
@@ -179,6 +179,7 @@ public class PerlinNoise {
 	      String time = "It took: " + (time1 - time0) / 1000000 + "MS to generate the image."; // Make a string which says how long it took to generate the image.
 	      
 	      JOptionPane.showMessageDialog(null, null, "Perlin Noise | " + time, JOptionPane.YES_NO_OPTION, new ImageIcon(image.getScaledInstance(512, 512, Image.SCALE_DEFAULT)));
+	      
 	      
 	   }
 	   

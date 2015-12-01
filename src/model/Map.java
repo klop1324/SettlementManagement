@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -8,15 +9,15 @@ import java.util.Random;
 
 public class Map extends Observable{
 	
-	/*
+	
 	public static void main(String args[]){
 		Map map = new Map(100,100);
 		System.out.println(map.toString());
 		
 	}
-	*/
 	
 	
+	private static final int size = 6;	// this is the size of the biome, smaller means larger biomes  
 	private int[][] map;
 	private boolean[][] isVisible;
 	private int xLength, yLength;
@@ -38,70 +39,22 @@ public class Map extends Observable{
 	
 	// makes the map
 	private void generate(){
-		System.out.println("called");
+		PerlinNoise noise = new PerlinNoise(size, size);
 		
-		ArrayList<Node> points = new ArrayList<Node>();
-		
-		Random random = new Random();
-		
-		int numOfSites = 0;
-		while(numOfSites < Math.sqrt(Math.sqrt(xLength * yLength))){
-			numOfSites = (int) Math.sqrt(xLength * yLength * random.nextInt(xLength))/40;
-		}
-		System.out.println("Sites: " +numOfSites);
-		
-		//makes sure there is less than log(Xlength) sites, so that we don't get, for example, 50 sites in a 2x2 array
-		while(numOfSites > Math.log(xLength)){
-			numOfSites /= 2;
-		}
-		
-		// creates all the points
-		while(points.size() < numOfSites){
-			Node p = new Node(random.nextInt(xLength), random.nextInt(yLength));
-			boolean flag = true;
-			for(int j = 0; j < points.size() && flag; j++){
-				if(points.get(j).getX() == p.getX() && points.get(j).getY() == p.getY())flag = false;
-			}
-			// adds to the list of sites, and sets that site to a random tile type
-			if(flag){
-				points.add(p);
-				double sum = 0;
-				int tileType;
-				Tile tileValues[] = Tile.values();
-				// spawn rate calculating
-				for(int i = 0; i < tileValues.length;i++){
-					sum += tileValues[i].getSpawnRate();
-				}
-				double temp = random.nextDouble()*sum;
-				double buffer = 0;
-				for(int i = 0; i < tileValues.length; i++){
-					if(buffer + tileValues[i].getSpawnRate() < temp) map[p.getX()][p.getY()] = tileValues[i].getIntRepresentation();
-					else{
-						buffer+= tileValues[i].getSpawnRate();
-					}
-				}
-				
-				map[p.getX()][p.getY()] = random.nextInt(Tile.values().length);
-			}
-		}
-		
-		// does the actual generation, uses the closest site to set the current tile to that site
-		for(int i = 0; i < xLength; i++){
-			for(int j = 0; j < yLength; j++){
-				Node temp = getClosestPoint(i, j, points);
-				map[i][j] = map[temp.getX()][temp.getY()];
-				
-			}
-		}
-		
-		// debugging! yay!
-		/*
-		for(int i = 0; i < points.size();i++){
-			int x = points.get(i).getX();
-			int y = points.get(i).getY();;
-			System.out.println("Point " + i + " = (" + x + "," + y + ") and the value is " + map[x][y]);
-		}
-		*/
+		for (int y = 0; y < this.yLength; y++) {
+	         for (int x = 0; x < this.xLength; x++) {
+	            
+	            float xx = (float) x / this.xLength * size; // Where does the point lie in the noise space according to image space. 
+	            float yy = (float) y / this.yLength * size; // Where does the point lie in the noise space according to image space. 
+	            
+	            float n = (float) noise.noise(xx, yy, 1.6f); // Noise values from Perlin's noise.
+	            int generation = (int) ((n + 1) * Tile.values().length-2 / 2f); // Since noise value returned is -1 to 1, we need it to be between 0 and Tile.values().length
+	            System.out.println(Tile.values().length);
+	            if(generation > Tile.values().length-1) generation = Tile.values().length-1;
+	            map[x][y] = generation;
+	            
+	         }
+	      }
 	}
 	
 	// private helper method to determine what is the closest node to the point x, y
