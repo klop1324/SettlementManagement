@@ -1,11 +1,12 @@
 package model.agents;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.resources.ResourceType;
 
-public abstract class AbstractAgent{
+public abstract class AbstractAgent implements Serializable{
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;

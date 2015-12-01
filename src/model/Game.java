@@ -4,6 +4,7 @@ package model;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
@@ -17,7 +18,7 @@ import model.buildings.*;
 import model.resources.Resource;
 
 
-public class Game extends Observable{
+public class Game extends Observable implements Serializable{
 
 	private static Game game;
 	private ArrayList<AbstractBuilding> buildings;

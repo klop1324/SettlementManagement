@@ -1,8 +1,9 @@
 package model.agents;
 
 import java.awt.Point;
+import java.io.Serializable;
 
-public class AgentCommandWithDestination {
+public class AgentCommandWithDestination implements Serializable{
 	
 	private AgentCommand command;
 	private Point commandDestination;

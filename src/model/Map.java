@@ -1,13 +1,9 @@
 package model;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Observable;
-import java.util.Random;
 
-public class Map extends Observable{
+public class Map extends Observable implements Serializable{
 	
 	
 	public static void main(String args[]){
