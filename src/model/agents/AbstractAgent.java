@@ -3,11 +3,12 @@ package model.agents;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import model.Game;
 import model.resources.ResourceType;
 
 public abstract class AbstractAgent{
-	int energy, condition, oil, carriedResources, MAX_RESOURCES;
-	Point position, destination, nearestOilTank, nearestChargingStation, nearestJunkYard;
+	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED;
+	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
 	String filename;
 	ResourceType carriedResourceType;
@@ -20,6 +21,7 @@ public abstract class AbstractAgent{
 		energy = 2000;
 		condition = 2000;
 		oil = 2000;
+		MAX_NEED = 2000;
 		carriedResources = 0;
 		AI = new AgentLogic();
 		destination = new Point(6, 6);
@@ -62,6 +64,7 @@ public abstract class AbstractAgent{
 	}
 	
 	public void move() {
+		if(atDestination()) return;
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
 		
@@ -106,9 +109,12 @@ public abstract class AbstractAgent{
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see model.AbstractAgent#tic()
+	private boolean atDestination() {
+		if(position.x == destination.x && position.y == destination.y) return true;
+		return false;
+	}
+
+	/**
 	 * Moves towards destination each tic. If destination has been reached,
 	 * destination is changed. Current pathfinding: four-way directional
 	 * movement, chooses how to get to diagonal target randomly each move.
@@ -163,16 +169,104 @@ public abstract class AbstractAgent{
 		}
 		
 		public void assessCurrentDestination() {
-			if(position.x == destination.x && position.y == destination.y) {
-				if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_RESOURCE) &&
-						carriedResources <= MAX_RESOURCES) {
-					// TODO actual resource assignment
-					carriedResources += 10;
-					return;
+			// Need low
+			if(oil < 100)
+				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
+			else if(energy < 100)
+				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
+			else if(condition < 100)
+				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestJunkYard));
+			
+			// At destination
+			if(atDestination()) {
+				if(!assessActionAtDestination()) {
+					actionQueue.remove(0);
+					setDestination(actionQueue.get(0).getCommandDestination());
 				}
-				actionQueue.remove(0);
-				setDestination(actionQueue.get(0).getCommandDestination());
 			}
+		}
+		
+		/**
+		 * Returns true if Agent won't need a new destination yet, returns false if
+		 * agent needs a new destination.
+		 * @return
+		 */
+		public boolean assessActionAtDestination() {
+			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) &&
+					oil <= MAX_NEED - 50) {
+				oil += 50;
+				return true;
+			} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY) &&
+					energy <= MAX_NEED - 50) {
+				energy += 50;
+				return true;
+			} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION) &&
+					condition <= MAX_NEED - 50) {
+				condition += 50;
+				return true;
+			}
+			
+			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
+				// kill rogue agent
+				condition -= 500;
+				return false;
+			}
+			
+			if(actionQueue.get(0).getAgentCommand().isCollect()) {
+				if(carriedResources <= MAX_RESOURCES - 50) {
+					carriedResources += 50;
+					return true;
+				} else {
+					if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
+						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
+						return true;
+					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COPPER)) {
+						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COPPER, nearestJunkYard));
+						return true;
+					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_ELECTRICITY)) {
+						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_ELECTRICITY, nearestChargingStation));
+						return true;
+					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_GOLD)) {
+						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_GOLD, nearestJunkYard));
+						return true;
+					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_IRON)) {
+						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_IRON, nearestJunkYard));
+						return true;
+					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_OIL)) {
+						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_OIL, nearestOilTank));
+						return true;
+					}
+				}
+			}
+			
+			if(actionQueue.get(0).getAgentCommand().isDeposit()) {
+				// TODO --- SINNING CODE ZONE ---
+				Game g = Game.getInstance();
+				int buildingIndex = -1;
+				for(int i = 0; i < g.getBuildings().size(); i++) {
+					if(g.getBuildings().get(i).getLocation().x == destination.x &&
+							g.getBuildings().get(i).getLocation().y == destination.y) {
+						buildingIndex = i;
+					}
+				}
+								
+				if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COAL))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.COAL, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COPPER))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.COPPER, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_IRON))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.IRON, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_ELECTRICITY))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.ELECTRICITY, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_GOLD))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.GOLD, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_OIL))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.OIL, carriedResources);
+				
+				setAmountCarried(0);
+			}
+			
+			return false;
 		}
 	}
 }

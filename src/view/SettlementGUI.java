@@ -79,7 +79,7 @@ class SettlementGUI extends JFrame implements Observer {
 	}
 
 	public SettlementGUI() {
-		game = new Game();
+		game = Game.getInstance();
 		mapArea = new ViewController(game);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
