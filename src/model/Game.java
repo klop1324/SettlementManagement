@@ -16,6 +16,7 @@ import model.agents.AgentCommand;
 import model.agents.AgentCommandWithDestination;
 import model.buildings.*;
 import model.resources.Resource;
+import model.resources.ResourceType;
 
 
 public class Game extends Observable implements Serializable{
@@ -142,6 +143,13 @@ public class Game extends Observable implements Serializable{
 			//TODO: actually generate resources
 
 		}
+		resources.add(new Resource(900, new Point(5,3), ResourceType.IRON));
+		resources.add(new Resource(900, new Point(5,4), ResourceType.COPPER));
+		resources.add(new Resource(900, new Point(5,5), ResourceType.GOLD));
+		resources.add(new Resource(900, new Point(5,6), ResourceType.OIL));
+		
+		buildings.add(new Armory("Armory",500, new Point( 7,3)));
+		buildings.add(new JunkYard("JunkYard",500, new Point( 7,3)));
 
 	}
 
