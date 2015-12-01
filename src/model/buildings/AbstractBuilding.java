@@ -24,13 +24,42 @@ public abstract class AbstractBuilding {
 	protected Timer myTimer;
 	protected int version;
 
-	public AbstractBuilding(String name, int capacity, Point location, BuildingType building){
-		this.name = name;
+	public AbstractBuilding(int capacity, Point location, BuildingType building){
 		this.capacity = capacity;
 		this.location = location;
 		this.building = building;
 		version = 1;
 		resources = new HashMap<ResourceType, Integer>();
+		setName(building);
+	}
+	
+	public void setName(BuildingType b){
+		switch(b){
+		case ARMORY:
+			name = "Armory";
+			break;
+		case CHARGINGSTATION:
+			name = "Charging Station";
+			break;
+		case HOMEDEPOT:
+			name = "Home Depot";
+			break;
+		case JUNKYARD:
+			name = "JunkYard";
+			break;
+		case OILTANK:
+			name = "Oil Tank";
+			break;
+		case OILWELL:
+			name = "Oil Well";
+			break;
+		case WORKSHOP:
+			name = "Workshop";
+			break;
+		default:
+			break;
+		
+		}
 	}
 	
 	public int getVersion(){

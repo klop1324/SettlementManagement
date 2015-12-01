@@ -16,7 +16,16 @@ public class Resource {
 		this.location = origin_point;
 		this.resources = resources;
 	}
-
+	
+	// When creating buildings and using up resources in that process
+	public void spendResource(int n){
+		if ((resourceAmount - n) >= 0){
+			resourceAmount -=n;
+		}
+		else {
+			System.out.println("You don't have enough resources to build that building!");
+		}
+	}
 	// Returns the amount
 	public int getAmount(){
 		return resourceAmount;

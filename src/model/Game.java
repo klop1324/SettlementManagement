@@ -16,6 +16,7 @@ import model.agents.WorkerAgent;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
+import model.tools.Tool;
 
 public class Game extends Observable {
 
@@ -144,6 +145,64 @@ public class Game extends Observable {
 		}
 		return resource;
 	}
+	
+	// should create tool
+	public void createTool(Resource r1, Resource r2){
+		for (AbstractBuilding b : buildings){
+			if (b.getResources().containsKey(r1.getType())) {
+				// Removes that resource amount
+				b.getResources().replace(r1.getType(), b.getResources().get(r1.getType()) - 1);
+			}
+			if (b.getResources().containsKey(r2.getType())) {
+				// Removes that resource amount
+				b.getResources().replace(r2.getType(), b.getResources().get(r2.getType()) - 1);
+			}
+		}
+		new Tool(r1, r2);
+	}
+	
+	public void createBuilding(Point p, BuildingType b){
+		switch (b){
+		case ARMORY:
+			for (Resource r: resources){ // Removing from user resources
+				if (r.getType().equals(ResourceType.COAL)){
+					r.spendResource(10);
+				}
+				if (r.getType().equals(ResourceType.GOLD)){
+					r.spendResource(5);
+				}
+				if (r.getType().equals(ResourceType.IRON)){
+					r.spendResource(15);
+				}
+				else {
+					
+				}
+			}
+			buildings.add(new Armory(100, p));
+			break;
+		case CHARGINGSTATION:
+			buildings.add(new ChargingStation(100, p));
+			break;
+		case HOMEDEPOT:
+			buildings.add(new HomeDepot(100, p));
+			break;
+		case JUNKYARD:
+			buildings.add(new JunkYard(100, p));
+			break;
+		case OILTANK:
+			buildings.add(new OilTank(100, p));
+			break;
+		case OILWELL:
+			buildings.add(new OilWell(100, p));
+			break;
+		case WORKSHOP:
+			buildings.add(new WorkShop(100, p));
+			break;
+		default:
+			break;
+		
+		}
+	}
 
 	// Temporarily adds hardcoded resources, buildings, and agent to game.
 	private void addToGameTemporary(){
@@ -172,11 +231,11 @@ public class Game extends Observable {
 		}
 
 		// Temporarily initializes the hardcoded resources
-		charge = new ChargingStation("Charge", 1000, new Point(10, 5));
-		oilTank = new OilTank("Oil", 1000, new Point(10, 4));
-		junkYard = new JunkYard("JunkYard", 1000, new Point(11, 3));
-		armory = new Armory("Armory", 1000, new Point(12, 3));
-		homeDepot = new HomeDepot("HomeDepot", 1000, new Point(13, 6));
+		charge = new ChargingStation(1000, new Point(10, 5));
+		oilTank = new OilTank(1000, new Point(10, 4));
+		junkYard = new JunkYard(1000, new Point(11, 3));
+		armory = new Armory(1000, new Point(12, 3));
+		homeDepot = new HomeDepot(1000, new Point(13, 6));
 		electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
 		electric2 = new Resource(20, new Point(0, 1), ResourceType.ELECTRICITY);
 		oil = new Resource(20, new Point(0, 2), ResourceType.OIL);	

@@ -17,7 +17,7 @@ public class BuildingTest {
 
 	@Test
 	public void junkYardTest() {
-		JunkYard junkyard = new JunkYard("Junk yard", 100, new Point(1,2));
+		JunkYard junkyard = new JunkYard(100, new Point(1,2));
 		Resource oil = new Resource(10, new Point(12, 3), ResourceType.OIL);
 		Resource iron = new Resource(10, new Point(12, 3), ResourceType.IRON);
 		assertFalse(junkyard.getResources().containsKey(oil.getType()));
@@ -33,7 +33,7 @@ public class BuildingTest {
 	@Test
 	public void chargingStationTest(){
 		Point point = new Point(13, 7);
-		ChargingStation charge = new ChargingStation(null, 90, point);
+		ChargingStation charge = new ChargingStation(90, point);
 		Resource electricSlide = new Resource(10, new Point(13,7), ResourceType.ELECTRICITY);
 		assertEquals((int) charge.getResources().get(electricSlide.getType()), 0);
 		charge.agentAddCapacity(electricSlide.getType(), 9, agent);
@@ -51,7 +51,7 @@ public class BuildingTest {
 	@Test
 	public void locationCheck(){
 		Resource iron = new Resource(10, new Point(4, 30), ResourceType.IRON);
-		JunkYard junkyard = new JunkYard("Junk Yard", 40, new Point(30, 20));
+		JunkYard junkyard = new JunkYard(40, new Point(30, 20));
 		assertEquals(iron.getLocation(), new Point(4, 30));
 		assertEquals(junkyard.getLocation(), new Point(30, 20));
 	}

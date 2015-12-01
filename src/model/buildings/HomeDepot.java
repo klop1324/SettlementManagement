@@ -12,8 +12,8 @@ public class HomeDepot extends AbstractBuilding{
 	private int maintainAmount = 10;
 	private HashMap<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>();
 
-	public HomeDepot(String name, int capacity, Point location) {
-		super(name, capacity, location, BuildingType.HOMEDEPOT);
+	public HomeDepot(int capacity, Point location) {
+		super(capacity, location, BuildingType.HOMEDEPOT);
 		cost.put(ResourceType.COAL, 5);
 		cost.put(ResourceType.IRON, 10);
 		cost.put(ResourceType.GOLD, 3);
