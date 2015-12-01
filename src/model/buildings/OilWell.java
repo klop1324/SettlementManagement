@@ -15,8 +15,10 @@ public class OilWell extends AbstractBuilding{
 	}
 
 	@Override
-	public void doBuildingJob() {
-		// TODO Auto-generated method stub
+	public void upgrade() {
+		capacity += 10;
+		setPassiveRate(passiveRate += 4.0);
+		version +=1;
 		
 	}
 

@@ -13,13 +13,14 @@ public class JunkYard extends AbstractBuilding{
 		resources.put(ResourceType.COPPER, 0);
 		resources.put(ResourceType.IRON, 0);
 		resources.put(ResourceType.GOLD, 0);
+		resources.put(ResourceType.COAL, 0);
 		
 	}
-	
 
 	@Override
-	public void doBuildingJob() {
-		System.out.println(resources);
+	public void upgrade() {
+		capacity += 10;
+		version += 1;
 		
 	}
 

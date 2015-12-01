@@ -1,7 +1,6 @@
 package model;
 
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +11,6 @@ import java.util.Random;
 import javax.swing.Timer;
 
 import model.agents.AbstractAgent;
-import model.agents.AgentCommand;
-import model.agents.AgentCommandWithDestination;
 import model.agents.SoldierAgent;
 import model.agents.WorkerAgent;
 import model.buildings.*;
@@ -271,12 +268,13 @@ public class Game extends Observable {
 //
 //				}
 //			}
-			//			// removal of resources // causes sprite to stop halfway
-			//			for(int i = 0; i < resources.size(); i++){
-			//				if(!resources.get(i).hasResources()){
-			//					resources.remove(i);
-			//					i--;
-			//				}
+			// removal of resources // causes sprite to stop halfway
+			for(int i = 0; i < resources.size(); i++){
+				if(!resources.get(i).hasResources()){
+					resources.remove(i);
+					i--;
+				}
+				
 			setChanged();
 			notifyObservers();
 			notifyObservers(resources);
@@ -284,4 +282,4 @@ public class Game extends Observable {
 		}
 	}
 }
-//}
+}

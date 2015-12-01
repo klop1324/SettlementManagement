@@ -15,10 +15,12 @@ public class ChargingStation extends AbstractBuilding{
 	}
 
 	@Override
-	public void doBuildingJob() {
+	public void upgrade() {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 
 }

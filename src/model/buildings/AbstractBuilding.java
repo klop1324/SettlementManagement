@@ -2,6 +2,7 @@ package model.buildings;
 
 import java.awt.Point;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Timer;
 
@@ -21,13 +22,19 @@ public abstract class AbstractBuilding {
 	protected HashMap<ResourceType, Integer> resources;
 	protected Object resource;
 	protected Timer myTimer;
+	protected int version;
 
 	public AbstractBuilding(String name, int capacity, Point location, BuildingType building){
 		this.name = name;
 		this.capacity = capacity;
 		this.location = location;
 		this.building = building;
+		version = 1;
 		resources = new HashMap<ResourceType, Integer>();
+	}
+	
+	public int getVersion(){
+		return version;
 	}
 	
 	public BuildingType getType(){
@@ -130,6 +137,7 @@ public abstract class AbstractBuilding {
 		}
 	}
 	
-	public abstract void doBuildingJob();
+	public abstract HashMap<ResourceType, Integer> getCost();
+	public abstract void upgrade();
 
 }

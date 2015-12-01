@@ -15,9 +15,9 @@ public class OilTank extends AbstractBuilding{
 	}
 
 	@Override
-	public void doBuildingJob() {
-		// TODO Auto-generated method stub
-		
+	public void upgrade() {
+		capacity += 10;
+		version += 1;
 	}
 
 }

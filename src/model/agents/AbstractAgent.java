@@ -28,6 +28,20 @@ public abstract class AbstractAgent{
 		this.position = position;
 	}
 	
+	// Added getter and setters for condition to interact with HomeDepot
+	public int getCondition(){
+		return condition;
+	}
+	
+	public void setCondition(int n){
+		if ((n + condition) > 2000){
+			condition = 2000;
+		}
+		else {
+			condition += n;
+		}
+	}
+	
 	// Added getter that can be changed later down the road
 	public int getAmountCarried(){
 		return carriedResources;
