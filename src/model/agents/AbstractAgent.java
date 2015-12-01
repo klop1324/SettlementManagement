@@ -3,6 +3,7 @@ package model.agents;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import model.Game;
 import model.resources.ResourceType;
 
 public abstract class AbstractAgent{
@@ -239,7 +240,30 @@ public abstract class AbstractAgent{
 			}
 			
 			if(actionQueue.get(0).getAgentCommand().isDeposit()) {
+				// TODO --- SINNING CODE ZONE ---
+				Game g = Game.getInstance();
+				int buildingIndex = -1;
+				for(int i = 0; i < g.getBuildings().size(); i++) {
+					if(g.getBuildings().get(i).getLocation().x == destination.x &&
+							g.getBuildings().get(i).getLocation().y == destination.y) {
+						buildingIndex = i;
+					}
+				}
+								
+				if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COAL))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.COAL, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COPPER))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.COPPER, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_IRON))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.IRON, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_ELECTRICITY))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.ELECTRICITY, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_GOLD))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.GOLD, carriedResources);
+				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_OIL))
+					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.OIL, carriedResources);
 				
+				setAmountCarried(0);
 			}
 			
 			return false;
