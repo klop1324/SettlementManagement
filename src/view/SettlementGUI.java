@@ -18,10 +18,9 @@ import java.util.Observer;
 
 import javafx.scene.control.ComboBox;
 
-import javax.swing.AbstractAction;
 import javax.swing.InputMap;
 import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -31,7 +30,6 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.DefaultEditorKit;
 
 import model.*;
 import model.agents.*;
@@ -44,12 +42,12 @@ class SettlementGUI extends JFrame implements Observer {
 	private ViewController mapArea;
 	private Game game;
 	private TextArea notificationArea = new TextArea();
-	// ButtonGroup
 	private JButton collectButton = new JButton("Collect Resource");
 	private JButton nextButton = new JButton(">>");
 	private JButton infoButton = new JButton();
 	private JButton notifierButton = new JButton();
 	private JButton individualButton = new JButton();
+	private JButton createButton = new JButton("Create/Build");
 	private JLabel electricityAmount = new JLabel("Electricity: ");
 	private JLabel oilAmount = new JLabel("Oil: ");	
 	private JLabel coalAmount = new JLabel("Coal: ");
@@ -59,6 +57,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private JLabel name = new JLabel("Click Something");
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
+	private JComboBox selectAgent;
 	//private JPanel individual = new JPanel();
 	private Stats individual = new Stats();
 	private int one = 0;
@@ -68,8 +67,9 @@ class SettlementGUI extends JFrame implements Observer {
 	private int clickY;
 	private Point agentDest;
 	private JLayeredPane backgroundPanel = new JLayeredPane();
+	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
-	// comboBox with container and int size
+	String[] agentOrBuilding = {"select one", "create agent", "build building"};
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
 
@@ -117,12 +117,21 @@ class SettlementGUI extends JFrame implements Observer {
 		copperAmount.setForeground(Color.WHITE);
 		ironAmount.setForeground(Color.WHITE);
 		goldAmount.setForeground(Color.WHITE);
+		
+		selectAgent = new JComboBox(agentOrBuilding);
+		selectAgent.setSelectedIndex(0);
+		JPanel createPanel = new JPanel();
+		JPanel dropPanel = new JPanel();
+		createPanel.setBackground(Color.BLACK);
+		dropPanel.setBackground(Color.BLACK);
+		createPanel.add(createButton);
+		dropPanel.add(selectAgent);
 
 		TitledBorder infoBorder = new TitledBorder("Information");
 		infoBorder.setTitleColor(Color.WHITE);
 		infoPanel.setOpaque(true);
 		infoPanel.setBounds(645, 0, 150, 401);
-		infoPanel.setLayout(new GridLayout(7, 1));
+		infoPanel.setLayout(new GridLayout(9, 1));
 		infoPanel.setBorder(infoBorder);
 		infoPanel.setBackground(Color.BLACK);
 		JPanel collectPanel = new JPanel();
@@ -130,6 +139,8 @@ class SettlementGUI extends JFrame implements Observer {
 		collectPanel.setBackground(Color.BLACK);
 		collectPanel.add(collectButton);
 		infoPanel.add(collectPanel);
+		infoPanel.add(createPanel);
+		infoPanel.add(dropPanel);
 		infoPanel.add(electricityAmount);
 		infoPanel.add(oilAmount);	
 		infoPanel.add(coalAmount);
@@ -153,8 +164,6 @@ class SettlementGUI extends JFrame implements Observer {
 		cs.setBounds(0, 0, 795, 572);
 		JScrollBar vertical = cs.getVerticalScrollBar();
 		JScrollBar horizontal = cs.getHorizontalScrollBar();
-		vertical.setPreferredSize(new Dimension(0, 0));
-		horizontal.setPreferredSize(new Dimension(0, 0));
 		/*InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
@@ -188,6 +197,8 @@ class SettlementGUI extends JFrame implements Observer {
 		nextButton.addActionListener(new NextButtonListener());
 		infoButton.addActionListener(new InfoButtonListener());
 		notifierButton.addActionListener(new NotifierButtonListener());
+		createButton.addActionListener(new CreateListener());
+		selectAgent.addActionListener(new DropDownListener());
 		mapArea.addMouseListener(new ClickerListener());
 		addObservers();
 	}
@@ -220,6 +231,90 @@ class SettlementGUI extends JFrame implements Observer {
 			else {
 				notifierPanel.setVisible(true);
 				notifierButton.setBounds(20, 392, 40, 10);
+			}
+		}
+	}
+	
+	private class DropDownListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			String selected = "" + selectAgent.getSelectedItem();
+			if (selected.equals("create agent")) {
+				selectAgent.removeAllItems();
+				selectAgent.addItem("select agent type");
+				selectAgent.addItem("builder");
+				selectAgent.addItem("soldier");
+				selectAgent.addItem("worker");
+				selectAgent.addItem("BACK TO MAIN");
+			}
+			else if (selected.equals("build building")) {
+				selectAgent.removeAllItems();
+				selectAgent.addItem("select building type");
+				selectAgent.addItem("armory");
+				selectAgent.addItem("charging station");
+				selectAgent.addItem("junkyard");
+				selectAgent.addItem("oil tank");
+				selectAgent.addItem("oil well");
+				selectAgent.addItem("workshop");
+				selectAgent.addItem("BACK TO MAIN");
+			}
+			else if (selected.equals("BACK TO MAIN")) {
+				System.out.println(selected);
+				selectAgent.removeAllItems();
+				selectAgent.addItem("select one");
+				selectAgent.addItem("create agent");
+				selectAgent.addItem("build building");
+			}
+		}
+	}
+	
+	private class CreateListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			String selected = "" + selectAgent.getSelectedItem();
+			selectAgent.removeAllItems();
+			selectAgent.addItem("select one");
+			selectAgent.addItem("create agent");
+			selectAgent.addItem("build building");
+			if (selected.equals("select agent type"))
+				return;
+			else if (selected.equals("builder")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("soldier")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("worker")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("armory")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("charging station")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("junkyard")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("oil tank")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("oil well")) {
+				System.out.println(selected);
+				return;
+			}
+			else if (selected.equals("workshop")) {
+				System.out.println(selected);
+				return;
 			}
 		}
 	}
