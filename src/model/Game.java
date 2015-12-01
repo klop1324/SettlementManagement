@@ -1,7 +1,6 @@
 package model;
 
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,15 +13,13 @@ import javax.swing.Timer;
 import model.agents.AbstractAgent;
 import model.agents.AgentCommand;
 import model.agents.AgentCommandWithDestination;
-import model.agents.SoldierAgent;
-import model.agents.WorkerAgent;
 import model.buildings.*;
 import model.resources.Resource;
-import model.resources.ResourceType;
 
-public class Game extends Observable {
 
-	private Game game = this;
+public class Game extends Observable{
+
+	private static Game game;
 	private ArrayList<AbstractBuilding> buildings;
 	private	ArrayList<Resource> resources;
 	private ArrayList<AbstractAgent> agents;
@@ -33,8 +30,16 @@ public class Game extends Observable {
 	private boolean collected = false;
 	private Point resourcePointClicked;
 	private Resource resourceClicked = null;
-
-	public Game() {
+	
+	public static synchronized Game getGameInstance(){
+		if(game == null){
+			game = new Game();
+		}
+		return game;
+		
+	}
+	
+	private Game() {
 		this.map = new Map(GlobalSettings.MAP_SIZE_X, GlobalSettings.MAP_SIZE_Y);
 		this.buildings = new ArrayList<AbstractBuilding>();
 		this.resources = new ArrayList<Resource>();
