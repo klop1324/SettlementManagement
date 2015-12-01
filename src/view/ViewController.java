@@ -53,7 +53,7 @@ public class ViewController extends JPanel implements Observer {
 			copper = ImageIO.read(new File("./ImageSet/singleCopper.png"));
 			iron = ImageIO.read(new File("./ImageSet/singleStone.png"));
 			gold = ImageIO.read(new File("./ImageSet/singleIron.png"));
-			ground = ImageIO.read(new File("./ImageSet/tile-0.png"));
+			ground = ImageIO.read(new File("./ImageSet/tile-Plating.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

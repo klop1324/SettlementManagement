@@ -1,9 +1,10 @@
 package model.resources;
 import java.awt.Point;
+import java.io.Serializable;
 
 import model.agents.AbstractAgent;
 
-public class Resource {
+public class Resource implements Serializable{
 	protected int resourceAmount;
 	protected Point location;
 	protected String agentResourceNotify;
