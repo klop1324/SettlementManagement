@@ -7,8 +7,7 @@ public class SoldierAgent extends AbstractAgent{
 	public SoldierAgent(Point position) {
 		super(position);
 		filename = "???";
-		textRep = 'S';
-		MAX_RESOURCES = 500;
+		MAX_RESOURCES = 0;
 	}
 
 	@Override
