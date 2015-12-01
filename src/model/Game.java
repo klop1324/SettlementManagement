@@ -30,24 +30,8 @@ public class Game extends Observable {
 
 	private Timer timer;
 	private Timer agentTimer;
-	private int[] currentResources;
-	private ChargingStation charge;
-	private OilTank oilTank;
-	private Armory armory;
-	private JunkYard junkYard;
-	private HomeDepot homeDepot;
-	private Resource electric;
-	private Resource electric2;
-	private Resource oil;
-	private Resource coal;
-	private Resource copper;
-	private Resource iron;
-	private Resource gold;
-	private SoldierAgent firstAgent;
-	private WorkerAgent secondAgent;
 	private boolean collected = false;
 	private Point resourcePointClicked;
-	private Point buildingDest;
 	private Resource resourceClicked = null;
 
 	public Game() {
@@ -56,16 +40,12 @@ public class Game extends Observable {
 		this.resources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
 
-		//TODO implement tick system
-
 
 		//TODO intitial resource generation
 
 		generateResources();
 
 		//TODO intitial agent generation
-
-		addToGameTemporary();
 
 		timer = new Timer(50, new TickActionListener());
 		agentTimer = new Timer(200, new AgentListener());
@@ -148,23 +128,6 @@ public class Game extends Observable {
 		return resource;
 	}
 
-	// Temporarily adds hardcoded resources, buildings, and agent to game.
-	private void addToGameTemporary(){
-		addBuilding(charge);
-		addBuilding(oilTank);		
-		addBuilding(junkYard);
-		addBuilding(armory);
-		addBuilding(homeDepot);
-		addResource(electric2);
-		addResource(coal);
-		addResource(copper);
-		addResource(iron);
-		addResource(gold);
-		addResource(electric);
-		addResource(oil);
-		addAgents(secondAgent);
-	}
-
 	private void generateResources(){
 		// generates log(sqrt(MapSizeX*MapSizeY))* MapRichness\
 		Random r = new Random();
@@ -173,22 +136,6 @@ public class Game extends Observable {
 			//TODO: actually generate resources
 
 		}
-
-		// Temporarily initializes the hardcoded resources
-		charge = new ChargingStation("Charge", 1000, new Point(10, 5));
-		oilTank = new OilTank("Oil", 1000, new Point(10, 4));
-		junkYard = new JunkYard("JunkYard", 1000, new Point(11, 3));
-		armory = new Armory("Armory", 1000, new Point(12, 3));
-		homeDepot = new HomeDepot("HomeDepot", 1000, new Point(13, 6));
-		electric = new Resource(20, new Point(0, 0), ResourceType.ELECTRICITY);
-		electric2 = new Resource(20, new Point(0, 1), ResourceType.ELECTRICITY);
-		oil = new Resource(20, new Point(0, 2), ResourceType.OIL);	
-		coal = new Resource(20, new Point(4, 7), ResourceType.COAL);
-		copper = new Resource(30, new Point(9, 8), ResourceType.COPPER);
-		iron = new Resource(20, new Point(8, 6), ResourceType.IRON);
-		gold = new Resource(40, new Point(9, 6), ResourceType.GOLD);	
-		firstAgent = new SoldierAgent(new Point(11,4));
-		secondAgent = new WorkerAgent(new Point(6, 6));
 
 	}
 
