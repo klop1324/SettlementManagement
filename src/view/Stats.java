@@ -38,7 +38,6 @@ public class Stats extends JPanel {
 
 	private int clickX;
 	private int clickY;
-	private Game game = new Game();
 	private JLabel agent = new JLabel("Agent: ");
 	private JLabel resource = new JLabel("Resource: ");
 	private JLabel building = new JLabel("Building: ");
@@ -63,7 +62,6 @@ public class Stats extends JPanel {
 	}
 
 	public Stats() {
-		game = new Game();
 		this.setLayout(new GridLayout(1, 5));
 		this.setBounds(197, 0, 400, 20);
 		this.setBackground(Color.BLACK);
