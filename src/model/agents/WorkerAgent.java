@@ -6,23 +6,22 @@ public class WorkerAgent extends AbstractAgent {
 	public WorkerAgent(Point position) {
 		super(position);
 		filename = "???";
-		textRep = 'M';
 		MAX_RESOURCES = 2000;
 	}
 
 	@Override
 	void decrementEnergy() {
-		energy = energy - 2;		
+		energy--;		
 	}
 
 	@Override
 	void decrementCondition() {
-		condition = condition - 2;		
+		condition--;		
 	}
 
 	@Override
 	void decrementOil() {
-		oil = oil - 2;	
+		oil--;	
 	}
 
 }

@@ -9,9 +9,7 @@ public abstract class AbstractAgent{
 	int energy, condition, oil, carriedResources, MAX_RESOURCES;
 	Point position, destination, nearestOilTank, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
-	boolean switchFlag; // TODO temp
 	String filename;
-	char textRep; // TODO temp
 	ResourceType carriedResourceType;
 	
 	/**
@@ -58,11 +56,7 @@ public abstract class AbstractAgent{
 	public Point getPosition() {
 		return position;
 	}
-	
-	public char getTextRep() {
-		return textRep;
-	}
-	
+		
 	public void sendCommand(AgentCommandWithDestination c) {
 		AI.recieveCommand(c);
 	}

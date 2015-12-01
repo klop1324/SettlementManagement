@@ -2,28 +2,27 @@ package model.agents;
 
 import java.awt.Point;
 
-public class ScoutAgent extends AbstractAgent {
+public class BuilderAgent extends AbstractAgent {
 
-	public ScoutAgent(Point position) {
+	public BuilderAgent(Point position) {
 		super(position);
 		filename = "???";
-		textRep = 's';
-		MAX_RESOURCES = 500;
+		MAX_RESOURCES = 0;
 	}
 
 	@Override
 	void decrementEnergy() {
-		energy--;	
+		energy -= 2;	
 	}
 
 	@Override
 	void decrementCondition() {
-		condition--;
+		condition -= 2;
 	}
 
 	@Override
 	void decrementOil() {
-		oil--;	
+		oil -= 2;	
 	}
 
 
