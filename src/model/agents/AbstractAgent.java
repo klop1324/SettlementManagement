@@ -4,18 +4,21 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import model.Game;
+import model.buildings.BuildingType;
 import model.resources.ResourceType;
 
-public abstract class AbstractAgent{
+public abstract class AbstractAgent {
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
 	String filename;
 	ResourceType carriedResourceType;
-	
+
 	/**
 	 * Creates a new AbstractAgent at a given position.
-	 * @param Point position
+	 * 
+	 * @param Point
+	 *            position
 	 */
 	public AbstractAgent(Point position) {
 		energy = 2000;
@@ -27,90 +30,92 @@ public abstract class AbstractAgent{
 		destination = new Point(6, 6);
 		this.position = position;
 	}
-	
+
 	// Added getter that can be changed later down the road
-	public int getAmountCarried(){
+	public int getAmountCarried() {
 		return carriedResources;
 	}
-	
-	public ResourceType getCarriedResource(){
+
+	public ResourceType getCarriedResource() {
 		return carriedResourceType;
 	}
-	
+
 	public void setAmountCarried(int a) {
 		carriedResources = a;
 	}
-	
+
 	// Added carriedResources setter can be changed later
-	public void setPickedUpResource(ResourceType resource){
+	public void setPickedUpResource(ResourceType resource) {
 		setAmountCarried(10); // Change later when max carry limit is set up
 		carriedResourceType = resource;
 	}
-	
+
 	public void setDestination(Point destination) {
 		this.destination = destination;
 	}
-	
+
 	public Point getDestination() {
 		return destination;
 	}
-	
+
 	public Point getPosition() {
 		return position;
 	}
-		
+
 	public void sendCommand(AgentCommandWithDestination c) {
 		AI.recieveCommand(c);
 	}
-	
+
 	public void move() {
-		if(atDestination()) return;
+		if (atDestination())
+			return;
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
-		
+
 		int direction = (int) (Math.random() * 2);
-		
-		if(!pRightOfD && !pBelowD) {
-			if(position.x == destination.x)
+
+		if (!pRightOfD && !pBelowD) {
+			if (position.x == destination.x)
 				position = new Point(position.x, position.y + 1);
-			else if(position.y == destination.y)
+			else if (position.y == destination.y)
 				position = new Point(position.x + 1, position.y);
-			else if(direction == 0)
+			else if (direction == 0)
 				position = new Point(position.x, position.y + 1);
-			else if(direction == 1)
+			else if (direction == 1)
 				position = new Point(position.x + 1, position.y);
-		} else if(pRightOfD && !pBelowD) {
-			if(position.x == destination.x)
+		} else if (pRightOfD && !pBelowD) {
+			if (position.x == destination.x)
 				position = new Point(position.x, position.y + 1);
-			else if(position.y == destination.y)
+			else if (position.y == destination.y)
 				position = new Point(position.x - 1, position.y);
-			else if(direction == 0)
+			else if (direction == 0)
 				position = new Point(position.x, position.y + 1);
-			else if(direction == 1)
+			else if (direction == 1)
 				position = new Point(position.x - 1, position.y);
-		} else if(pRightOfD && pBelowD) {
-			if(position.x == destination.x)
+		} else if (pRightOfD && pBelowD) {
+			if (position.x == destination.x)
 				position = new Point(position.x, position.y - 1);
-			else if(position.y == destination.y)
+			else if (position.y == destination.y)
 				position = new Point(position.x - 1, position.y);
-			else if(direction == 0)
+			else if (direction == 0)
 				position = new Point(position.x, position.y - 1);
-			else if(direction == 1)
+			else if (direction == 1)
 				position = new Point(position.x - 1, position.y);
-		} else if(!pRightOfD && pBelowD) {
-			if(position.x == destination.x)
+		} else if (!pRightOfD && pBelowD) {
+			if (position.x == destination.x)
 				position = new Point(position.x, position.y - 1);
-			else if(position.y == destination.y)
+			else if (position.y == destination.y)
 				position = new Point(position.x + 1, position.y);
-			else if(direction == 0)
+			else if (direction == 0)
 				position = new Point(position.x, position.y - 1);
-			else if(direction == 1)
+			else if (direction == 1)
 				position = new Point(position.x + 1, position.y);
 		}
 	}
-	
+
 	private boolean atDestination() {
-		if(position.x == destination.x && position.y == destination.y) return true;
+		if (position.x == destination.x && position.y == destination.y)
+			return true;
 		return false;
 	}
 
@@ -120,32 +125,66 @@ public abstract class AbstractAgent{
 	 * movement, chooses how to get to diagonal target randomly each move.
 	 */
 	public void tic() {
+		checkClosestBuildings();
 		AI.assessCurrentDestination();
 		move();
 		decrementEnergy();
 		decrementCondition();
 		decrementOil();
 	}
-	
-	abstract void decrementEnergy();
-	abstract void decrementCondition();
-	abstract void decrementOil();
-	
-	public class AgentLogic {
+
+	private void checkClosestBuildings() {
+		// TODO --- SINNING CODE ZONE ---
+		Game g = Game.getInstance();
+		double chargeDistance, depotDistance, oilDistance, junkDistance;
+		chargeDistance = 999999999;
+		depotDistance = 999999999;
+		oilDistance = 999999999;
+		junkDistance = 999999999;
 		
+		for (model.buildings.AbstractBuilding b : g.getBuildings()) {
+			if (b.getType().equals(BuildingType.CHARGINGSTATION) && 
+					position.distance(b.getLocation()) < chargeDistance) {
+				nearestChargingStation = b.getLocation();
+				chargeDistance = position.distance(b.getLocation());
+			} else if (b.getType().equals(BuildingType.HOMEDEPOT) && 
+					position.distance(b.getLocation()) < depotDistance) {
+				nearestHomeDepot = b.getLocation();
+				depotDistance = position.distance(b.getLocation());
+			} else if (b.getType().equals(BuildingType.OILTANK) && 
+					position.distance(b.getLocation()) < oilDistance) {
+				nearestOilTank = b.getLocation();
+				oilDistance = position.distance(b.getLocation());
+			} else if (b.getType().equals(BuildingType.JUNKYARD) && 
+					position.distance(b.getLocation()) < junkDistance) {
+				nearestJunkYard = b.getLocation();
+				junkDistance = position.distance(b.getLocation());
+			}
+
+		}
+
+	}
+
+	abstract void decrementEnergy();
+
+	abstract void decrementCondition();
+
+	abstract void decrementOil();
+
+	public class AgentLogic {
+
 		/*
-		 * Agent should be doing things in this priority:
-		 * 1. Addressing critically low needs
-		 * 2. Depositing Resource if it's at carrying capacity
-		 * 3. Following user commands in the order they are issued
+		 * Agent should be doing things in this priority: 1. Addressing
+		 * critically low needs 2. Depositing Resource if it's at carrying
+		 * capacity 3. Following user commands in the order they are issued
 		 * 
 		 * Critically low energy/condition can be assessed by constantly
-		 * measuring distance from a refill station, comparing it to
-		 * remaining energy/condition, and moving there once stat
-		 * remaining after traveling <= some number greater than 0.
+		 * measuring distance from a refill station, comparing it to remaining
+		 * energy/condition, and moving there once stat remaining after
+		 * traveling <= some number greater than 0.
 		 * 
-		 * User commands expire only once the command has been fully carried out,
-		 * i.e. all of specified resource gathered, or until user cancels
+		 * User commands expire only once the command has been fully carried
+		 * out, i.e. all of specified resource gathered, or until user cancels
 		 * command.
 		 * 
 		 * May be possible to get caught between these two priorities, such as
@@ -153,119 +192,122 @@ public abstract class AbstractAgent{
 		 * This could be accounted for, or it might just be up to the user to
 		 * notice an unproductive robot waffling between commands and needs.
 		 */
-		
+
 		private ArrayList<AgentCommandWithDestination> actionQueue;
-		
+
 		public AgentLogic() {
 			actionQueue = new ArrayList<AgentCommandWithDestination>();
 		}
-		
+
 		public void recieveCommand(AgentCommandWithDestination c) {
 			actionQueue.add(c);
 		}
-		
-		public ArrayList<AgentCommandWithDestination> getActionQueue(){
+
+		public ArrayList<AgentCommandWithDestination> getActionQueue() {
 			return actionQueue;
 		}
-		
+
 		public void assessCurrentDestination() {
 			// Need low
-			if(oil < 100)
+			if (oil < 100)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
-			else if(energy < 100)
+			else if (energy < 100)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
-			else if(condition < 100)
-				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestJunkYard));
-			
+			else if (condition < 100)
+				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
+
 			// At destination
-			if(atDestination()) {
-				if(!assessActionAtDestination()) {
+			if (atDestination()) {
+				if (!assessActionAtDestination()) {
 					actionQueue.remove(0);
 					setDestination(actionQueue.get(0).getCommandDestination());
 				}
 			}
 		}
-		
+
 		/**
-		 * Returns true if Agent won't need a new destination yet, returns false if
-		 * agent needs a new destination.
+		 * Returns true if Agent won't need a new destination yet, returns false
+		 * if agent needs a new destination.
+		 * 
 		 * @return
 		 */
 		public boolean assessActionAtDestination() {
-			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) &&
-					oil <= MAX_NEED - 50) {
+			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 50) {
 				oil += 50;
 				return true;
-			} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY) &&
-					energy <= MAX_NEED - 50) {
+			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY)
+					&& energy <= MAX_NEED - 50) {
 				energy += 50;
 				return true;
-			} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION) &&
-					condition <= MAX_NEED - 50) {
+			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION)
+					&& condition <= MAX_NEED - 50) {
 				condition += 50;
 				return true;
 			}
-			
-			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
+
+			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
 				// kill rogue agent
 				condition -= 500;
 				return false;
 			}
-			
-			if(actionQueue.get(0).getAgentCommand().isCollect()) {
-				if(carriedResources <= MAX_RESOURCES - 50) {
+
+			if (actionQueue.get(0).getAgentCommand().isCollect()) {
+				if (carriedResources <= MAX_RESOURCES - 50) {
 					carriedResources += 50;
 					return true;
 				} else {
-					if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
-						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
+					if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
+						actionQueue
+								.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
 						return true;
-					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COPPER)) {
-						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COPPER, nearestJunkYard));
+					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COPPER)) {
+						actionQueue.add(0,
+								new AgentCommandWithDestination(AgentCommand.DEPOSIT_COPPER, nearestJunkYard));
 						return true;
-					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_ELECTRICITY)) {
-						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_ELECTRICITY, nearestChargingStation));
+					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_ELECTRICITY)) {
+						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_ELECTRICITY,
+								nearestChargingStation));
 						return true;
-					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_GOLD)) {
+					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_GOLD)) {
 						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_GOLD, nearestJunkYard));
 						return true;
-					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_IRON)) {
+					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_IRON)) {
 						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_IRON, nearestJunkYard));
 						return true;
-					} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_OIL)) {
+					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_OIL)) {
 						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_OIL, nearestOilTank));
 						return true;
 					}
 				}
 			}
-			
-			if(actionQueue.get(0).getAgentCommand().isDeposit()) {
+
+			if (actionQueue.get(0).getAgentCommand().isDeposit()) {
 				// TODO --- SINNING CODE ZONE ---
 				Game g = Game.getInstance();
 				int buildingIndex = -1;
-				for(int i = 0; i < g.getBuildings().size(); i++) {
-					if(g.getBuildings().get(i).getLocation().x == destination.x &&
-							g.getBuildings().get(i).getLocation().y == destination.y) {
+				for (int i = 0; i < g.getBuildings().size(); i++) {
+					if (g.getBuildings().get(i).getLocation().x == destination.x
+							&& g.getBuildings().get(i).getLocation().y == destination.y) {
 						buildingIndex = i;
 					}
 				}
-								
-				if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COAL))
+
+				if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COAL))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.COAL, carriedResources);
-				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COPPER))
+				else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_COPPER))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.COPPER, carriedResources);
-				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_IRON))
+				else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_IRON))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.IRON, carriedResources);
-				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_ELECTRICITY))
+				else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_ELECTRICITY))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.ELECTRICITY, carriedResources);
-				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_GOLD))
+				else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_GOLD))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.GOLD, carriedResources);
-				else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_OIL))
+				else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.DEPOSIT_OIL))
 					g.getBuildings().get(buildingIndex).agentAddCapacity(ResourceType.OIL, carriedResources);
-				
+
 				setAmountCarried(0);
 			}
-			
+
 			return false;
 		}
 	}
