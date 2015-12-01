@@ -10,7 +10,7 @@ public enum Tile {
 	//===============================
 	//==> DO NOT SKIP NUMBERS!!!! <==
 	//===============================
-	PLATING(0, 'o',5.0), OIL(1, ' ', 5.0), GRAVEL(2, 'G', 5.0);
+	PLATING(0, 'o',5.0), OIL(1, ' ', 5.0), SHALLOWS(2, 'S', 5.0), GRAVEL(3, 'G', 5.0);
 	
 	private int intRep;
 	private char charRep;

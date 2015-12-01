@@ -45,28 +45,30 @@ public class Map extends Observable{
 		for(Tile t: Tile.values()){
 			totalSpawnChance += t.getSpawnRate();
 		}
-		System.out.println(totalSpawnChance);
+		
 		for (int y = 0; y < this.yLength; y++) {
 	         for (int x = 0; x < this.xLength; x++) {
 	            
 	            float xx = (float) x / this.xLength * size; // Where does the point lie in the noise space according to image space. 
 	            float yy = (float) y / this.yLength * size; // Where does the point lie in the noise space according to image space. 
 	            
-	            float n = (float) noise.noise(xx, yy, 1f); // Noise values from Perlin's noise.
+	            float n = (float) noise.noise(xx, yy, 3f); // Noise values from Perlin's noise.
 	            
 	            // Since noise value returned is -1 to 1, we need it to be between 0 and Tile.values().length * total Spawn Rate
-	            double generation = (double) (((n + 1) * (Tile.values().length-1) * totalSpawnChance) / 2f); 
-
-	            
+	            int generation = (int) (((n + 1) * totalSpawnChance) / 1.8f); 
 	            // sets the tile
-	            for(Tile t: Tile.values()){
-	            	if(generation < t.getSpawnRate()) map[x][y] = t.getIntRepresentation();
-	            	else{
-	            		generation -= t.getSpawnRate();
+	            boolean flag = true;
+	            //System.out.println(generation);
+	            for(int i = 0; i < Tile.values().length && flag; i++){
+	            	if(generation <= Tile.values()[i].getSpawnRate()){
+	            		map[x][y] = Tile.values()[i].getIntRepresentation();
+	            		flag = false;
 	            	}
+	            	generation -= Tile.values()[i].getSpawnRate();
+	            	
 	            }
 	            
-	            
+	            if(map[x][y] == -1) map[x][y] = Tile.values()[Tile.values().length-1].getIntRepresentation();
 	            
 	            
 	         }
