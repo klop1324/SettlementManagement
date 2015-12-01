@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import model.resources.ResourceType;
 
 public abstract class AbstractAgent{
-	int energy, condition, oil, carriedResources, MAX_RESOURCES;
+	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED;
 	Point position, destination, nearestOilTank, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
 	String filename;
@@ -20,6 +20,7 @@ public abstract class AbstractAgent{
 		energy = 2000;
 		condition = 2000;
 		oil = 2000;
+		MAX_NEED = 2000;
 		carriedResources = 0;
 		AI = new AgentLogic();
 		destination = new Point(6, 6);
@@ -62,6 +63,7 @@ public abstract class AbstractAgent{
 	}
 	
 	public void move() {
+		if(atDestination()) return;
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
 		
@@ -106,9 +108,12 @@ public abstract class AbstractAgent{
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see model.AbstractAgent#tic()
+	private boolean atDestination() {
+		if(position.x == destination.x && position.y == destination.y) return true;
+		return false;
+	}
+
+	/**
 	 * Moves towards destination each tic. If destination has been reached,
 	 * destination is changed. Current pathfinding: four-way directional
 	 * movement, chooses how to get to diagonal target randomly each move.
@@ -163,16 +168,50 @@ public abstract class AbstractAgent{
 		}
 		
 		public void assessCurrentDestination() {
-			if(position.x == destination.x && position.y == destination.y) {
-				if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_RESOURCE) &&
-						carriedResources <= MAX_RESOURCES) {
-					// TODO actual resource assignment
-					carriedResources += 10;
-					return;
+			// Need low
+			if(oil < 100)
+				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
+			else if(energy < 100)
+				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
+			else if(condition < 100)
+				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestJunkYard));
+			
+			// At destination
+			if(atDestination()) {
+				if(!assessActionAtDestination()) {
+					actionQueue.remove(0);
+					setDestination(actionQueue.get(0).getCommandDestination());
 				}
-				actionQueue.remove(0);
-				setDestination(actionQueue.get(0).getCommandDestination());
 			}
+		}
+		
+		public boolean assessActionAtDestination() {
+			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) &&
+					oil <= MAX_NEED - 50) {
+				oil += 50;
+				return true;
+			} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY) &&
+					energy <= MAX_NEED - 50) {
+				energy += 50;
+				return true;
+			} else if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION) &&
+					condition <= MAX_NEED - 50) {
+				condition += 50;
+				return true;
+			}
+			
+			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
+				// kill rogue agent
+				return false;
+			}
+			
+			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_RESOURCE) &&
+					carriedResources <= MAX_RESOURCES) {
+				carriedResources += 10;
+				return true;
+			}
+			
+			return false;
 		}
 	}
 }
