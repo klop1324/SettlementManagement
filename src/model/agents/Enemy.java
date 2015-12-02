@@ -3,7 +3,7 @@ package model.agents;
 import java.awt.Point;
 
 import model.Game;
-import model.buildings.Building;
+import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
 import model.resources.ResourceType;
 
@@ -46,17 +46,17 @@ public class Enemy {
 		// Searches for an appropriate target building
 		while(!buildingFound) {
 			int buildingIndex = (int) Math.random() * g.getBuildings().size();
-			Building targetBuildingTemp = g.getBuildings().get(buildingIndex);
+			AbstractBuilding targetBuildingTemp = g.getBuildings().get(buildingIndex);
 			
-			if(targetBuildingTemp.getBuildingType() == BuildingType.CHARGINGSTATION) {
+			if(targetBuildingTemp.getType() == BuildingType.CHARGINGSTATION) {
 				buildingFound = true;
 				stealingResource = ResourceType.ELECTRICITY;
 				targetBuildingLocation = targetBuildingTemp.getLocation();
-			} else if(targetBuildingTemp.getBuildingType() == BuildingType.HOMEDEPOT) {
+			} else if(targetBuildingTemp.getType() == BuildingType.HOMEDEPOT) {
 				buildingFound = true;
 				stealingResource = ResourceType.COAL;
 				targetBuildingLocation = targetBuildingTemp.getLocation();
-			} else if(targetBuildingTemp.getBuildingType() == BuildingType.JUNKYARD) {
+			} else if(targetBuildingTemp.getType() == BuildingType.JUNKYARD) {
 				buildingFound = true;
 				targetBuildingLocation = targetBuildingTemp.getLocation();
 
@@ -112,8 +112,8 @@ public class Enemy {
 	 */
 	private void actionAtDestination() {
 		Game g = Game.getInstance();
-		Building thisBuilding = null;
-		for(Building b : g.getBuildings()) {
+		AbstractBuilding thisBuilding = null;
+		for(AbstractBuilding b : g.getBuildings()) {
 			if(b.getLocation().equals(destination))
 				thisBuilding = b;
 		}
