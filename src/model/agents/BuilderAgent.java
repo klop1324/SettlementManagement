@@ -2,7 +2,7 @@ package model.agents;
 
 import java.awt.Point;
 
-import model.buildings.AbstractBuilding;
+import model.buildings.Building;
 
 public class BuilderAgent extends AbstractAgent {
 	private int buildAmount = 3;
@@ -12,7 +12,7 @@ public class BuilderAgent extends AbstractAgent {
 		MAX_RESOURCES = 0;
 	}
 	
-	public void incrementCompletionAmount(AbstractBuilding b){
+	public void incrementCompletionAmount(Building b){
 		if (this.hasWeldingGun()){
 			buildAmount += 5;
 			b.incrementCompletionAmount(buildAmount);
