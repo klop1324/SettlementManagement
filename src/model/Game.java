@@ -79,20 +79,34 @@ public class Game extends Observable implements Serializable{
 		switch(resourceTypeClicked) {
 		case COAL:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_COAL, resourcePointClicked));
+			break;
 		case COPPER:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_COPPER, resourcePointClicked));
+			break;
 		case ELECTRICITY:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_ELECTRICITY, resourcePointClicked));
+			break;
 		case GOLD:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_GOLD, resourcePointClicked));
+			break;
 		case IRON:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_IRON, resourcePointClicked));
+			break;
 		case OIL:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_OIL, resourcePointClicked));
+			break;
 		}
 	}
 
-
+	private AbstractBuilding findBuildingForResource(Resource r){
+		AbstractBuilding building = null;
+		for (AbstractBuilding b: buildings){
+			if (b.getResources().containsKey(r.getType())){
+				building = b;
+			}
+		}
+		return building;
+	}
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
 		for (Resource r: resources){
