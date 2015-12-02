@@ -39,7 +39,7 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	public AbstractBuilding(Point location, int startingCapacity, boolean isPassiveProvider,
 			double passiveRate, ResourceType passiveResource, int buildTime, double maintCost, BuildingType buildingType){
-		
+	
 		this.buildingType = buildingType;
 		this.name = buildingType.getName();
 		this.capacity = startingCapacity;
@@ -48,6 +48,8 @@ public abstract class AbstractBuilding implements Serializable{
 		this.passiveRate = passiveRate;
 		this.passiveResource = passiveResource;
 		this.buildTime = buildTime;
+		this.holdableResources = new ArrayList<ResourceType>();
+		this.currentAmount = new HashMap<ResourceType, Integer>();
 		
 		this.maintCostType = ResourceType.ELECTRICITY;
 		this.maintCost = maintCost;
