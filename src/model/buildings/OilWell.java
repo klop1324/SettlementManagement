@@ -1,23 +1,34 @@
 package model.buildings;
 
 import java.awt.Point;
+import java.util.HashMap;
 
 import model.resources.ResourceType;
 
 // Extracts resource from map
 public class OilWell extends AbstractBuilding{
 
-	public OilWell(String name, int capacity, Point location) {
-		super(name, capacity, location, BuildingType.OILWELL);
+	public OilWell(int capacity, Point location) {
+		super(capacity, location, BuildingType.OILWELL);
 		passiveProvider = true;
 		setPassiveRate(2.3);
 		resources.put(ResourceType.OIL, 0);
 	}
 
 	@Override
-	public void doBuildingJob() {
-		// TODO Auto-generated method stub
+	public void upgrade() {
+		capacity += 10;
+		setPassiveRate(passiveRate += 4.0);
+		version +=1;
+		buildTime += 100;
+		completionAmount = 0;
 		
+	}
+
+	@Override
+	public HashMap<ResourceType, Integer> getCost() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

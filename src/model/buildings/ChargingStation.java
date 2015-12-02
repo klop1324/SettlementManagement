@@ -1,24 +1,36 @@
 package model.buildings;
 
 import java.awt.Point;
+import java.util.HashMap;
 
 import model.resources.ResourceType;
 
 // Charges Robots
 public class ChargingStation extends AbstractBuilding{
 
-	public ChargingStation(String name, int capacity, Point location) {
-		super(name, capacity, location, BuildingType.CHARGINGSTATION);
+	public ChargingStation(int capacity, Point location) {
+		super(capacity, location, BuildingType.CHARGINGSTATION);
 		super.passiveProvider = true;
 		setPassiveRate(3.0);
 		resources.put(ResourceType.ELECTRICITY, 0);
 	}
 
 	@Override
-	public void doBuildingJob() {
-		// TODO Auto-generated method stub
-		
+	public void upgrade() {
+		capacity += 10;
+		setPassiveRate(passiveRate += 4.0);
+		version +=1;
+		buildTime += 100;
+		completionAmount = 0;
 	}
+
+	@Override
+	public HashMap<ResourceType, Integer> getCost() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 
 }

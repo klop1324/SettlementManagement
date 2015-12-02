@@ -3,10 +3,8 @@ package model.buildings;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.HashMap;
-
 import javax.swing.Timer;
 
-import model.agents.AbstractAgent;
 import model.resources.ResourceType;
 
 
@@ -22,15 +20,73 @@ public abstract class AbstractBuilding implements Serializable{
 	protected HashMap<ResourceType, Integer> resources;
 	protected Object resource;
 	protected Timer myTimer;
+	protected int version;
+	protected int buildTime;
+	protected int completionAmount;
 
-	public AbstractBuilding(String name, int capacity, Point location, BuildingType building){
-		this.name = name;
+	public AbstractBuilding(int capacity, Point location, BuildingType building){
 		this.capacity = capacity;
 		this.location = location;
 		this.building = building;
+		completionAmount = 0;
+		version = 1;
 		resources = new HashMap<ResourceType, Integer>();
+		setName(building);
 	}
-	
+	public int getBuildTime(){
+		return buildTime;
+	}
+
+	public void incrementCompletionAmount(int n){
+		completionAmount+=n;
+	}
+
+	public boolean isCompleted(){
+		if (completionAmount == 100){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public int getCompletionAmount(){
+		return completionAmount;
+	}
+
+	public void setName(BuildingType b){
+		switch(b){
+		case ARMORY:
+			name = "Armory";
+			break;
+		case CHARGINGSTATION:
+			name = "Charging Station";
+			break;
+		case HOMEDEPOT:
+			name = "Home Depot";
+			break;
+		case JUNKYARD:
+			name = "JunkYard";
+			break;
+		case OILTANK:
+			name = "Oil Tank";
+			break;
+		case OILWELL:
+			name = "Oil Well";
+			break;
+		case WORKSHOP:
+			name = "Workshop";
+			break;
+		default:
+			break;
+
+		}
+	}
+
+	public int getVersion(){
+		return version;
+	}
+
 	public BuildingType getType(){
 		return building;
 	}
@@ -60,7 +116,7 @@ public abstract class AbstractBuilding implements Serializable{
 	public boolean isPassiveProvider(){
 		return passiveProvider;
 	}
-	
+
 	// Can set rate if passive provider
 	public void setPassiveRate(double rate){
 		if(isPassiveProvider()){
@@ -82,7 +138,7 @@ public abstract class AbstractBuilding implements Serializable{
 	public HashMap<ResourceType, Integer> getResources(){
 		return resources;
 	}
-	
+
 	// Allows agents to remove amount of resources from building
 	public void agentRemoveCapacity(ResourceType o, int amount) {
 		int newResourceAmount = resources.get(o) - amount;
@@ -119,7 +175,7 @@ public abstract class AbstractBuilding implements Serializable{
 		}
 		return allResources;
 	}
-	
+
 	public boolean isFull(){
 		if (capacity == max_capacity){
 			return true;
@@ -128,7 +184,8 @@ public abstract class AbstractBuilding implements Serializable{
 			return false;
 		}
 	}
-	
-	public abstract void doBuildingJob();
+
+	public abstract HashMap<ResourceType, Integer> getCost();
+	public abstract void upgrade();
 
 }
