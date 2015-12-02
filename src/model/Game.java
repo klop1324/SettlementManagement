@@ -16,6 +16,7 @@ import model.agents.AbstractAgent;
 import model.agents.AgentCommand;
 import model.agents.AgentCommandWithDestination;
 import model.agents.BuilderAgent;
+import model.agents.Enemy;
 import model.agents.WorkerAgent;
 import model.buildings.Building;
 import model.buildings.BuildingType;
@@ -113,6 +114,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return building;
 	}
+	
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
 		for (Resource r: mapResources){
@@ -399,6 +401,12 @@ public class Game extends Observable implements Serializable{
 			if(!agents.isEmpty()) {
 				for(AbstractAgent a : agents)
 					a.tic();
+			}
+			
+			// Updates enemies
+			if(!enemies.isEmpty()) {
+				for(Enemy e : enemies)
+					e.tic();
 			}
 			
 			for (AbstractAgent ba : agents) {
