@@ -112,16 +112,6 @@ public class Game extends Observable implements Serializable{
 			break;
 		}
 	}
-
-	private AbstractBuilding findBuildingForResource(Resource r){
-		AbstractBuilding building = null;
-		for (AbstractBuilding b: buildings){
-			if (b.getResources().contains(r)){
-				building = b;
-			}
-		}
-		return building;
-	}
 	
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
