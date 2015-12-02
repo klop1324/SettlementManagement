@@ -76,10 +76,6 @@ public class Game extends Observable implements Serializable{
 
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
-		
-		for(Resource r: mapResources){
-			//System.out.println("Type: " + r.getType().name() + " Point" + r.getLocation().toString());
-		}
 
 	}
 
@@ -396,7 +392,6 @@ public class Game extends Observable implements Serializable{
 		if(array[x][y] == -1){
 			if(Tile.values()[this.map.get(x, y)].isPassible()){
 				mapResources.add(new Resource((int) (Math.random() + 100) * 10 * GlobalSettings.MAP_RICHNESS, new Point(x,y), resource));
-				System.out.println("placed Resource: " + resource.name() + " at Point: " +x + "," + y);
 			}
 			//base case
 			array[x][y] = 0;
