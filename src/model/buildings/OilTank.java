@@ -11,7 +11,8 @@ public class OilTank extends AbstractBuilding{
 
 	public OilTank(Point location) {
 		super(location, 25000, false, 0.0, null, 100, 0, BuildingType.OILTANK);
-		
+		holdableResources.add(ResourceType.OIL);
+		currentAmount.put(ResourceType.OIL, 0);
 	}
 
 	@Override

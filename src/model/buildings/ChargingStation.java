@@ -13,7 +13,8 @@ public class ChargingStation extends AbstractBuilding{
 		//(Point location, String name, int startingCapacity, boolean isPassiveProvider,
 		//		double passiveRate, ResourceType passiveResource, int buildTime,ResourceType maintCostType, double maintCost, BuildingType buildingType)
 		super(location, 25000, false, 0.0, null, 100, 0.5, BuildingType.CHARGINGSTATION);
-		
+		holdableResources.add(ResourceType.ELECTRICITY);
+		currentAmount.put(ResourceType.ELECTRICITY, 0);
 	}
 
 	@Override
