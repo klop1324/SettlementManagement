@@ -230,6 +230,7 @@ class SettlementGUI extends JFrame implements Observer {
 		addObservers();
 	}
 	
+	// can ignore this
 	/*private void setupKeyBinding() {
 	      int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	      InputMap inMap = mapArea.getInputMap(condition);

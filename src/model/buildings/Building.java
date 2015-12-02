@@ -157,5 +157,19 @@ public class Building implements Serializable{
 	public HashMap<ResourceType, Integer> getCost(){
 		return cost;
 	}	
-
+	
+	public void doFunction(Object o){
+		switch(building){
+		case ARMORY:
+			break;
+		case OILTANK:
+			break;
+		case CHARGINGSTATION:
+			break;
+		case WORKSHOP:
+			break;
+		case HOMEDEPOT:
+			break;
+		}
+	}
 }
