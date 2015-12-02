@@ -28,17 +28,15 @@ public class Enemy {
 	 *            position
 	 */
 	public Enemy(Point position) {
-		ticCounter = 0;
+		ticCounter = -1;
 		carriedResources = 0;
 		MAX_RESOURCES = 100;
 		home = position;
 		this.position = position;
-		this.determineTargetBuilding();
-		destination = targetBuildingLocation;
 	}
 	
 	/**
-	 * Run only at initialization. Determines what Building the Enemy is
+	 * Run only right after initialization. Determines what Building the Enemy is
 	 * going to and what Resource it's going to steal.
 	 */
 	private void determineTargetBuilding() {
@@ -75,8 +73,9 @@ public class Enemy {
 					break;
 				}
 			}
-
 		}
+		
+		destination = targetBuildingLocation;
 	}
 
 
@@ -93,12 +92,16 @@ public class Enemy {
 	 * Basic update method. Call this from Game whenever Game ticks.
 	 */
 	public void tic() {
+		if(ticCounter == -1) determineTargetBuilding();
+		
 		ticCounter++;
 		
 		if(position.equals(destination))
 			actionAtDestination();
-		else if(ticCounter >= 20)
+		else if(ticCounter >= 20) {
 			move();
+			ticCounter = 0;
+		}
 	}
 
 	/**
@@ -127,7 +130,7 @@ public class Enemy {
 				return;
 			} else {
 				carriedResources += 10;
-				thisBuilding.removeResource(stealingResource, 50);
+				thisBuilding.removeResource(stealingResource, 10);
 				return;
 			}
 		}

@@ -32,6 +32,7 @@ public class Game extends Observable implements Serializable{
 	private ArrayList<Building> buildings;
 	private	ArrayList<Resource> mapResources;
 	private ArrayList<AbstractAgent> agents;
+	private ArrayList<Enemy> enemies;
 	private ArrayList<Building> buildingsInProcess;
 	private HashMap<ResourceType, Integer > playerResources;
 	private Map map;
@@ -55,6 +56,7 @@ public class Game extends Observable implements Serializable{
 		this.buildings = new ArrayList<Building>();
 		this.mapResources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
+		this.enemies = new ArrayList<Enemy>();
 		this.buildingsInProcess = new ArrayList<Building>();
 		this.playerResources = new HashMap<ResourceType, Integer>();
 		for(ResourceType r: ResourceType.values()){
@@ -66,6 +68,16 @@ public class Game extends Observable implements Serializable{
 		generateResources();
 
 		//TODO intitial agent generation
+		
+		agents.add(new WorkerAgent(new Point(6, 6)));
+		enemies.add(new Enemy(new Point(6, 7)));
+		
+		// TODO temp building generation for testing
+		
+		buildings.add(new Building(BuildingType.JUNKYARD, new Point(4,4)));
+		buildings.add(new Building(BuildingType.CHARGINGSTATION, new Point(4,5)));
+		buildings.add(new Building(BuildingType.OILTANK, new Point(4,6)));
+		buildings.add(new Building(BuildingType.HOMEDEPOT, new Point(4,7)));
 
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
@@ -449,11 +461,11 @@ public class Game extends Observable implements Serializable{
 					a.tic();
 			}
 			
-//			// Updates enemies
-//			if(!enemies.isEmpty()) {
-//				for(Enemy e : enemies)
-//					e.tic();
-//			}
+			// Updates enemies
+			if(!enemies.isEmpty()) {
+				for(Enemy e : enemies)
+					e.tic();
+			}
 			
 			for (AbstractAgent ba : agents) {
 				if (ba.getClass().equals(BuilderAgent.class)){

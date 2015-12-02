@@ -383,14 +383,14 @@ public abstract class AbstractAgent implements Serializable {
 					if (r.getLocation().x == position.x && r.getLocation().y == position.y)
 						collectingResource = r;
 				}
-
-				if (collectingResource.getAmount() < 50) {
+				
+				if (collectingResource.getAmount() <= 100) {
 					carriedResources += collectingResource.getAmount();
-					collectingResource.removeResource(50);
+					collectingResource.removeResource(100);
 					resourceDepleted = true;
-				} else if (carriedResources <= MAX_RESOURCES - 50) {
-					carriedResources += 50;
-					collectingResource.removeResource(50);
+				} else if (carriedResources <= MAX_RESOURCES - 100) {
+					carriedResources += 100;
+					collectingResource.removeResource(100);
 					return true;
 				}
 				if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {

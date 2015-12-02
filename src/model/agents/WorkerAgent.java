@@ -6,7 +6,7 @@ public class WorkerAgent extends AbstractAgent {
 	public WorkerAgent(Point position) {
 		super(position);
 		filename = "???";
-		MAX_RESOURCES = 100;
+		MAX_RESOURCES = 200;
 	}
 
 	@Override
