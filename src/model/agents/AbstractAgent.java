@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import model.Game;
 import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
+import model.resources.Resource;
 import model.resources.ResourceType;
 import model.tools.Tool;
 import model.tools.ToolType;
@@ -14,8 +15,8 @@ import model.tools.ToolType;
 public abstract class AbstractAgent implements Serializable{
 	Tool tool = null;
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt;
-	Point lastPosition, position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation,
-	nearestJunkYard;
+	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation,
+			nearestJunkYard;
 	AgentLogic AI;
 	String filename;
 	ResourceType carriedResourceType;
@@ -33,9 +34,8 @@ public abstract class AbstractAgent implements Serializable{
 		MAX_NEED = 2000;
 		carriedResources = 0;
 		AI = new AgentLogic();
-		destination = new Point(6, 6);
+		destination = null;
 		this.position = position;
-		lastPosition = position;
 	}
 
 	public boolean hasPickAxe(){ // Tool for Worker Agents to get ore faster.
@@ -101,23 +101,8 @@ public abstract class AbstractAgent implements Serializable{
 		tool = t;
 	}
 
-	// Added getter that can be changed later down the road
-	public int getAmountCarried() {
-		return carriedResources;
-	}
-
-	public ResourceType getCarriedResource() {
-		return carriedResourceType;
-	}
-
 	public void setAmountCarried(int a) {
 		carriedResources = a;
-	}
-
-	// Added carriedResources setter can be changed later
-	public void setPickedUpResource(ResourceType resource) {
-		setAmountCarried(10); // Change later when max carry limit is set up
-		carriedResourceType = resource;
 	}
 
 	public void setDestination(Point destination) {
@@ -132,20 +117,14 @@ public abstract class AbstractAgent implements Serializable{
 		return position;
 	}
 	
-	public Point getLastPosition() {
-		return lastPosition;
-	}
-
 	public void sendCommand(AgentCommandWithDestination c) {
 		AI.recieveCommand(c);
 	}
 
 	public void move() {
-		if (atDestination())
+		if (atDestination() || destination == null)
 			return;
-		
-		lastPosition = position;
-		
+			
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
 
@@ -191,6 +170,8 @@ public abstract class AbstractAgent implements Serializable{
 	}
 
 	private boolean atDestination() {
+		if(destination == null) return true;
+		
 		if (position.x == destination.x && position.y == destination.y)
 			return true;
 		return false;
@@ -295,17 +276,19 @@ public abstract class AbstractAgent implements Serializable{
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 			else if (condition < 100)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
-			
+						
+			// Sets destination
+			if(!actionQueue.isEmpty())
+				setDestination(actionQueue.get(0).getCommandDestination());
+			else
+				setDestination(null);
+
 			// At destination
-			if (atDestination()) {
+			if (atDestination() && destination != null) {
 				if (!assessActionAtDestination()) {
 					actionQueue.remove(0);
 				}
 			}
-			
-			// Sets destination
-			if(!actionQueue.isEmpty())
-				setDestination(actionQueue.get(0).getCommandDestination());
 		}
 
 		/**
@@ -318,6 +301,8 @@ public abstract class AbstractAgent implements Serializable{
 			if (actionQueue.isEmpty())
 				return true;
 
+			Game g = Game.getInstance();
+			
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 50) {
 				oil += 50;
 				return true;
@@ -337,39 +322,63 @@ public abstract class AbstractAgent implements Serializable{
 				return false;
 			}
 
+			// Collecting a resource
 			if (actionQueue.get(0).getAgentCommand().isCollect()) {
-				if (carriedResources <= MAX_RESOURCES - 50) {
+				boolean resourceDepleted = false;
+				
+				Resource collectingResource = null;
+				for(Resource r : g.getResources()) {
+					if(r.getLocation().x == position.x && r.getLocation().y == position.y)
+						collectingResource = r;
+				}
+				
+				if(collectingResource.getAmount() < 50) {
+					carriedResources += collectingResource.getAmount();
+					collectingResource.removeResource(50);
+					resourceDepleted = true;
+				} else if (carriedResources <= MAX_RESOURCES - 50) {
 					carriedResources += 50;
+					collectingResource.removeResource(50);
 					return true;
-				} else {
-					if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
-						actionQueue
-								.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
-						return true;
-					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COPPER)) {
-						actionQueue.add(0,
-								new AgentCommandWithDestination(AgentCommand.DEPOSIT_COPPER, nearestJunkYard));
-						return true;
-					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_ELECTRICITY)) {
-						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_ELECTRICITY,
-								nearestChargingStation));
-						return true;
-					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_GOLD)) {
-						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_GOLD, nearestJunkYard));
-						return true;
-					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_IRON)) {
-						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_IRON, nearestJunkYard));
-						return true;
-					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_OIL)) {
-						actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_OIL, nearestOilTank));
-						return true;
-					}
+				}
+				if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
+					if(resourceDepleted)
+						actionQueue.remove(0);
+					actionQueue
+							.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
+					return true;
+				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COPPER)) {
+					if(resourceDepleted)
+						actionQueue.remove(0);
+					actionQueue.add(0,
+							new AgentCommandWithDestination(AgentCommand.DEPOSIT_COPPER, nearestJunkYard));
+					return true;
+				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_ELECTRICITY)) {
+					if(resourceDepleted)
+						actionQueue.remove(0);
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_ELECTRICITY,
+							nearestChargingStation));
+					return true;
+				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_GOLD)) {
+					if(resourceDepleted)
+						actionQueue.remove(0);
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_GOLD, nearestJunkYard));
+					return true;
+				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_IRON)) {
+					if(resourceDepleted)
+						actionQueue.remove(0);
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_IRON, nearestJunkYard));
+					return true;
+				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_OIL)) {
+					if(resourceDepleted)
+						actionQueue.remove(0);
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_OIL, nearestOilTank));
+					return true;
 				}
 			}
 
 			if (actionQueue.get(0).getAgentCommand().isDeposit()) {
 				// TODO --- SINNING CODE ZONE ---
-				Game g = Game.getInstance();
 				int buildingIndex = -1;
 				for (int i = 0; i < g.getBuildings().size(); i++) {
 					if (g.getBuildings().get(i).getLocation().x == destination.x
