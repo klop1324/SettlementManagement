@@ -402,6 +402,10 @@ public class Game extends Observable implements Serializable{
 	public Map getMap() {
 		return map;
 	}
+	
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
 
 	public void addBuildingInProcess(AbstractBuilding b){
 		this.buildingsInProcess.add(b);
@@ -446,8 +450,13 @@ public class Game extends Observable implements Serializable{
 			
 			// Updates agents
 			if(!agents.isEmpty()) {
-				for(AbstractAgent a : agents)
-					a.tic();
+				for(int i = 0; i < agents.size(); i++) {
+					agents.get(i).tic();
+					// Agent death condition
+					if(agents.get(i).getEnergy() <= 0 || agents.get(i).getOil() <= 0 ||
+							agents.get(i).getCondition() <= 0)
+						agents.remove(agents.get(i));
+				}
 			}
 			
 			// Updates enemies

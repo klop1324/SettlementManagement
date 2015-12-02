@@ -200,4 +200,12 @@ public class Enemy {
 		}
 	}
 
+	/**
+	 * Hooray! They're dead!
+	 */
+	public void kill() {
+		Game g = Game.getInstance();
+		g.getEnemies().remove(this);
+	}
+
 }
