@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import javafx.scene.control.ComboBox;
+
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -71,7 +75,6 @@ class SettlementGUI extends JFrame implements Observer {
 	private int clickY;
 	private JScrollBar vertical = new JScrollBar();
 	private JScrollBar horizontal = new JScrollBar();
-	private Point agentDest;
 	private Point userClick;
 	private JLayeredPane backgroundPanel = new JLayeredPane();
 	//private String selected = "select agent type";
@@ -227,6 +230,7 @@ class SettlementGUI extends JFrame implements Observer {
 		addObservers();
 	}
 	
+	// can ignore this
 	/*private void setupKeyBinding() {
 	      int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	      InputMap inMap = mapArea.getInputMap(condition);
@@ -562,6 +566,7 @@ class SettlementGUI extends JFrame implements Observer {
 		labels.add(ironAmount);
 		labels.add(oilAmount);
 		
+		// l.setText(l.getText() + "0");
 		for(JLabel l: labels){
 			l.setText("0");
 		}

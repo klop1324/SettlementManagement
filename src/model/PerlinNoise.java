@@ -152,7 +152,7 @@ public class PerlinNoise implements Serializable{
 
 	      long time0 = System.nanoTime(); // Take a time stamp.
 	      
-	      int size = 6; // Perlin's noise map.
+	      int size = 16; // Perlin's noise map.
 	      PerlinNoise noise = new PerlinNoise(size, size);
 	      
 	      int width = 512; // Width of the finished image.
@@ -166,7 +166,7 @@ public class PerlinNoise implements Serializable{
 	            float xx = (float) x / width * size; // Where does the point lie in the noise space according to image space. 
 	            float yy = (float) y / height * size; // Where does the point lie in the noise space according to image space. 
 	            
-	            float n = (float) noise.noise(xx, yy, 1f); // Noise values from Perlin's noise.
+	            float n = (float) noise.noise(xx, yy, 2.5f); // Noise values from Perlin's noise.
 	            int col = (int) ((n + 1) * 255 / 2f); // Since noise value returned is -1 to 1, we make it so that -1 is black, and 1 is white.
 	            
 	            Color color = new Color(col, col, col); // java.AWT color to get RGB from.

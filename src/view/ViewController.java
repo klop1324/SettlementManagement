@@ -26,7 +26,7 @@ import model.resources.Resource;
 public class ViewController extends JPanel implements Observer {
 	private Game game;
 	private Map map;
-	private Image agent1, agent2, oilTank, charge, oil, solar, ground;
+	private Image agent1, agent2, oilTank, charge, oil, solar, ground, water, sand, grass;
 	private Image junkYard, armory, homeDepot, coal, copper, iron, gold, oilWell, workShop;
 	private ArrayList<AbstractAgent> agents;
 	private int tic = 0;
@@ -54,6 +54,9 @@ public class ViewController extends JPanel implements Observer {
 			iron = ImageIO.read(new File("./ImageSet/singleStone.png"));
 			gold = ImageIO.read(new File("./ImageSet/singleIron.png"));
 			ground = Tile.PLATING.getImage();
+			water = ImageIO.read(new File("./ImageSet/water1.png"));
+			sand = ImageIO.read(new File("./ImageSet/sand1.png"));
+			grass = ImageIO.read(new File("./ImageSet/grass1.png"));
 			oilWell = ImageIO.read(new File("./UnusedImages/graphics/technology/oil-gathering.png"));
 			workShop = ImageIO.read(new File("./UnusedImages/graphics/technology/gates.png"));
 			
@@ -78,9 +81,11 @@ public class ViewController extends JPanel implements Observer {
 				if (map.get(i, j) == 0) {
 					g2.drawImage(ground, i * 50, j * 50, null);
 				} else if (map.get(i, j) == 1) {
-					g2.drawImage(ground, i * 50, j * 50, null);
+					g2.drawImage(water, i * 50, j * 50, null);
+				} else if (map.get(i, j) == 2) {
+					g2.drawImage(sand, i * 50, j * 50, null);
 				} else {
-					g2.drawImage(ground, i * 50, j * 50, null);
+					g2.drawImage(grass, i * 50, j * 50, null);
 				}
 			}
 		}

@@ -8,9 +8,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
-import java.util.Random;
 
 import javax.swing.Timer;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import model.agents.AbstractAgent;
 import model.agents.AgentCommand;
@@ -328,28 +329,73 @@ public class Game extends Observable implements Serializable{
 
 	private void generateResources(){
 		// generates log(sqrt(MapSizeX*MapSizeY))* MapRichness\
-		Random r = new Random();
-		for(int i = 0; i < Math.log(Math.sqrt(GlobalSettings.MAP_SIZE_X * GlobalSettings.MAP_SIZE_Y)) * GlobalSettings.MAP_RICHNESS; i++){
-
-			//TODO: actually generate resources
-
+		// magic numbers, i know.\
+		int size = 32;
+		PerlinNoise noise = new PerlinNoise(size, size);
+		int generationArray[][] = new int[GlobalSettings.MAP_SIZE_X][GlobalSettings.MAP_SIZE_Y];
+		
+		for (int y = 0; y < GlobalSettings.MAP_SIZE_X; y++) {
+	         for (int x = 0; x < GlobalSettings.MAP_SIZE_Y; x++) {
+	            
+	        	float xx = (float) x / generationArray.length * size; // Where does the point lie in the noise space according to image space. 
+		        float yy = (float) y / generationArray[0].length * size; // Where does the point lie in the noise space according to image space. 
+		        
+	            float n = (float) noise.noise(xx, yy, 1.7f); // Noise values from Perlin's noise.
+	            // Since noise value returned is -1 to 1, we need it to be between 0 and Tile.values().length * total Spawn Rate
+	            int generation = (int) (((n + 1) * (Tile.values().length-1) )); 
+	            if(generation >= (Tile.values().length)){
+	            	generationArray[x][y] = -1;
+	            }
+	         }
+		}
+		
+		ArrayList<ResourceType> unplacedResources = new ArrayList<ResourceType>();
+		
+		// makes a list of unplaced resources
+		for(ResourceType resource : ResourceType.values()){
+			if(resource.isSpawnable())unplacedResources.add(resource);
+		}
+		java.util.Collections.shuffle(unplacedResources);
+		
+		ArrayList<ResourceType> placedResources = new ArrayList<ResourceType>();
+		
+		// places resources
+		for(int i = 0; i < generationArray.length;i++){
+			for(int j = 0; j < generationArray[0].length; j++){
+				// if there is a node i should be generating on
+				if(generationArray[i][j] == -1){
+					// place call generation helper to generate all the resources ONLY ON TILES THAT ARE PASSABLE
+					if(!unplacedResources.isEmpty()){
+						generationArray = generationHelper(generationArray, i,j, unplacedResources.get(0));
+						placedResources.add(unplacedResources.get(0));
+						unplacedResources.remove(0);
+					}
+					else{
+						generationArray = generationHelper(generationArray, i,j,
+								placedResources.get((int) (Math.random()*placedResources.size())));
+					}
+					
+				}
+			}
 		}
 
-		mapResources.add(new Resource(40, new Point(5,3), ResourceType.IRON));
-		mapResources.add(new Resource(40, new Point(5,4), ResourceType.COPPER));
-		mapResources.add(new Resource(40, new Point(5,5), ResourceType.GOLD));
-		mapResources.add(new Resource(40, new Point(5,6), ResourceType.OIL));
-		mapResources.add(new Resource(40, new Point(10, 3), ResourceType.ELECTRICITY));
-
-		buildings.add(new Building(BuildingType.ARMORY, new Point(6,9)));
-		buildings.add(new Building(BuildingType.JUNKYARD, new Point(7,9)));
-		buildings.add(new Building(BuildingType.OILWELL, new Point(8,9)));
-		addBuilding(new Building(BuildingType.CHARGINGSTATION, new Point(9,9)));
-		addBuilding(new Building(BuildingType.OILTANK, new Point(10,9)));
-
-		
-		addAgents(new WorkerAgent(new Point(4, 9)));
-
+	}
+	// recursive, going through the blob formed by -1's in the array, adding them to the mapResources
+	private int[][] generationHelper(int array[][], int x, int y, ResourceType resource){
+		if(array[x][y] == -1){
+			if(Tile.values()[this.map.get(x, y)].isPassible()){
+				mapResources.add(new Resource((int) (Math.random() + 100) * 10 * GlobalSettings.MAP_RICHNESS, new Point(x,y), resource));
+			}
+			//base case
+			array[x][y] = 0;
+			
+			//recursion
+			if(x+1 < array[0].length) array = generationHelper(array, x+1, y, resource);
+			if(y+1 < array.length) array = generationHelper(array, x, y+1, resource);
+			if(x-1 >= 0) array = generationHelper(array, x-1, y, resource);
+			if(y-1 >=0) array = generationHelper(array, x, y-1, resource);
+		}
+		return array;
 	}
 
 	public Map getMap() {

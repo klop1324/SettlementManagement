@@ -2,7 +2,7 @@ package model.agents;
 
 import java.awt.Point;
 
-import model.buildings.Building;
+import model.buildings.*;
 
 public class BuilderAgent extends AbstractAgent {
 	private int buildAmount = 3;
