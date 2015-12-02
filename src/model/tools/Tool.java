@@ -24,7 +24,7 @@ public class Tool {
 		if ((type1.equals(ResourceType.COPPER) ||type1.equals(ResourceType.IRON)) &&
 				(type2.equals(ResourceType.IRON) || type2.equals(ResourceType.COPPER)) &&
 				!type1.equals(type2)){
-			typeTool = ToolType.SPEAR;
+			typeTool = ToolType.ROCKETS;
 		}
 		if((type1.equals(ResourceType.COAL) ||type1.equals(ResourceType.COPPER)) &&
 				(type2.equals(ResourceType.COPPER) || type2.equals(ResourceType.COAL)) &&

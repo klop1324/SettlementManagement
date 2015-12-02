@@ -2,7 +2,7 @@ package model.tools;
 
 public enum ToolType {
 	WELDINGGUN,
-	SPEAR,
+	ROCKETS,
 	PICKAXE,
 	ARMOR
 	
