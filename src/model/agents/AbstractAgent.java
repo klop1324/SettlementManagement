@@ -394,35 +394,35 @@ public abstract class AbstractAgent implements Serializable {
 					return true;
 				}
 				if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
-					if (resourceDepleted)
-						actionQueue.remove(0);
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
+					if (resourceDepleted)
+						actionQueue.remove(1);
 					return true;
 				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COPPER)) {
-					if (resourceDepleted)
-						actionQueue.remove(0);
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COPPER, nearestJunkYard));
+					if (resourceDepleted)
+						actionQueue.remove(1);
 					return true;
 				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_ELECTRICITY)) {
-					if (resourceDepleted)
-						actionQueue.remove(0);
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_ELECTRICITY,
 							nearestChargingStation));
+					if (resourceDepleted)
+						actionQueue.remove(1);
 					return true;
 				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_GOLD)) {
-					if (resourceDepleted)
-						actionQueue.remove(0);
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_GOLD, nearestJunkYard));
+					if (resourceDepleted)
+						actionQueue.remove(1);
 					return true;
 				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_IRON)) {
-					if (resourceDepleted)
-						actionQueue.remove(0);
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_IRON, nearestJunkYard));
+					if (resourceDepleted)
+						actionQueue.remove(1);
 					return true;
 				} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_OIL)) {
-					if (resourceDepleted)
-						actionQueue.remove(0);
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_OIL, nearestOilTank));
+					if (resourceDepleted)
+						actionQueue.remove(1);
 					return true;
 				}
 			}
