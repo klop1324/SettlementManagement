@@ -30,7 +30,7 @@ public class ViewController extends JPanel implements Observer {
 	private int agentX;
 	private int agentY;
 	private ArrayList<AbstractAgent> agents;
-	private Timer timer = new Timer(50, new TimerListener());
+//	private Timer timer = new Timer(50, new TimerListener());
 	private int tic = 0;
 
 	private boolean isAnimating = false;
@@ -65,22 +65,22 @@ public class ViewController extends JPanel implements Observer {
 		repaint();
 	}
 
-	private class TimerListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			isAnimating = true;
-			tic++;
-			for (AbstractAgent agent: agents){ 
-				if(agent.getPosition().equals(agent.getDestination())){
-					timer.stop(); // will have to refactor this for multiple agents
-					repaint();
-				}
-			}
-			repaint();
-
-		}
-	}
+//	private class TimerListener implements ActionListener {
+//
+//		@Override
+//		public void actionPerformed(ActionEvent e) {
+//			isAnimating = true;
+//			tic++;
+//			for (AbstractAgent agent: agents){ 
+//				if(agent.getPosition().equals(agent.getDestination())){
+//					timer.stop(); // will have to refactor this for multiple agents
+//					repaint();
+//				}
+//			}
+//			repaint();
+//
+//		}
+//	}
 
 	public boolean isAnimating() {
 		return isAnimating;
@@ -175,11 +175,12 @@ public class ViewController extends JPanel implements Observer {
 			agentX = a.getPosition().x;
 			agentY = a.getPosition().y;
 		}
-		drawBoardWithAnimation();
+		repaint();
+//		drawBoardWithAnimation();
 	}
 
-	private void drawBoardWithAnimation() {
-		//tic = 0;
-		timer.start();		
-	}
+//	private void drawBoardWithAnimation() {
+//		//tic = 0;
+//		timer.start();		
+//	}
 }
