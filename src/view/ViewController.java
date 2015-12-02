@@ -41,24 +41,6 @@ public class ViewController extends JPanel implements Observer {
 		try {			
 			agent1 = ImageIO.read(new File("./ImageSet/destroyer.png"));
 			agent2 = ImageIO.read(new File("./ImageSet/defender.png"));
-			oilTank = ImageIO.read(new File("./ImageSet/oilTank.png"));
-			charge = ImageIO.read(new File("./ImageSet/basic-accumulator.png"));
-			junkYard = ImageIO.read(new File("./ImageSet/junkYard.png"));
-			armory = ImageIO.read(new File("./ImageSet/electric-furnace-base.png"));
-			homeDepot = ImageIO.read(new File("./ImageSet/market.png"));
-			oil = ImageIO.read(new File("./ImageSet/oil.png"));
-			solar = ImageIO.read(new File("./UnusedImages/graphics/technology/solar-energy.png"));
-			coal = ImageIO.read(new File("./ImageSet/singleCoal.png"));
-			copper = ImageIO.read(new File("./ImageSet/singleCopper.png"));
-			iron = ImageIO.read(new File("./ImageSet/singleStone.png"));
-			gold = ImageIO.read(new File("./ImageSet/singleIron.png"));
-			ground = Tile.PLATING.getImage();
-			water = ImageIO.read(new File("./ImageSet/water1.png"));
-			sand = ImageIO.read(new File("./ImageSet/sand1.png"));
-			grass = ImageIO.read(new File("./ImageSet/grass1.png"));
-			oilWell = ImageIO.read(new File("./UnusedImages/graphics/technology/oil-gathering.png"));
-			workShop = ImageIO.read(new File("./UnusedImages/graphics/technology/gates.png"));
-			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -75,44 +57,15 @@ public class ViewController extends JPanel implements Observer {
 		// Tile enum
 		Graphics g2 = (Graphics2D) g;
 		map = game.getMap();
+		Tile tile[] = Tile.values();
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
-				if (map.get(i, j) == 0) {
-					g2.drawImage(ground, i * 50, j * 50, null);
-				} else if (map.get(i, j) == 1) {
-					g2.drawImage(water, i * 50, j * 50, null);
-				} else if (map.get(i, j) == 2) {
-					g2.drawImage(sand, i * 50, j * 50, null);
-				} else {
-					g2.drawImage(grass, i * 50, j * 50, null);
-				}
+				g2.drawImage(tile[map.get(i, j)].getImage(), i*50, j*50, null);
 			}
 		}
 		
 		for (Resource r: game.getResources()){
-			switch (r.getType()){
-			case COAL:
-				g2.drawImage(coal, r.getLocation().x *50, r.getLocation().y*50, null);
-				break;
-			case COPPER:
-				g2.drawImage(copper, r.getLocation().x*50, r.getLocation().y*50, null);
-				break;
-			case ELECTRICITY:
-				g2.drawImage(solar, r.getLocation().x*50, r.getLocation().y*50, null);
-				break;
-			case GOLD:
-				g2.drawImage(gold, r.getLocation().x*50, r.getLocation().y*50, null);
-				break;
-			case IRON:
-				g2.drawImage(iron, r.getLocation().x*50, r.getLocation().y*50, null);
-				break;
-			case OIL:
-				g2.drawImage(oil, r.getLocation().x*50, r.getLocation().y*50, null);
-				break;
-			default:
-				break;
-
-			}
+			g2.drawImage(r.getType().getImage(), r.getLocation().x *50, r.getLocation().y*50, null);
 		}
 		
 		for (AbstractBuilding b: game.getBuildings()){

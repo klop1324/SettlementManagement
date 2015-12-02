@@ -59,9 +59,7 @@ public class Game extends Observable implements Serializable{
 		for(ResourceType r: ResourceType.values()){
 			this.playerResources.put(r, 0);
 		}
-
-		//TODO intitial resource generation
-
+		
 		generateResources();
 
 		//TODO intitial agent generation
@@ -78,6 +76,10 @@ public class Game extends Observable implements Serializable{
 
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
+		
+		for(Resource r: mapResources){
+			//System.out.println("Type: " + r.getType().name() + " Point" + r.getLocation().toString());
+		}
 
 	}
 
@@ -381,7 +383,7 @@ public class Game extends Observable implements Serializable{
 					}
 					else{
 						generationArray = generationHelper(generationArray, i,j,
-								placedResources.get((int) (Math.random()*placedResources.size())));
+								placedResources.get((int) (Math.random() * placedResources.size())));
 					}
 					
 				}
@@ -394,15 +396,20 @@ public class Game extends Observable implements Serializable{
 		if(array[x][y] == -1){
 			if(Tile.values()[this.map.get(x, y)].isPassible()){
 				mapResources.add(new Resource((int) (Math.random() + 100) * 10 * GlobalSettings.MAP_RICHNESS, new Point(x,y), resource));
+				System.out.println("placed Resource: " + resource.name() + " at Point: " +x + "," + y);
 			}
 			//base case
 			array[x][y] = 0;
 			
 			//recursion
-			if(x+1 < array[0].length && array[x][y] != 0) array = generationHelper(array, x+1, y, resource);
-			if(y+1 < array.length && array[x][y] != 0) array = generationHelper(array, x, y+1, resource);
-			if(x-1 >= 0 && array[x][y] != 0) array = generationHelper(array, x-1, y, resource);
-			if(y-1 >=0 && array[x][y] != 0) array = generationHelper(array, x, y-1, resource);
+			if(x+1 < array[0].length) 
+				if(array[x+1][y] != 0) array = generationHelper(array, x+1, y, resource);
+			if(y+1 < array.length) 
+				if(array[x][y+1] != 0) array = generationHelper(array, x, y+1, resource);
+			if(x-1 >= 0 ) 
+				if(array[x-1][y] != 0) array = generationHelper(array, x-1, y, resource);
+			if(y-1 >=0) 
+				if(array[x][y-1] != 0) array = generationHelper(array, x, y-1, resource);
 		}
 		return array;
 	}
