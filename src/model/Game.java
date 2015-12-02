@@ -157,6 +157,20 @@ public class Game extends Observable implements Serializable{
 	// Will also have user interaction to send builder agents to
 	// build this building.
 	public void createBuilding(Point p, BuildingType b){
+		// TODO Refactor once functionality is figured out
+		for (AbstractBuilding buildings: buildings){
+			// bip stands for building in process
+			for (AbstractBuilding bip: buildingsInProcess) {
+				for (Resource r: resources){
+					if ((p.equals(r.getLocation()) || p.equals(bip.getLocation()) 
+							|| p.equals(buildings.getLocation()))){
+						System.out.println("Cannot be placed over another object!");
+						return;
+					}
+				}
+			}
+		}
+		
 		switch (b){
 		case ARMORY:
 			armoryCost();

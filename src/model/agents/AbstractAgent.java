@@ -5,14 +5,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.Game;
-import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
 import model.resources.ResourceType;
 import model.tools.Tool;
 import model.tools.ToolType;
 
 public abstract class AbstractAgent implements Serializable{
-	Tool tool;
+	Tool tool = null;
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
@@ -36,8 +35,8 @@ public abstract class AbstractAgent implements Serializable{
 		this.position = position;
 	}
 
-	public boolean hasPickAxe(){
-		if (tool.getType().equals(ToolType.PICKAXE)){
+	public boolean hasPickAxe(){ // Tool for Worker Agents to get ore faster.
+		if (this.hasTool() && tool.getType().equals(ToolType.PICKAXE)){
 			return true;
 		}
 		else {
@@ -45,8 +44,8 @@ public abstract class AbstractAgent implements Serializable{
 		}
 	}
 
-	public boolean hasArmor(){
-		if (tool.getType().equals(ToolType.ARMOR)){
+	public boolean hasArmor(){ // Tool for Soldier Agents to lose less health in battle.
+		if (this.hasTool() && tool.getType().equals(ToolType.ARMOR)){
 			return true;
 		}
 		else {
@@ -54,8 +53,8 @@ public abstract class AbstractAgent implements Serializable{
 		}
 	}
 
-	public boolean hasSpear(){
-		if (tool.getType().equals(ToolType.SPEAR)){
+	public boolean hasSpear(){ // Tool for Soldier Agents to do more damage.
+		if (this.hasTool() && tool.getType().equals(ToolType.SPEAR)){
 			return true;
 		}
 		else {
@@ -63,8 +62,17 @@ public abstract class AbstractAgent implements Serializable{
 		}
 	}
 
-	public boolean hasWeldingGun(){
-		if (tool.getType().equals(ToolType.WELDINGGUN)){
+	public boolean hasWeldingGun(){ // Tool for Builder Agents to build faster.
+			if (this.hasTool() && tool.getType().equals(ToolType.WELDINGGUN)){
+				return true;
+			}
+			else {
+				return false;
+			}
+	}
+	
+	public boolean hasTool(){
+		if (tool != null){
 			return true;
 		}
 		else {
@@ -72,10 +80,6 @@ public abstract class AbstractAgent implements Serializable{
 		}
 	}
 
-
-	public void incrementCompletionAmount(AbstractBuilding b, int n){
-		b.incrementCompletionAmount(n);
-	}
 
 	// Added getter and setters for condition to interact with HomeDepot
 	public int getCondition(){

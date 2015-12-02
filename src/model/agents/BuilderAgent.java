@@ -2,12 +2,24 @@ package model.agents;
 
 import java.awt.Point;
 
-public class BuilderAgent extends AbstractAgent {
+import model.buildings.AbstractBuilding;
 
+public class BuilderAgent extends AbstractAgent {
+	private int buildAmount = 3;
 	public BuilderAgent(Point position) {
 		super(position);
 		filename = "???";
 		MAX_RESOURCES = 0;
+	}
+	
+	public void incrementCompletionAmount(AbstractBuilding b){
+		if (this.hasWeldingGun()){
+			buildAmount += 5;
+			b.incrementCompletionAmount(buildAmount);
+		}
+		else {
+			b.incrementCompletionAmount(buildAmount);
+		}
 	}
 
 	@Override
