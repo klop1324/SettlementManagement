@@ -9,12 +9,10 @@ public class SolarPanel extends AbstractBuilding{
 
 	public SolarPanel(int capacity, Point location, BuildingType building) {
 		super(capacity, location, building);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public HashMap<ResourceType, Integer> getCost() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

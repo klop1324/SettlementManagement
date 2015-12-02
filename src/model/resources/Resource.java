@@ -25,6 +25,7 @@ public class Resource implements Serializable{
 		}
 		else {
 			System.out.println("You don't have enough resources to build that building!");
+			return;
 		}
 	}
 	// Returns the amount

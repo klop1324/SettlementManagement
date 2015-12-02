@@ -232,6 +232,7 @@ public class Game extends Observable implements Serializable{
 			break;
 
 		}
+		System.out.println(buildingsInProcess);
 	}
 
 	public void armoryCost(){

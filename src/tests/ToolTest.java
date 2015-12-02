@@ -25,6 +25,8 @@ public class ToolTest {
 		Resource coal = new Resource(10, new Point(2,4), ResourceType.COAL);
 		Resource gold = new Resource(10, new Point(2,4), ResourceType.GOLD);
 		Tool pickaxe = new Tool(coal, iron);
+		Tool pickaxe2 = new Tool(iron, coal);
+		assertEquals(pickaxe2.getType(), ToolType.PICKAXE);
 		assertEquals(pickaxe.getType(), ToolType.PICKAXE);
 		game.createTool(coal, iron, agent);
 		assertTrue(agent.hasTool());
@@ -34,5 +36,21 @@ public class ToolTest {
 		assertTrue(soldier.hasTool());
 		assertTrue(soldier.hasArmor());
 		
+	}
+	
+	public void spearTest(){
+		Game game = new Game();
+		SoldierAgent agent = new SoldierAgent(null);
+		Resource copper = new Resource(30, null, ResourceType.COPPER);
+		Resource iron = new Resource(30, null, ResourceType.IRON);
+		game.addResource(iron);
+		game.addResource(copper);
+		game.addAgents(agent);
+		game.createTool(iron, copper, agent);
+		assertTrue(agent.hasTool());
+		assertEquals(agent.getAttackPoints(), 5);
+		agent.attack();
+		assertEquals(agent.getAttackPoints(), 15);
+		assertTrue(agent.hasSpear());
 	}
 }
