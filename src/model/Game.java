@@ -60,7 +60,6 @@ public class Game extends Observable implements Serializable{
 		//TODO intitial agent generation
 
 		timer = new Timer(50, new TickActionListener());
-//		agentTimer = new Timer(200, new AgentListener());
 		timer.start();
 
 	}
@@ -104,63 +103,23 @@ public class Game extends Observable implements Serializable{
 			break;
 		}
 		
-		// TODO working on version that works with tic()
-//		agentTimer.start();
-//		this.resourcePointClicked = resourcePointClicked;
-//		resourceClicked = getResourceClicked(resourcePointClicked);
-//		if (resourceClicked.hasResources()){
-//			sendAgentsToResource(resourceClicked);
-//			for (AbstractAgent a: agents){
-//				if (a.getPosition().equals(resourceClicked.getLocation())){
-//					resourceClicked.removeResource(10, a);
-//					System.out.println(resourceClicked.getNotification());
-//					collected = true;
-//					agentTimer.stop(); // Has to stop timer to keep from continally taking from resource.
-//				}
-//				else {
-//					// Agent should be moving if he reaches this conditional
-//				}
-//			}
-//			agentTimer.start();
-//		}
-//		else {
-//			agentTimer.stop();
-//		}
 	}
 
+	private AbstractBuilding findBuildingForResource(Resource r){
+		AbstractBuilding building = null;
+		for (AbstractBuilding b: buildings){
+			if (b.getResources().containsKey(r.getType())){
+				building = b;
+			}
+		}
+		return building;
+	}
 
-//	public void agentToBuilding(Resource r){
-//		AbstractBuilding building = findBuildingForResource(r);
-//		sendAgentsToBuilding(building);
-//		for (AbstractAgent a: agents) {
-//			if (a.getPosition().equals(building.getLocation())){
-//				building.agentAddCapacity(r.getType(), a.getAmountCarried());
-//				collected = false;
-//			}
-//		}
-//	}
-
-//	private void sendAgentsToBuilding(AbstractBuilding b){
-//		for (AbstractAgent a: agents){
-//			a.setDestination(b.getLocation());
-//		}
-//	}
-
-//	private AbstractBuilding findBuildingForResource(Resource r){
-//		AbstractBuilding building = null;
-//		for (AbstractBuilding b: buildings){
-//			if (b.getResources().containsKey(r.getType())){
-//				building = b;
-//			}
-//		}
-//		return building;
-//	}
-//
-//	private void sendAgentsToResource(Resource r){
-//		for (AbstractAgent agent: agents){
-//			agent.setDestination(r.getLocation());
-//		}
-//	}
+	private void sendAgentsToResource(Resource r){
+		for (AbstractAgent agent: agents){
+			agent.setDestination(r.getLocation());
+		}
+	}
 
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
