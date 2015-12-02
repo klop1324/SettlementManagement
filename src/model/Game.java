@@ -54,6 +54,7 @@ public class Game extends Observable implements Serializable{
 		this.mapResources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
 		this.buildingsInProcess = new ArrayList<Building>();
+		this.playerResources = new HashMap<ResourceType, Integer>();
 		for(ResourceType r: ResourceType.values()){
 			this.playerResources.put(r, 0);
 		}

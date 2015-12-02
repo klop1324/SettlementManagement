@@ -32,6 +32,7 @@ public class Building implements Serializable{
 		this.location = location;
 		this.building = building;
 		this.passiveProvider = building.isPassiveProvider();
+		this.currentAmount = new HashMap<ResourceType, Integer>();
 		if(this.isPassiveProvider()) 
 		isBuilt = false;
 		buildCompletion = 0;
