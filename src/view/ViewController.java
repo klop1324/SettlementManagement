@@ -18,6 +18,7 @@ import javax.swing.Timer;
 
 import model.Game;
 import model.Map;
+import model.Tile;
 import model.agents.*;
 import model.buildings.AbstractBuilding;
 import model.resources.Resource;
@@ -55,9 +56,10 @@ public class ViewController extends JPanel implements Observer {
 			copper = ImageIO.read(new File("./ImageSet/singleCopper.png"));
 			iron = ImageIO.read(new File("./ImageSet/singleStone.png"));
 			gold = ImageIO.read(new File("./ImageSet/singleIron.png"));
-			ground = ImageIO.read(new File("./ImageSet/tile-Plating.png"));
+			ground = Tile.PLATING.getImage();
 			oilWell = ImageIO.read(new File("./UnusedImages/graphics/technology/oil-gathering.png"));
 			workShop = ImageIO.read(new File("./UnusedImages/graphics/technology/gates.png"));
+			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
