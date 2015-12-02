@@ -161,7 +161,15 @@ public class ViewController extends JPanel implements Observer {
 		}
 		
 		for (AbstractAgent a: game.getAgents()){
-			g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
+			if (a.getClass().equals(BuilderAgent.class)){
+				
+			}
+			if (a.getClass().equals(WorkerAgent.class)){
+				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
+			}
+			if (a.getClass().equals(SoldierAgent.class)){
+				
+			}
 		}
 	}
 
@@ -171,10 +179,6 @@ public class ViewController extends JPanel implements Observer {
 		// robot sprite is
 		game = (Game) observable;
 		agents = game.getAgents();
-		for(AbstractAgent a: agents){
-			agentX = a.getPosition().x;
-			agentY = a.getPosition().y;
-		}
 		drawBoardWithAnimation();
 	}
 
