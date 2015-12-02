@@ -403,11 +403,11 @@ public class Game extends Observable implements Serializable{
 					a.tic();
 			}
 			
-			// Updates enemies
-			if(!enemies.isEmpty()) {
-				for(Enemy e : enemies)
-					e.tic();
-			}
+//			// Updates enemies
+//			if(!enemies.isEmpty()) {
+//				for(Enemy e : enemies)
+//					e.tic();
+//			}
 			
 			for (AbstractAgent ba : agents) {
 				if (ba.getClass().equals(BuilderAgent.class)){
