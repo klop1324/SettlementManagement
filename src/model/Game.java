@@ -59,9 +59,7 @@ public class Game extends Observable implements Serializable{
 		for(ResourceType r: ResourceType.values()){
 			this.playerResources.put(r, 0);
 		}
-
-		//TODO intitial resource generation
-
+		
 		generateResources();
 
 		//TODO intitial agent generation
@@ -381,7 +379,7 @@ public class Game extends Observable implements Serializable{
 					}
 					else{
 						generationArray = generationHelper(generationArray, i,j,
-								placedResources.get((int) (Math.random()*placedResources.size())));
+								placedResources.get((int) (Math.random() * placedResources.size())));
 					}
 					
 				}
@@ -399,10 +397,14 @@ public class Game extends Observable implements Serializable{
 			array[x][y] = 0;
 			
 			//recursion
-			if(x+1 < array[0].length && array[x][y] != 0) array = generationHelper(array, x+1, y, resource);
-			if(y+1 < array.length && array[x][y] != 0) array = generationHelper(array, x, y+1, resource);
-			if(x-1 >= 0 && array[x][y] != 0) array = generationHelper(array, x-1, y, resource);
-			if(y-1 >=0 && array[x][y] != 0) array = generationHelper(array, x, y-1, resource);
+			if(x+1 < array[0].length) 
+				if(array[x+1][y] != 0) array = generationHelper(array, x+1, y, resource);
+			if(y+1 < array.length) 
+				if(array[x][y+1] != 0) array = generationHelper(array, x, y+1, resource);
+			if(x-1 >= 0 ) 
+				if(array[x-1][y] != 0) array = generationHelper(array, x-1, y, resource);
+			if(y-1 >=0) 
+				if(array[x][y-1] != 0) array = generationHelper(array, x, y-1, resource);
 		}
 		return array;
 	}
