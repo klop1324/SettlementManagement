@@ -25,6 +25,7 @@ public class Resource implements Serializable{
 		}
 		else {
 			System.out.println("You don't have enough resources to build that building!");
+			return;
 		}
 	}
 	// Returns the amount
@@ -56,9 +57,8 @@ public class Resource implements Serializable{
 	}
 
 	// Remove amount
-	public void removeResource(int removeAmount, AbstractAgent agent){
+	public void removeResource(int removeAmount){
 		if (hasResources()){
-			agent.setPickedUpResource(resources);
 			resourceAmount-= removeAmount;
 			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
 			if (!hasResources()){

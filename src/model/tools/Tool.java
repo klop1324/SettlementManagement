@@ -5,6 +5,8 @@ import model.resources.ResourceType;
 
 public class Tool {
 	private ToolType typeTool;
+	// When creating tool put in two types of resources.
+	// Will output ToolType
 	public Tool(Resource res1, Resource res2){
 		ResourceType type1 = res1.getType();
 		ResourceType type2 = res2.getType();

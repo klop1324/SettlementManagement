@@ -16,24 +16,21 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javafx.scene.control.ComboBox;
-
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
-import model.*;
-import model.agents.*;
+import model.Game;
 import model.buildings.Building;
+import model.buildings.BuildingType;
 import model.resources.Resource;
 import model.resources.ResourceType;
 
@@ -68,7 +65,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private int next = 0;
 	private int clickX;
 	private int clickY;
-	private Point agentDest;
+	private Point userClick;
 	private JLayeredPane backgroundPanel = new JLayeredPane();
 	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
@@ -304,28 +301,46 @@ class SettlementGUI extends JFrame implements Observer {
 				return;
 			}
 			else if (selected.equals("armory")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.ARMORY);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("charging station")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.CHARGINGSTATION);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("junkyard")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.JUNKYARD);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("oil tank")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.OILTANK);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("oil well")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.OILWELL);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("workshop")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.WORKSHOP);
+					System.out.println(selected);
+					return;
+				}
 			}
 		}
 	}
@@ -336,8 +351,8 @@ class SettlementGUI extends JFrame implements Observer {
 		public void mouseClicked(MouseEvent e) { // Gets coordinates of mouse clicks according to game points.
 			clickX = (int) Math.floor(e.getPoint().x/50);
 			clickY = (int) Math.floor(e.getPoint().y/50);
-			agentDest = new Point(clickX, clickY);
-			System.out.println(agentDest);
+			userClick = new Point(clickX, clickY);
+			System.out.println(userClick);
 			
 		}
 
@@ -370,10 +385,10 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println(agentDest);
+			System.out.println(userClick);
 			for (Resource r: game.getResources()){
-				if (r.getLocation().equals(agentDest)){
-					game.agentToResource(agentDest);
+				if (r.getLocation().equals(userClick)){
+					game.agentToResource(userClick);
 				}
 				else {
 					//notificationArea.append("Please choose a resource");

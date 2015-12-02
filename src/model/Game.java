@@ -7,20 +7,21 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Observable;
 import java.util.Random;
 
 import javax.swing.Timer;
 
 import model.agents.AbstractAgent;
-import model.buildings.*;
+import model.agents.AgentCommand;
+import model.agents.AgentCommandWithDestination;
+import model.agents.BuilderAgent;
+import model.agents.WorkerAgent;
+import model.buildings.Building;
+import model.buildings.BuildingType;
 import model.resources.Resource;
 import model.resources.ResourceType;
 import model.tools.Tool;
-import sun.net.www.content.audio.basic;
-import model.agents.BuilderAgent;
-import model.agents.WorkerAgent;
 
 
 public class Game extends Observable implements Serializable{
@@ -64,56 +65,41 @@ public class Game extends Observable implements Serializable{
 		//TODO intitial agent generation
 
 		timer = new Timer(50, new TickActionListener());
-		agentTimer = new Timer(200, new AgentListener());
 		timer.start();
 
 	}
 
-	/*
-	 *  Ugly code, will need to be changed during refactorization
-	 *  Agent moves to resource user clicks
-	 *	they will grab 10 and then if agent travels to 
-	 *	building that holds that resource it will add to that building
-	 */
 
 	public void agentToResource(Point resourcePointClicked) {
-		agentTimer.start();
+		
+		WorkerAgent agentToSend = null;
 		this.resourcePointClicked = resourcePointClicked;
-		resourceClicked = getResourceClicked(resourcePointClicked);
-		if (resourceClicked.hasResources()){
-			sendAgentsToResource(resourceClicked);
-			for (AbstractAgent a: agents){
-				if (a.getPosition().equals(resourceClicked.getLocation())){
-					resourceClicked.removeResource(10, a);
-					System.out.println(resourceClicked.getNotification());
-					collected = true;
-					agentTimer.stop(); // Has to stop timer to keep from continally taking from resource.
-				}
-				else {
-					// Agent should be moving if he reaches this conditional
-				}
-			}
-			agentTimer.start();
+		ResourceType resourceTypeClicked = getResourceClicked(resourcePointClicked).getType();
+		
+		for(AbstractAgent a : agents) {
+			if(a.getClass() == WorkerAgent.class)
+				agentToSend = (WorkerAgent) a;
 		}
-		else {
-			agentTimer.stop();
-		}
-	}
-
-	public void agentToBuilding(Resource r){
-		Building building = findBuildingForResource(r);
-		sendAgentsToBuilding(building);
-		for (AbstractAgent a: agents) {
-			if (a.getPosition().equals(building.getLocation())){
-				building.agentAddCapacity(r.getType(), a.getAmountCarried());
-				collected = false;
-			}
-		}
-	}
-
-	private void sendAgentsToBuilding(Building b){
-		for (AbstractAgent a: agents){
-			a.setDestination(b.getLocation());
+		
+		switch(resourceTypeClicked) {
+		case COAL:
+			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_COAL, resourcePointClicked));
+			break;
+		case COPPER:
+			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_COPPER, resourcePointClicked));
+			break;
+		case ELECTRICITY:
+			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_ELECTRICITY, resourcePointClicked));
+			break;
+		case GOLD:
+			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_GOLD, resourcePointClicked));
+			break;
+		case IRON:
+			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_IRON, resourcePointClicked));
+			break;
+		case OIL:
+			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_OIL, resourcePointClicked));
+			break;
 		}
 	}
 
@@ -126,13 +112,6 @@ public class Game extends Observable implements Serializable{
 		}
 		return building;
 	}
-
-	private void sendAgentsToResource(Resource r){
-		for (AbstractAgent agent: agents){
-			agent.setDestination(r.getLocation());
-		}
-	}
-
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
 		for (Resource r: mapResources){
@@ -143,7 +122,15 @@ public class Game extends Observable implements Serializable{
 		return resource;
 	}
 
-	// Should create tool
+	/**
+	 * Creates a tool and equipts it to specific agent object
+	 * @param r1
+	 * resource one
+	 * @param r2
+	 * resource two
+	 * @param a
+	 * agent
+	 */
 	public void createTool(Resource r1, Resource r2, AbstractAgent a){
 		for (Building b : buildings){
 			// if the building has the resource
@@ -157,28 +144,64 @@ public class Game extends Observable implements Serializable{
 		a.addTool(new Tool(r1, r2)); // adds tool to agent
 	}
 
-	// Interacts with builder agents to create a building
-	// Will also have user interaction to send builder agents to
-	// build this building.
+	/**
+	 * Creates a building by checking if the location is an empty tile 
+	 * and then using BuildingType to add a new instance of that type of building
+	 * to the buildingsInProgress ArrayList.
+	 * @param p
+	 * Point in which building is being placed.
+	 * @param b
+	 * BuildingType of new Building.
+	 */
 	public void createBuilding(Point p, BuildingType b){
-		/*
-		
-			ResourceType keys[] = (ResourceType[]) building.getCost().keySet().toArray();
-			HashMap<ResourceType, Integer> m = building.getCost();
-			boolean flag = true;
-			// checks if the player has the resources to build it
-			for(int i = 0; i < keys.length; i++){
-				if(playerResources.get(keys[i])- m.get(keys[i]) < 0) flag = false;
-			}
-			if(flag){
-				for(int i = 0; i < keys.length; i++){
-					int currVal = playerResources.get(keys[i]);
-					playerResources.replace(keys[i], currVal - m.get(keys[i]));
+		// TODO Refactor once functionality is figured out
+		for (Building buildings: buildings){
+			// bip stands for building in process
+			for(Building bip: buildingsInProcess) {
+				for (Resource r: mapResources){
+					if ((p.equals(r.getLocation()) || p.equals(bip.getLocation()) 
+							|| p.equals(buildings.getLocation()))){
+						System.out.println("Cannot be placed over another object!");
+						return;
+					}
 				}
-				buildingsInProcess.add(new Armory(p));
 			}
-		*/
-	
+		}
+		
+		switch (b){
+		case ARMORY:
+			armoryCost();
+			buildingsInProcess.add(new Building(BuildingType.ARMORY, p));
+			break;
+		case CHARGINGSTATION:
+			chargingStationCost();
+			buildingsInProcess.add(new Building(BuildingType.CHARGINGSTATION, p));
+			break;
+		case HOMEDEPOT:
+			homeDepotCost();
+			buildingsInProcess.add(new Building(BuildingType.HOMEDEPOT, p));
+			break;
+		case JUNKYARD:
+			junkYardCost();
+			buildingsInProcess.add(new Building(BuildingType.JUNKYARD, p));
+			break;
+		case OILTANK:
+			oilTankCost();
+			buildingsInProcess.add(new Building(BuildingType.OILTANK, p));
+			break;
+		case OILWELL:
+			oilWellCost();
+			buildingsInProcess.add(new Building(BuildingType.OILWELL, p));
+			break;
+		case WORKSHOP:
+			workShopCost();
+			buildingsInProcess.add(new Building(BuildingType.WORKSHOP, p));
+			break;
+		default:
+			break;
+
+		}
+		System.out.println(buildingsInProcess);
 	}
 
 	public void armoryCost(){
@@ -308,11 +331,19 @@ public class Game extends Observable implements Serializable{
 			//TODO: actually generate resources
 
 		}
+
 		mapResources.add(new Resource(40, new Point(5,3), ResourceType.IRON));
 		mapResources.add(new Resource(40, new Point(5,4), ResourceType.COPPER));
 		mapResources.add(new Resource(40, new Point(5,5), ResourceType.GOLD));
 		mapResources.add(new Resource(40, new Point(5,6), ResourceType.OIL));
 		mapResources.add(new Resource(40, new Point(10, 3), ResourceType.ELECTRICITY));
+
+		buildings.add(new Building(BuildingType.ARMORY, new Point(6,9)));
+		buildings.add(new Building(BuildingType.JUNKYARD, new Point(7,9)));
+		buildings.add(new Building(BuildingType.OILWELL, new Point(8,9)));
+		addBuilding(new Building(BuildingType.CHARGINGSTATION, new Point(9,9)));
+		addBuilding(new Building(BuildingType.OILTANK, new Point(10,9)));
+
 		
 		addAgents(new WorkerAgent(new Point(4, 9)));
 
@@ -358,37 +389,17 @@ public class Game extends Observable implements Serializable{
 		return buildingsInProcess;
 	}
 
-	private class AgentListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (collected){
-				agentToBuilding(resourceClicked);
-			}
-			else {
-				agentToResource(resourcePointClicked);	
-			}
-
-			for (AbstractAgent a: agents){
-				if (a.getPosition().equals(a.getDestination())){
-					timer.stop();
-				}
-				else {	
-					a.tic();
-				}
-			}
-
-			setChanged();
-			notifyObservers();
-			notifyObservers(mapResources);
-		}
-
-	}
-
 	private class TickActionListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
+			// Updates agents
+			if(!agents.isEmpty()) {
+				for(AbstractAgent a : agents)
+					a.tic();
+			}
+			
 			for (AbstractAgent ba : agents) {
 				if (ba.getClass().equals(BuilderAgent.class)){
 					ba.setDestination(buildingsInProcess.get(0).getLocation());
