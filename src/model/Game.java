@@ -366,11 +366,11 @@ public class Game extends Observable implements Serializable{
 		resources.add(new Resource(40, new Point(5,6), ResourceType.OIL));
 		resources.add(new Resource(40, new Point(10, 3), ResourceType.ELECTRICITY));
 
-		buildings.add(new Armory(500, new Point( 7,3)));
-		buildings.add(new JunkYard(500, new Point( 7,9)));
-		buildings.add(new OilWell(500, new Point(5, 6)));
-		addBuilding(new ChargingStation(500, new Point(3, 4)));
-		addBuilding(new OilTank(500, new Point(9, 2)));
+		buildings.add(new Armory(500000, new Point( 7,3)));
+		buildings.add(new JunkYard(500000, new Point( 7,9)));
+		buildings.add(new OilWell(500000, new Point(5, 6)));
+		addBuilding(new ChargingStation(50000, new Point(3, 4)));
+		addBuilding(new OilTank(500000, new Point(9, 2)));
 		
 		addAgents(new WorkerAgent(new Point(4, 9)));
 
