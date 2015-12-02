@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+<<<<<<< HEAD
 import javafx.scene.control.ComboBox;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
+=======
+>>>>>>> ec1c9d8344870e6585e5d6f7827ece615d69c775
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -30,16 +33,15 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
-import model.*;
-import model.agents.*;
-import model.buildings.AbstractBuilding;
+import model.Game;
+import model.buildings.Building;
+import model.buildings.BuildingType;
 import model.resources.Resource;
 import model.resources.ResourceType;
 
@@ -74,15 +76,19 @@ class SettlementGUI extends JFrame implements Observer {
 	private int next = 0;
 	private int clickX;
 	private int clickY;
+<<<<<<< HEAD
 	private JScrollBar vertical = new JScrollBar();
 	private JScrollBar horizontal = new JScrollBar();
 	private Point agentDest;
+=======
+	private Point userClick;
+>>>>>>> ec1c9d8344870e6585e5d6f7827ece615d69c775
 	private JLayeredPane backgroundPanel = new JLayeredPane();
 	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
 	String[] agentOrBuilding = {"select one", "create agent", "build building"};
 	// add keyListener and mouseMotionListener for the map
-	private ArrayList<AbstractBuilding> gameBuildings;
+	private ArrayList<Building> gameBuildings;
 
 	public static void main(String[] args) {
 		(new SettlementGUI()).setVisible(true);
@@ -381,32 +387,50 @@ class SettlementGUI extends JFrame implements Observer {
 				return;
 			}
 			else if (selected.equals("armory")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.ARMORY);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("charging station")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.CHARGINGSTATION);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("home depot")) {
 				System.out.println(selected);
 				return;
 			}
 			else if (selected.equals("junkyard")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.JUNKYARD);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("oil tank")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.OILTANK);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("oil well")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.OILWELL);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("workshop")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createBuilding(userClick, BuildingType.WORKSHOP);
+					System.out.println(selected);
+					return;
+				}
 			}
 		}
 	}
@@ -417,8 +441,8 @@ class SettlementGUI extends JFrame implements Observer {
 		public void mouseClicked(MouseEvent e) { // Gets coordinates of mouse clicks according to game points.
 			clickX = (int) Math.floor(e.getPoint().x/50);
 			clickY = (int) Math.floor(e.getPoint().y/50);
-			agentDest = new Point(clickX, clickY);
-			System.out.println(agentDest);
+			userClick = new Point(clickX, clickY);
+			System.out.println(userClick);
 			
 		}
 
@@ -493,10 +517,10 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println(agentDest);
+			System.out.println(userClick);
 			for (Resource r: game.getResources()){
-				if (r.getLocation().equals(agentDest)){
-					game.agentToResource(agentDest);
+				if (r.getLocation().equals(userClick)){
+					game.agentToResource(userClick);
 				}
 				else {
 					//notificationArea.append("Please choose a resource");
@@ -538,33 +562,53 @@ class SettlementGUI extends JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
-		for (AbstractBuilding b: gameBuildings){
-			switch (b.getType()) { // Checks for each building in the arraylist and set's its info.
-			case ARMORY:
-				break;
-			case CHARGINGSTATION:
-				electricityAmount.setText("Electricity: " + b.getResources().get(ResourceType.ELECTRICITY));
-				repaint();
-				break;
-			case HOMEDEPOT:
-				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
-				break;
-			case JUNKYARD:
-				copperAmount.setText("Copper: " + b.getResources().get(ResourceType.COPPER));
-				goldAmount.setText("Gold: " + b.getResources().get(ResourceType.GOLD));
-				ironAmount.setText("Iron: " + b.getResources().get(ResourceType.IRON));
-				break;
-			case OILTANK:
-				oilAmount.setText("Oil: " + b.getResources().get(ResourceType.OIL));
-				break;
-			case OILWELL:
-				break;
-			case WORKSHOP:
-				break;
-			default:
-				break;
 
+		//SUPER HACKY CODE
+		ArrayList<JLabel> labels = new ArrayList<JLabel>();
+		labels.add(electricityAmount);
+		labels.add(copperAmount);
+		labels.add(coalAmount);
+		labels.add(goldAmount);
+		labels.add(ironAmount);
+		labels.add(oilAmount);
+		
+		for(JLabel l: labels){
+			l.setText("0");
+		}
+		
+		for (Building b: gameBuildings){
+			ArrayList<ResourceType> resources = b.getResources();
+			for(int i = 0; i < resources.size(); i++){
+				int currAmount = 0;
+				ResourceType resource = resources.get(i);
+				switch(resource){
+				case ELECTRICITY:
+					currAmount = Integer.parseInt(electricityAmount.getText());
+					electricityAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case COPPER:
+					currAmount = Integer.parseInt(copperAmount.getText());
+					copperAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case COAL:
+					currAmount = Integer.parseInt(coalAmount.getText());
+					coalAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case GOLD:
+					currAmount = Integer.parseInt(goldAmount.getText());
+					goldAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case IRON:
+					currAmount = Integer.parseInt(ironAmount.getText());
+					ironAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case OIL:
+					currAmount = Integer.parseInt(oilAmount.getText());
+					oilAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				}
 			}
+		// END SUPER HACKY CODE
 		}
 		String resourceNotification = "";
 		for (Resource r: game.getResources()) {

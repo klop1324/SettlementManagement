@@ -18,6 +18,16 @@ public class Resource implements Serializable{
 		this.resources = resources;
 	}
 
+	// When creating buildings and using up resources in that process
+	public void spendResource(int n){
+		if ((resourceAmount - n) >= 0){
+			resourceAmount -=n;
+		}
+		else {
+			System.out.println("You don't have enough resources to build that building!");
+			return;
+		}
+	}
 	// Returns the amount
 	public int getAmount(){
 		return resourceAmount;
@@ -47,9 +57,8 @@ public class Resource implements Serializable{
 	}
 
 	// Remove amount
-	public void removeResource(int removeAmount, AbstractAgent agent){
+	public void removeResource(int removeAmount){
 		if (hasResources()){
-			agent.setPickedUpResource(resources);
 			resourceAmount-= removeAmount;
 			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
 			if (!hasResources()){
