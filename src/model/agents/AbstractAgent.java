@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.Game;
+import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
 import model.resources.ResourceType;
 import model.tools.Tool;
@@ -12,8 +13,9 @@ import model.tools.ToolType;
 
 public abstract class AbstractAgent implements Serializable{
 	Tool tool = null;
-	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED;
-	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
+	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt;
+	Point lastPosition, position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation,
+	nearestJunkYard;
 	AgentLogic AI;
 	String filename;
 	ResourceType carriedResourceType;
@@ -33,13 +35,13 @@ public abstract class AbstractAgent implements Serializable{
 		AI = new AgentLogic();
 		destination = new Point(6, 6);
 		this.position = position;
+		lastPosition = position;
 	}
 
 	public boolean hasPickAxe(){ // Tool for Worker Agents to get ore faster.
 		if (this.hasTool() && tool.getType().equals(ToolType.PICKAXE)){
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -47,8 +49,7 @@ public abstract class AbstractAgent implements Serializable{
 	public boolean hasArmor(){ // Tool for Soldier Agents to lose less health in battle.
 		if (this.hasTool() && tool.getType().equals(ToolType.ARMOR)){
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -56,8 +57,7 @@ public abstract class AbstractAgent implements Serializable{
 	public boolean hasSpear(){ // Tool for Soldier Agents to do more damage.
 		if (this.hasTool() && tool.getType().equals(ToolType.SPEAR)){
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -80,30 +80,33 @@ public abstract class AbstractAgent implements Serializable{
 		}
 	}
 
+	public void incrementCompletionAmount(AbstractBuilding b, int n) {
+		b.incrementCompletionAmount(n);
+	}
 
 	// Added getter and setters for condition to interact with HomeDepot
-	public int getCondition(){
+	public int getCondition() {
 		return condition;
 	}
 
-	public void setCondition(int n){
-		if ((n + condition) > 2000){
+	public void setCondition(int n) {
+		if ((n + condition) > 2000) {
 			condition = 2000;
-		}
-		else {
+		} else {
 			condition += n;
 		}
 	}
 
-	public void addTool(Tool t){
+	public void addTool(Tool t) {
 		tool = t;
 	}
+
 	// Added getter that can be changed later down the road
 	public int getAmountCarried() {
 		return carriedResources;
 	}
 
-	public ResourceType getCarriedResource(){
+	public ResourceType getCarriedResource() {
 		return carriedResourceType;
 	}
 
@@ -128,6 +131,10 @@ public abstract class AbstractAgent implements Serializable{
 	public Point getPosition() {
 		return position;
 	}
+	
+	public Point getLastPosition() {
+		return lastPosition;
+	}
 
 	public void sendCommand(AgentCommandWithDestination c) {
 		AI.recieveCommand(c);
@@ -136,11 +143,13 @@ public abstract class AbstractAgent implements Serializable{
 	public void move() {
 		if (atDestination())
 			return;
+		
+		lastPosition = position;
+		
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
 
 		int direction = (int) (Math.random() * 2);
-
 
 		if (!pRightOfD && !pBelowD) {
 			if (position.x == destination.x)
@@ -193,12 +202,19 @@ public abstract class AbstractAgent implements Serializable{
 	 * movement, chooses how to get to diagonal target randomly each move.
 	 */
 	public void tic() {
-		checkClosestBuildings();
 		AI.assessCurrentDestination();
-		move();
+
 		decrementEnergy();
 		decrementCondition();
 		decrementOil();
+
+		if (ticInt == 10) {
+			checkClosestBuildings();
+			move();
+			ticInt = 0;
+		}
+
+		ticInt++;
 	}
 
 	private void checkClosestBuildings() {
@@ -211,20 +227,16 @@ public abstract class AbstractAgent implements Serializable{
 		junkDistance = 999999999;
 
 		for (model.buildings.AbstractBuilding b : g.getBuildings()) {
-			if (b.getType().equals(BuildingType.CHARGINGSTATION) && 
-					position.distance(b.getLocation()) < chargeDistance) {
+			if (b.getType().equals(BuildingType.CHARGINGSTATION) && position.distance(b.getLocation()) < chargeDistance) {
 				nearestChargingStation = b.getLocation();
 				chargeDistance = position.distance(b.getLocation());
-			} else if (b.getType().equals(BuildingType.HOMEDEPOT) && 
-					position.distance(b.getLocation()) < depotDistance) {
+			} else if (b.getType().equals(BuildingType.HOMEDEPOT) && position.distance(b.getLocation()) < depotDistance) {
 				nearestHomeDepot = b.getLocation();
 				depotDistance = position.distance(b.getLocation());
-			} else if (b.getType().equals(BuildingType.OILTANK) && 
-					position.distance(b.getLocation()) < oilDistance) {
+			} else if (b.getType().equals(BuildingType.OILTANK) && position.distance(b.getLocation()) < oilDistance) {
 				nearestOilTank = b.getLocation();
 				oilDistance = position.distance(b.getLocation());
-			} else if (b.getType().equals(BuildingType.JUNKYARD) && 
-					position.distance(b.getLocation()) < junkDistance) {
+			} else if (b.getType().equals(BuildingType.JUNKYARD) && position.distance(b.getLocation()) < junkDistance) {
 				nearestJunkYard = b.getLocation();
 				junkDistance = position.distance(b.getLocation());
 			}
@@ -283,16 +295,18 @@ public abstract class AbstractAgent implements Serializable{
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 			else if (condition < 100)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
-
+			
 			// At destination
 			if (atDestination()) {
 				if (!assessActionAtDestination()) {
 					actionQueue.remove(0);
-					setDestination(actionQueue.get(0).getCommandDestination());
 				}
 			}
+			
+			// Sets destination
+			if(!actionQueue.isEmpty())
+				setDestination(actionQueue.get(0).getCommandDestination());
 		}
-
 
 		/**
 		 * Returns true if Agent won't need a new destination yet, returns false
@@ -301,6 +315,9 @@ public abstract class AbstractAgent implements Serializable{
 		 * @return
 		 */
 		public boolean assessActionAtDestination() {
+			if (actionQueue.isEmpty())
+				return true;
+
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 50) {
 				oil += 50;
 				return true;
@@ -314,8 +331,8 @@ public abstract class AbstractAgent implements Serializable{
 				return true;
 			}
 
-			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
-				// kill rogue agent
+			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
+				// TODO kill rogue agent
 				condition -= 500;
 				return false;
 			}
@@ -327,7 +344,7 @@ public abstract class AbstractAgent implements Serializable{
 				} else {
 					if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
 						actionQueue
-						.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
+								.add(0, new AgentCommandWithDestination(AgentCommand.DEPOSIT_COAL, nearestHomeDepot));
 						return true;
 					} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COPPER)) {
 						actionQueue.add(0,
@@ -350,7 +367,7 @@ public abstract class AbstractAgent implements Serializable{
 				}
 			}
 
-			if(actionQueue.get(0).getAgentCommand().isDeposit()) {
+			if (actionQueue.get(0).getAgentCommand().isDeposit()) {
 				// TODO --- SINNING CODE ZONE ---
 				Game g = Game.getInstance();
 				int buildingIndex = -1;
