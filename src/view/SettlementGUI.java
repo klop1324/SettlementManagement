@@ -1,4 +1,5 @@
 package view;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -9,16 +10,26 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+<<<<<<< HEAD
+import javafx.scene.control.ComboBox;
+
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+=======
+>>>>>>> ec1c9d8344870e6585e5d6f7827ece615d69c775
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -65,7 +76,13 @@ class SettlementGUI extends JFrame implements Observer {
 	private int next = 0;
 	private int clickX;
 	private int clickY;
+<<<<<<< HEAD
+	private JScrollBar vertical = new JScrollBar();
+	private JScrollBar horizontal = new JScrollBar();
+	private Point agentDest;
+=======
 	private Point userClick;
+>>>>>>> ec1c9d8344870e6585e5d6f7827ece615d69c775
 	private JLayeredPane backgroundPanel = new JLayeredPane();
 	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
@@ -162,20 +179,26 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		this.setFocusable(false);
 		backgroundPanel.setFocusable(false);
-		mapArea.setFocusable(true);
+		mapArea.setFocusable(false);
+		mapArea.setEnabled(true);
 		notifierPanel.setFocusable(false);
 		infoPanel.setFocusable(false);
 		
+		JPanel temp = new JPanel();
+		temp.setBackground(Color.BLUE);
 		JScrollPane cs = new JScrollPane(mapArea);
 		cs.setBounds(0, 0, 795, 572);
-		JScrollBar vertical = cs.getVerticalScrollBar();
-		JScrollBar horizontal = cs.getHorizontalScrollBar();
+		temp.setBounds(cs.getX(), cs.getY(), 2000, 2000);
+		vertical = cs.getVerticalScrollBar();
+		horizontal = cs.getHorizontalScrollBar();
+		cs.setVerticalScrollBarPolicy(cs.VERTICAL_SCROLLBAR_ALWAYS);
+		cs.setHorizontalScrollBarPolicy(cs.HORIZONTAL_SCROLLBAR_ALWAYS);
 		/*InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
 		imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
-		imH.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
-		imH.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");*/
+		imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
+		imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");*/
 		InputMap input = mapArea.getInputMap();
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.PGDN);
 		input.put(key, vertical.getActionForKeyStroke(KeyStroke.getKeyStroke("DOWN")));
@@ -184,6 +207,8 @@ class SettlementGUI extends JFrame implements Observer {
 		infoButton.setBounds(635, 20, 10, 40);
 		notifierButton.setBounds(20, 392, 40, 10);
 		
+		//this.setupKeyBinding();
+				
 		this.add(backgroundPanel);
 		backgroundPanel.add(individual, new Integer(1), 0);
 		backgroundPanel.add(infoButton, new Integer(1), 0);
@@ -208,8 +233,66 @@ class SettlementGUI extends JFrame implements Observer {
 		selectAgent.addActionListener(new DropDownListener());
 		helpButton.addActionListener(new HelpButtonListener());
 		mapArea.addMouseListener(new ClickerListener());
+		this.addKeyListener(new ArrowKeyListener());
 		addObservers();
 	}
+	
+	/*private void setupKeyBinding() {
+	      int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
+	      InputMap inMap = mapArea.getInputMap(condition);
+	      ActionMap actMap = mapArea.getActionMap();
+
+	      // this uses an enum of Direction that holds ints for the arrow keys
+	      for (Direction direction : Direction.values()) {
+	         int key = direction.getKey();
+	         String name = direction.name();
+
+	         // add the key bindings for arrow key and shift-arrow key
+	         inMap.put(KeyStroke.getKeyStroke(key, 0), name);
+	         inMap.put(KeyStroke.getKeyStroke(key, InputEvent.SHIFT_DOWN_MASK), name);
+	         actMap.put(name, new MyKeyAction(direction));
+	      }
+	   }
+	
+	enum Direction {
+		   UP(KeyEvent.VK_UP), DOWN(KeyEvent.VK_DOWN), LEFT(KeyEvent.VK_LEFT), RIGHT(KeyEvent.VK_RIGHT);
+
+		   private int key;
+
+		   private Direction(int key) {
+		      this.key = key;
+		   }
+
+		   public int getKey() {
+		      return key;
+		   }
+		}
+	
+	class MyKeyAction extends AbstractAction {
+		   private Direction direction;
+
+		   public MyKeyAction(Direction direction) {
+		      this.direction = direction;
+		   }
+
+		   @Override
+		   public void actionPerformed(ActionEvent e) {
+		      switch (direction) {
+		      case UP:
+		    	  System.out.println("hello");
+		         break;
+		      case DOWN:
+		         break;
+		      case LEFT:
+		         break;
+		      case RIGHT:
+		         break;
+
+		      default:
+		         break;
+		      }
+		   }
+	}*/
 	
 	private class InfoButtonListener implements ActionListener {
 
@@ -235,10 +318,12 @@ class SettlementGUI extends JFrame implements Observer {
 			if (two % 2 != 0) {
 				notifierPanel.setVisible(false);
 				notifierButton.setBounds(20, 562, 40, 10);
+				helpPanel.setVisible(false);
 			}
 			else {
 				notifierPanel.setVisible(true);
 				notifierButton.setBounds(20, 392, 40, 10);
+				helpPanel.setVisible(true);
 			}
 		}
 	}
@@ -261,6 +346,7 @@ class SettlementGUI extends JFrame implements Observer {
 				selectAgent.addItem("select building type");
 				selectAgent.addItem("armory");
 				selectAgent.addItem("charging station");
+				selectAgent.addItem("home depot");
 				selectAgent.addItem("junkyard");
 				selectAgent.addItem("oil tank");
 				selectAgent.addItem("oil well");
@@ -313,6 +399,10 @@ class SettlementGUI extends JFrame implements Observer {
 					System.out.println(selected);
 					return;
 				}
+			}
+			else if (selected.equals("home depot")) {
+				System.out.println(selected);
+				return;
 			}
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
@@ -381,6 +471,48 @@ class SettlementGUI extends JFrame implements Observer {
 		}
 		
 	}
+	
+	private class ArrowKeyListener implements KeyListener{
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.isActionKey())
+				System.out.println("hello");
+			InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+			InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+			
+			int key = e.getKeyCode();
+			if (key == KeyEvent.VK_UP) {
+				//System.out.println("up");
+				imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+				System.out.println("up");
+			}
+			else if (key == KeyEvent.VK_DOWN) {
+				imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
+				System.out.println("down");
+			}
+			else if (key == KeyEvent.VK_RIGHT) {
+				imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
+				System.out.println("right");
+			}
+			else if (key == KeyEvent.VK_LEFT) {
+				imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
+				System.out.println("left");
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			
+		}
+		
+	}
+	
 	private class CollectButtonListener implements ActionListener {
 
 		@Override
