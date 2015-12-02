@@ -14,7 +14,7 @@ import model.tools.ToolType;
 
 public abstract class AbstractAgent implements Serializable {
 	Tool tool = null;
-	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt;
+	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
 	String filename;
@@ -35,6 +35,7 @@ public abstract class AbstractAgent implements Serializable {
 		AI = new AgentLogic();
 		destination = null;
 		this.position = position;
+		gatherRate = 10;
 	}
 
 	public boolean hasPickAxe() { // Tool for Worker Agents to get ore faster.
@@ -96,11 +97,13 @@ public abstract class AbstractAgent implements Serializable {
 	}
 
 	/**
-	 * Adds a tool. Tools don't do anything right now.
+	 * Adds a tool. Only pickaxes work right now.
 	 * @param t
 	 */
 	public void addTool(Tool t) {
 		tool = t;
+		if(tool.getType() == ToolType.PICKAXE)
+			gatherRate = 50;
 	}
 
 	/**
@@ -134,6 +137,15 @@ public abstract class AbstractAgent implements Serializable {
 	public Point getPosition() {
 		return position;
 	}
+	
+	public int getEnergy() {
+		return energy;
+	}
+	
+	public int getOil() {
+		return oil;
+	}
+
 
 	/**
 	 * Sends a command and a destination to the Agent. Agent sends this to its
@@ -215,17 +227,6 @@ public abstract class AbstractAgent implements Serializable {
 	}
 
 	/**
-	 * Nice going, commander.
-	 */
-	public void die() {
-		Game g = Game.getInstance();
-		for (AbstractAgent a : g.getAgents()) {
-			if (a.equals(this))
-				g.getAgents().remove(a);
-		}
-	}
-
-	/**
 	 * Does everything Agent needs to do in a game tick, including checking
 	 * destination, decrementing needs, and moving toward destinations (every
 	 * 10th tick).
@@ -236,9 +237,6 @@ public abstract class AbstractAgent implements Serializable {
 		decrementEnergy();
 		decrementCondition();
 		decrementOil();
-
-		if (energy <= 0 || condition <= 0 || oil <= 0)
-			die();
 
 		if (ticInt == 10) {
 			checkClosestBuildings();
@@ -322,11 +320,11 @@ public abstract class AbstractAgent implements Serializable {
 
 		public void assessCurrentDestination() {
 			// Need low
-			if (oil < 100)
+			if (oil < 500)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
-			else if (energy < 100)
+			else if (energy < 500)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
-			else if (condition < 100)
+			else if (condition < 500)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 
 			// Sets destination
@@ -369,8 +367,12 @@ public abstract class AbstractAgent implements Serializable {
 			}
 
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
-				// TODO kill rogue agent
-				condition -= 500;
+				for(Enemy e : g.getEnemies()) {
+					if(e.getPosition().equals(position)) {
+						e.kill();
+						condition -= 500;
+					}
+				}
 				return false;
 			}
 
@@ -384,13 +386,13 @@ public abstract class AbstractAgent implements Serializable {
 						collectingResource = r;
 				}
 				
-				if (collectingResource.getAmount() <= 100) {
+				if (collectingResource.getAmount() <= gatherRate) {
 					carriedResources += collectingResource.getAmount();
-					collectingResource.removeResource(100);
+					collectingResource.removeResource(gatherRate);
 					resourceDepleted = true;
-				} else if (carriedResources <= MAX_RESOURCES - 100) {
-					carriedResources += 100;
-					collectingResource.removeResource(100);
+				} else if (carriedResources <= MAX_RESOURCES - gatherRate) {
+					carriedResources += gatherRate;
+					collectingResource.removeResource(gatherRate);
 					return true;
 				}
 				if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.COLLECT_COAL)) {
@@ -428,7 +430,6 @@ public abstract class AbstractAgent implements Serializable {
 			}
 
 			if (actionQueue.get(0).getAgentCommand().isDeposit()) {
-				// TODO --- SINNING CODE ZONE ---
 				int buildingIndex = -1;
 				for (int i = 0; i < g.getBuildings().size(); i++) {
 					if (g.getBuildings().get(i).getLocation().x == destination.x
