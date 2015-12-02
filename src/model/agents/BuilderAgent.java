@@ -12,7 +12,7 @@ public class BuilderAgent extends AbstractAgent {
 		MAX_RESOURCES = 0;
 	}
 	
-	public void incrementCompletionAmount(Building b){
+	public void incrementCompletionAmount(AbstractBuilding b){
 		if (this.hasWeldingGun()){
 			buildAmount += 5;
 			b.incrementCompletionAmount(buildAmount);

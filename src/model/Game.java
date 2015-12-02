@@ -11,15 +11,12 @@ import java.util.Observable;
 
 import javax.swing.Timer;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
-
 import model.agents.AbstractAgent;
 import model.agents.AgentCommand;
 import model.agents.AgentCommandWithDestination;
 import model.agents.BuilderAgent;
 import model.agents.WorkerAgent;
-import model.buildings.Building;
-import model.buildings.BuildingType;
+import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
 import model.tools.Tool;
@@ -28,10 +25,10 @@ import model.tools.Tool;
 public class Game extends Observable implements Serializable{
 
 	private static Game game;
-	private ArrayList<Building> buildings;
+	private ArrayList<AbstractBuilding> buildings;
 	private	ArrayList<Resource> mapResources;
 	private ArrayList<AbstractAgent> agents;
-	private ArrayList<Building> buildingsInProcess;
+	private ArrayList<AbstractBuilding> buildingsInProcess;
 	private HashMap<ResourceType, Integer > playerResources;
 	private Map map;
 
@@ -51,10 +48,10 @@ public class Game extends Observable implements Serializable{
 
 	public Game() {
 		this.map = new Map(GlobalSettings.MAP_SIZE_X, GlobalSettings.MAP_SIZE_Y);
-		this.buildings = new ArrayList<Building>();
+		this.buildings = new ArrayList<AbstractBuilding>();
 		this.mapResources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
-		this.buildingsInProcess = new ArrayList<Building>();
+		this.buildingsInProcess = new ArrayList<AbstractBuilding>();
 		this.playerResources = new HashMap<ResourceType, Integer>();
 		for(ResourceType r: ResourceType.values()){
 			this.playerResources.put(r, 0);
@@ -105,9 +102,9 @@ public class Game extends Observable implements Serializable{
 		}
 	}
 
-	private Building findBuildingForResource(Resource r){
-		Building building = null;
-		for (Building b: buildings){
+	private AbstractBuilding findBuildingForResource(Resource r){
+		AbstractBuilding building = null;
+		for (AbstractBuilding b: buildings){
 			if (b.getResources().contains(r)){
 				building = b;
 			}
@@ -134,7 +131,7 @@ public class Game extends Observable implements Serializable{
 	 * agent
 	 */
 	public void createTool(Resource r1, Resource r2, AbstractAgent a){
-		for (Building b : buildings){
+		for (AbstractBuilding b : buildings){
 			// if the building has the resource
 			if (b.getResources().contains(r1.getType())&& b.getResources().contains(r2.getType())) {
 				// Removes that resource amount
@@ -157,9 +154,9 @@ public class Game extends Observable implements Serializable{
 	 */
 	public void createBuilding(Point p, BuildingType b){
 		// TODO Refactor once functionality is figured out
-		for (Building buildings: buildings){
+		for (AbstractBuilding buildings: buildings){
 			// bip stands for building in process
-			for(Building bip: buildingsInProcess) {
+			for(AbstractBuilding bip: buildingsInProcess) {
 				for (Resource r: mapResources){
 					if ((p.equals(r.getLocation()) || p.equals(bip.getLocation()) 
 							|| p.equals(buildings.getLocation()))){
@@ -173,31 +170,31 @@ public class Game extends Observable implements Serializable{
 		switch (b){
 		case ARMORY:
 			armoryCost();
-			buildingsInProcess.add(new Building(BuildingType.ARMORY, p));
+			buildingsInProcess.add(new Armory(p));
 			break;
 		case CHARGINGSTATION:
 			chargingStationCost();
-			buildingsInProcess.add(new Building(BuildingType.CHARGINGSTATION, p));
+			buildingsInProcess.add(new ChargingStation(p));
 			break;
 		case HOMEDEPOT:
 			homeDepotCost();
-			buildingsInProcess.add(new Building(BuildingType.HOMEDEPOT, p));
+			buildingsInProcess.add(new HomeDepot(p));
 			break;
 		case JUNKYARD:
 			junkYardCost();
-			buildingsInProcess.add(new Building(BuildingType.JUNKYARD, p));
+			buildingsInProcess.add(new JunkYard(p));
 			break;
 		case OILTANK:
 			oilTankCost();
-			buildingsInProcess.add(new Building(BuildingType.OILTANK, p));
+			buildingsInProcess.add(new OilTank(p));
 			break;
 		case OILWELL:
 			oilWellCost();
-			buildingsInProcess.add(new Building(BuildingType.OILWELL, p));
+			buildingsInProcess.add(new OilWell(p));
 			break;
 		case WORKSHOP:
 			workShopCost();
-			buildingsInProcess.add(new Building(BuildingType.WORKSHOP, p));
+			buildingsInProcess.add(new WorkShop(p));
 			break;
 		default:
 			break;
@@ -388,10 +385,10 @@ public class Game extends Observable implements Serializable{
 			array[x][y] = 0;
 			
 			//recursion
-			if(x+1 < array[0].length) array = generationHelper(array, x+1, y, resource);
-			if(y+1 < array.length) array = generationHelper(array, x, y+1, resource);
-			if(x-1 >= 0) array = generationHelper(array, x-1, y, resource);
-			if(y-1 >=0) array = generationHelper(array, x, y-1, resource);
+			if(x+1 < array[0].length && array[x][y] != 0) array = generationHelper(array, x+1, y, resource);
+			if(y+1 < array.length && array[x][y] != 0) array = generationHelper(array, x, y+1, resource);
+			if(x-1 >= 0 && array[x][y] != 0) array = generationHelper(array, x-1, y, resource);
+			if(y-1 >=0 && array[x][y] != 0) array = generationHelper(array, x, y-1, resource);
 		}
 		return array;
 	}
@@ -400,11 +397,11 @@ public class Game extends Observable implements Serializable{
 		return map;
 	}
 
-	public void addBuildingInProcess(Building b){
+	public void addBuildingInProcess(AbstractBuilding b){
 		this.buildingsInProcess.add(b);
 	}
 
-	public void addBuilding(Building b){
+	public void addBuilding(AbstractBuilding b){
 		this.buildings.add(b);
 	}
 
@@ -428,11 +425,11 @@ public class Game extends Observable implements Serializable{
 		return playerResources;
 	}
 	
-	public ArrayList<Building> getBuildings() {
+	public ArrayList<AbstractBuilding> getBuildings() {
 		return buildings;
 	}
 
-	public ArrayList<Building> getBuildingsInProcess() {
+	public ArrayList<AbstractBuilding> getBuildingsInProcess() {
 		return buildingsInProcess;
 	}
 
@@ -463,7 +460,7 @@ public class Game extends Observable implements Serializable{
 			// Checks if buildings are completed and adds the completed ones to 
 			// the buildings list.
 			if (!buildingsInProcess.isEmpty()){	
-				for (Building b: buildingsInProcess) {
+				for (AbstractBuilding b: buildingsInProcess) {
 					if (b.isCompleted()){
 						buildings.add(b);
 						buildingsInProcess.remove(b);

@@ -3,9 +3,6 @@ package view;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,13 +11,15 @@ import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import model.Game;
 import model.Map;
 import model.Tile;
-import model.agents.*;
-import model.buildings.Building;
+import model.agents.AbstractAgent;
+import model.agents.BuilderAgent;
+import model.agents.SoldierAgent;
+import model.agents.WorkerAgent;
+import model.buildings.AbstractBuilding;
 import model.resources.Resource;
 
 public class ViewController extends JPanel implements Observer {
@@ -115,33 +114,9 @@ public class ViewController extends JPanel implements Observer {
 
 			}
 		}
-		for (Building b: game.getBuildings()){
-			switch(b.getType()){
-			case ARMORY:
-				g2.drawImage(armory, b.getLocation().x*50, b.getLocation().y*50, null);
-				break;
-			case CHARGINGSTATION:
-				g2.drawImage(charge, b.getLocation().x*50, b.getLocation().y*50, null);
-				break;
-			case HOMEDEPOT:
-				g2.drawImage(homeDepot, b.getLocation().x*50, b.getLocation().y*50, null);
-				break;
-			case JUNKYARD:
-				g2.drawImage(junkYard, b.getLocation().x*50, b.getLocation().y*50, null);
-				break;
-			case OILTANK:
-				g2.drawImage(oilTank, b.getLocation().x*50, b.getLocation().y*50, null);
-				break;
-			case OILWELL:
-				g2.drawImage(oilWell, b.getLocation().x*50, b.getLocation().y*50, null);
-				break;
-			case WORKSHOP:
-				g2.drawImage(workShop, b.getLocation().x*50, b.getLocation().y*50, null);
-				break;
-			default:
-				break;
-			
-			}
+		
+		for (AbstractBuilding b: game.getBuildings()){
+			g2.drawImage(b.getImage(), b.getLocation().x*50, b.getLocation().y*50, null);
 		}
 		
 		for (AbstractAgent a: game.getAgents()){
