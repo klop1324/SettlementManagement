@@ -12,8 +12,8 @@ import model.resources.ResourceType;
 import model.tools.Tool;
 import model.tools.ToolType;
 
-public abstract class AbstractAgent implements Serializable {
-	Tool tool;
+public abstract class AbstractAgent implements Serializable{
+	Tool tool = null;
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation,
 			nearestJunkYard;
@@ -38,42 +38,44 @@ public abstract class AbstractAgent implements Serializable {
 		this.position = position;
 	}
 
-	public boolean hasPickAxe() {
-		if (tool == null)
-			return false;
-		if (tool.getType().equals(ToolType.PICKAXE)) {
+	public boolean hasPickAxe(){ // Tool for Worker Agents to get ore faster.
+		if (this.hasTool() && tool.getType().equals(ToolType.PICKAXE)){
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean hasArmor() {
-		if (tool == null)
-			return false;
-		if (tool.getType().equals(ToolType.ARMOR)) {
+	public boolean hasArmor(){ // Tool for Soldier Agents to lose less health in battle.
+		if (this.hasTool() && tool.getType().equals(ToolType.ARMOR)){
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean hasSpear() {
-		if (tool == null)
-			return false;
-		if (tool.getType().equals(ToolType.SPEAR)) {
+	public boolean hasSpear(){ // Tool for Soldier Agents to do more damage.
+		if (this.hasTool() && tool.getType().equals(ToolType.SPEAR)){
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean hasWeldingGun() {
-		if (tool == null)
-			return false;
-		if (tool.getType().equals(ToolType.WELDINGGUN)) {
+	public boolean hasWeldingGun(){ // Tool for Builder Agents to build faster.
+			if (this.hasTool() && tool.getType().equals(ToolType.WELDINGGUN)){
+				return true;
+			}
+			else {
+				return false;
+			}
+	}
+	
+	public boolean hasTool(){
+		if (tool != null){
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
