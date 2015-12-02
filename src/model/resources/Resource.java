@@ -56,9 +56,8 @@ public class Resource implements Serializable{
 	}
 
 	// Remove amount
-	public void removeResource(int removeAmount, AbstractAgent agent){
+	public void removeResource(int removeAmount){
 		if (hasResources()){
-			agent.setPickedUpResource(resources);
 			resourceAmount-= removeAmount;
 			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
 			if (!hasResources()){
