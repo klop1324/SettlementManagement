@@ -18,6 +18,7 @@ import javax.swing.Timer;
 
 import model.Game;
 import model.Map;
+import model.Tile;
 import model.agents.*;
 
 public class ViewController extends JPanel implements Observer {
@@ -53,7 +54,7 @@ public class ViewController extends JPanel implements Observer {
 			copper = ImageIO.read(new File("./ImageSet/singleCopper.png"));
 			iron = ImageIO.read(new File("./ImageSet/singleStone.png"));
 			gold = ImageIO.read(new File("./ImageSet/singleIron.png"));
-			ground = ImageIO.read(new File("./ImageSet/tile-Plating.png"));
+			ground = Tile.PLATING.getImage();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
