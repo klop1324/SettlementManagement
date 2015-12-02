@@ -9,7 +9,7 @@ import org.junit.Test;
 import model.Game;
 import model.agents.BuilderAgent;
 import model.agents.WorkerAgent;
-import model.buildings.AbstractBuilding;
+import model.buildings.Building;
 import model.buildings.Armory;
 import model.buildings.BuildingType;
 import model.buildings.ChargingStation;

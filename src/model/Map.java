@@ -108,7 +108,7 @@ public class Map extends Observable implements Serializable{
 		String result = "";
 		for(int i = 0; i < 100; i++){
 			for(int j = 0; j < 100; j++){
-				result += "" + map[i][j];
+				result += "" + Tile.values()[map[i][j]].getCharRepresentation();
 			}
 			result += "\n";
 		}

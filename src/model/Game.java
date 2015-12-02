@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Random;
 
@@ -16,6 +18,7 @@ import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
 import model.tools.Tool;
+import sun.net.www.content.audio.basic;
 import model.agents.BuilderAgent;
 import model.agents.WorkerAgent;
 
@@ -23,10 +26,11 @@ import model.agents.WorkerAgent;
 public class Game extends Observable implements Serializable{
 
 	private static Game game;
-	private ArrayList<AbstractBuilding> buildings;
-	private	ArrayList<Resource> resources;
+	private ArrayList<Building> buildings;
+	private	ArrayList<Resource> mapResources;
 	private ArrayList<AbstractAgent> agents;
-	private ArrayList<AbstractBuilding> buildingsInProcess;
+	private ArrayList<Building> buildingsInProcess;
+	private HashMap<ResourceType, Integer > playerResources;
 	private Map map;
 
 	private Timer timer;
@@ -45,11 +49,13 @@ public class Game extends Observable implements Serializable{
 
 	public Game() {
 		this.map = new Map(GlobalSettings.MAP_SIZE_X, GlobalSettings.MAP_SIZE_Y);
-		this.buildings = new ArrayList<AbstractBuilding>();
-		this.resources = new ArrayList<Resource>();
+		this.buildings = new ArrayList<Building>();
+		this.mapResources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
-		this.buildingsInProcess = new ArrayList<AbstractBuilding>();
-
+		this.buildingsInProcess = new ArrayList<Building>();
+		for(ResourceType r: ResourceType.values()){
+			this.playerResources.put(r, 0);
+		}
 
 		//TODO intitial resource generation
 
@@ -94,9 +100,8 @@ public class Game extends Observable implements Serializable{
 		}
 	}
 
-
 	public void agentToBuilding(Resource r){
-		AbstractBuilding building = findBuildingForResource(r);
+		Building building = findBuildingForResource(r);
 		sendAgentsToBuilding(building);
 		for (AbstractAgent a: agents) {
 			if (a.getPosition().equals(building.getLocation())){
@@ -106,16 +111,16 @@ public class Game extends Observable implements Serializable{
 		}
 	}
 
-	private void sendAgentsToBuilding(AbstractBuilding b){
+	private void sendAgentsToBuilding(Building b){
 		for (AbstractAgent a: agents){
 			a.setDestination(b.getLocation());
 		}
 	}
 
-	private AbstractBuilding findBuildingForResource(Resource r){
-		AbstractBuilding building = null;
-		for (AbstractBuilding b: buildings){
-			if (b.getResources().containsKey(r.getType())){
+	private Building findBuildingForResource(Resource r){
+		Building building = null;
+		for (Building b: buildings){
+			if (b.getResources().contains(r)){
 				building = b;
 			}
 		}
@@ -130,7 +135,7 @@ public class Game extends Observable implements Serializable{
 
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
-		for (Resource r: resources){
+		for (Resource r: mapResources){
 			if (r.getLocation().equals(resourcePoint)){
 				resource = r;
 			}
@@ -140,14 +145,13 @@ public class Game extends Observable implements Serializable{
 
 	// Should create tool
 	public void createTool(Resource r1, Resource r2, AbstractAgent a){
-		for (AbstractBuilding b : buildings){
-			if (b.getResources().containsKey(r1.getType())) {
+		for (Building b : buildings){
+			// if the building has the resource
+			if (b.getResources().contains(r1.getType())&& b.getResources().contains(r2.getType())) {
 				// Removes that resource amount
-				b.getResources().replace(r1.getType(), b.getResources().get(r1.getType()) - 1);
-			}
-			if (b.getResources().containsKey(r2.getType())) {
-				// Removes that resource amount
-				b.getResources().replace(r2.getType(), b.getResources().get(r2.getType()) - 1);
+				b.removeResource(r1.getType(), b.getResourceAmount(r1.getType()) - 1);
+				b.removeResource(r2.getType(), b.getResourceAmount(r2.getType()) - 1);
+				break;
 			}
 		}
 		a.addTool(new Tool(r1, r2)); // adds tool to agent
@@ -157,43 +161,28 @@ public class Game extends Observable implements Serializable{
 	// Will also have user interaction to send builder agents to
 	// build this building.
 	public void createBuilding(Point p, BuildingType b){
-		switch (b){
-		case ARMORY:
-			armoryCost();
-			buildingsInProcess.add(new Armory(100, p));
-			break;
-		case CHARGINGSTATION:
-			chargingStationCost();
-			buildingsInProcess.add(new ChargingStation(100, p));
-			break;
-		case HOMEDEPOT:
-			homeDepotCost();
-			buildingsInProcess.add(new HomeDepot(100, p));
-			break;
-		case JUNKYARD:
-			junkYardCost();
-			buildingsInProcess.add(new JunkYard(100, p));
-			break;
-		case OILTANK:
-			oilTankCost();
-			buildingsInProcess.add(new OilTank(100, p));
-			break;
-		case OILWELL:
-			oilWellCost();
-			buildingsInProcess.add(new OilWell(100, p));
-			break;
-		case WORKSHOP:
-			workShopCost();
-			buildingsInProcess.add(new WorkShop(100, p));
-			break;
-		default:
-			break;
-
-		}
+		/*
+		
+			ResourceType keys[] = (ResourceType[]) building.getCost().keySet().toArray();
+			HashMap<ResourceType, Integer> m = building.getCost();
+			boolean flag = true;
+			// checks if the player has the resources to build it
+			for(int i = 0; i < keys.length; i++){
+				if(playerResources.get(keys[i])- m.get(keys[i]) < 0) flag = false;
+			}
+			if(flag){
+				for(int i = 0; i < keys.length; i++){
+					int currVal = playerResources.get(keys[i]);
+					playerResources.replace(keys[i], currVal - m.get(keys[i]));
+				}
+				buildingsInProcess.add(new Armory(p));
+			}
+		*/
+	
 	}
 
 	public void armoryCost(){
-		for (Resource r: resources){ // Removing from user resources
+		for (Resource r: mapResources){ // Removing from user resources
 			if (r.getType().equals(ResourceType.COAL)){
 				r.spendResource(10);
 			}
@@ -210,7 +199,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public void chargingStationCost(){
-		for (Resource r: resources){ // Removing from user resources
+		for (Resource r: mapResources){ // Removing from user resources
 			if (r.getType().equals(ResourceType.COAL)){
 				r.spendResource(10);
 			}
@@ -227,7 +216,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public void homeDepotCost(){
-		for (Resource r: resources){ // Removing from user resources
+		for (Resource r: mapResources){ // Removing from user resources
 			if (r.getType().equals(ResourceType.COAL)){
 				r.spendResource(10);
 			}
@@ -244,7 +233,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public void junkYardCost(){
-		for (Resource r: resources){ // Removing from user resources
+		for (Resource r: mapResources){ // Removing from user resources
 			if (r.getType().equals(ResourceType.COAL)){
 				r.spendResource(10);
 			}
@@ -261,7 +250,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public void oilTankCost(){
-		for (Resource r: resources){ // Removing from user resources
+		for (Resource r: mapResources){ // Removing from user resources
 			if (r.getType().equals(ResourceType.COAL)){
 				r.spendResource(10);
 			}
@@ -278,7 +267,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public void oilWellCost(){
-		for (Resource r: resources){ // Removing from user resources
+		for (Resource r: mapResources){ // Removing from user resources
 			if (r.getType().equals(ResourceType.COAL)){
 				r.spendResource(10);
 			}
@@ -293,8 +282,9 @@ public class Game extends Observable implements Serializable{
 			}
 		}
 	}
+
 	public void workShopCost(){
-		for (Resource r: resources){ // Removing from user resources
+		for (Resource r: mapResources){ // Removing from user resources
 			if (r.getType().equals(ResourceType.COAL)){
 				r.spendResource(10);
 			}
@@ -318,17 +308,11 @@ public class Game extends Observable implements Serializable{
 			//TODO: actually generate resources
 
 		}
-		resources.add(new Resource(40, new Point(5,3), ResourceType.IRON));
-		resources.add(new Resource(40, new Point(5,4), ResourceType.COPPER));
-		resources.add(new Resource(40, new Point(5,5), ResourceType.GOLD));
-		resources.add(new Resource(40, new Point(5,6), ResourceType.OIL));
-		resources.add(new Resource(40, new Point(10, 3), ResourceType.ELECTRICITY));
-
-		buildings.add(new Armory(500, new Point( 7,3)));
-		buildings.add(new JunkYard(500, new Point( 7,9)));
-		buildings.add(new OilWell(500, new Point(5, 6)));
-		addBuilding(new ChargingStation(500, new Point(3, 4)));
-		addBuilding(new OilTank(500, new Point(9, 2)));
+		mapResources.add(new Resource(40, new Point(5,3), ResourceType.IRON));
+		mapResources.add(new Resource(40, new Point(5,4), ResourceType.COPPER));
+		mapResources.add(new Resource(40, new Point(5,5), ResourceType.GOLD));
+		mapResources.add(new Resource(40, new Point(5,6), ResourceType.OIL));
+		mapResources.add(new Resource(40, new Point(10, 3), ResourceType.ELECTRICITY));
 		
 		addAgents(new WorkerAgent(new Point(4, 9)));
 
@@ -337,11 +321,12 @@ public class Game extends Observable implements Serializable{
 	public Map getMap() {
 		return map;
 	}
-	public void addBuildingInProcess(AbstractBuilding b){
+
+	public void addBuildingInProcess(Building b){
 		this.buildingsInProcess.add(b);
 	}
 
-	public void addBuilding(AbstractBuilding b){
+	public void addBuilding(Building b){
 		this.buildings.add(b);
 	}
 
@@ -350,7 +335,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public void addResource(Resource resource) {
-		this.resources.add(resource);
+		this.mapResources.add(resource);
 	}
 
 	public ArrayList<AbstractAgent> getAgents() {
@@ -358,14 +343,14 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public ArrayList<Resource> getResources() {
-		return resources;
+		return mapResources;
 	}
 
-	public ArrayList<AbstractBuilding> getBuildings() {
+	public ArrayList<Building> getBuildings() {
 		return buildings;
 	}
 
-	public ArrayList<AbstractBuilding> getBuildingsInProcess() {
+	public ArrayList<Building> getBuildingsInProcess() {
 		return buildingsInProcess;
 	}
 
@@ -391,7 +376,7 @@ public class Game extends Observable implements Serializable{
 
 			setChanged();
 			notifyObservers();
-			notifyObservers(resources);
+			notifyObservers(mapResources);
 		}
 
 	}
@@ -406,9 +391,9 @@ public class Game extends Observable implements Serializable{
 				}
 			}
 			// removal of resources // causes sprite to stop halfway
-			for(int i = 0; i < resources.size(); i++){
-				if(!resources.get(i).hasResources()){
-					resources.remove(i);
+			for(int i = 0; i < mapResources.size(); i++){
+				if(!mapResources.get(i).hasResources()){
+					mapResources.remove(i);
 					i--;
 				}
 			}
@@ -416,7 +401,7 @@ public class Game extends Observable implements Serializable{
 			// Checks if buildings are completed and adds the completed ones to 
 			// the buildings list.
 			if (!buildingsInProcess.isEmpty()){	
-				for (AbstractBuilding b: buildingsInProcess) {
+				for (Building b: buildingsInProcess) {
 					if (b.isCompleted()){
 						buildings.add(b);
 						buildingsInProcess.remove(b);
@@ -426,7 +411,7 @@ public class Game extends Observable implements Serializable{
 
 			setChanged();
 			notifyObservers();
-			notifyObservers(resources);
+			notifyObservers(mapResources);
 
 		}
 	}

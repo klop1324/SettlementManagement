@@ -20,7 +20,7 @@ import model.Game;
 import model.Map;
 import model.Tile;
 import model.agents.*;
-import model.buildings.AbstractBuilding;
+import model.buildings.Building;
 import model.resources.Resource;
 
 public class ViewController extends JPanel implements Observer {
@@ -133,7 +133,7 @@ public class ViewController extends JPanel implements Observer {
 
 			}
 		}
-		for (AbstractBuilding b: game.getBuildings()){
+		for (Building b: game.getBuildings()){
 			switch(b.getType()){
 			case ARMORY:
 				g2.drawImage(armory, b.getLocation().x*50, b.getLocation().y*50, null);

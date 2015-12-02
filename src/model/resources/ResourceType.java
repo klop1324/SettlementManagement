@@ -7,7 +7,8 @@ public enum ResourceType {
 	ELECTRICITY(3),
 	GOLD(4),
 	IRON(5),
-	OIL(6);
+	OIL(6),
+	TOOL(7);
 	
 	private int value;
 
