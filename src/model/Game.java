@@ -15,6 +15,7 @@ import model.agents.AbstractAgent;
 import model.agents.AgentCommand;
 import model.agents.AgentCommandWithDestination;
 import model.agents.BuilderAgent;
+import model.agents.Enemy;
 import model.agents.WorkerAgent;
 import model.buildings.*;
 import model.resources.Resource;
@@ -29,6 +30,7 @@ public class Game extends Observable implements Serializable{
 	private	ArrayList<Resource> mapResources;
 	private ArrayList<AbstractAgent> agents;
 	private ArrayList<AbstractBuilding> buildingsInProcess;
+	private ArrayList<Enemy> enemies;
 	private HashMap<ResourceType, Integer > playerResources;
 	private Map map;
 
@@ -52,6 +54,7 @@ public class Game extends Observable implements Serializable{
 		this.mapResources = new ArrayList<Resource>();
 		this.agents = new ArrayList<AbstractAgent>();
 		this.buildingsInProcess = new ArrayList<AbstractBuilding>();
+		this.enemies = new ArrayList<Enemy>();
 		this.playerResources = new HashMap<ResourceType, Integer>();
 		for(ResourceType r: ResourceType.values()){
 			this.playerResources.put(r, 0);
@@ -62,6 +65,16 @@ public class Game extends Observable implements Serializable{
 		generateResources();
 
 		//TODO intitial agent generation
+		
+		agents.add(new WorkerAgent(new Point(6, 6)));
+		enemies.add(new Enemy(new Point(6, 7)));
+		
+		// TODO temp building generation for testing
+		
+		buildings.add(new JunkYard(new Point(4,4)));
+		buildings.add(new ChargingStation(new Point(4,5)));
+		buildings.add(new OilTank(new Point(4,6)));
+		buildings.add(new HomeDepot(new Point(4,7)));
 
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
@@ -111,6 +124,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return building;
 	}
+	
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
 		for (Resource r: mapResources){
@@ -442,6 +456,12 @@ public class Game extends Observable implements Serializable{
 			if(!agents.isEmpty()) {
 				for(AbstractAgent a : agents)
 					a.tic();
+			}
+			
+			// Updates enemies
+			if(!enemies.isEmpty()) {
+				for(Enemy e : enemies)
+					e.tic();
 			}
 			
 			for (AbstractAgent ba : agents) {
