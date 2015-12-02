@@ -60,17 +60,10 @@ public class Game extends Observable implements Serializable{
 		//TODO intitial agent generation
 
 		timer = new Timer(50, new TickActionListener());
-//		agentTimer = new Timer(200, new AgentListener());
 		timer.start();
 
 	}
 
-	/*
-	 *  Ugly code, will need to be changed during refactorization
-	 *  Agent moves to resource user clicks
-	 *	they will grab 10 and then if agent travels to 
-	 *	building that holds that resource it will add to that building
-	 */
 
 	public void agentToResource(Point resourcePointClicked) {
 		
@@ -97,64 +90,8 @@ public class Game extends Observable implements Serializable{
 		case OIL:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_OIL, resourcePointClicked));
 		}
-		
-		// TODO working on version that works with tic()
-//		agentTimer.start();
-//		this.resourcePointClicked = resourcePointClicked;
-//		resourceClicked = getResourceClicked(resourcePointClicked);
-//		if (resourceClicked.hasResources()){
-//			sendAgentsToResource(resourceClicked);
-//			for (AbstractAgent a: agents){
-//				if (a.getPosition().equals(resourceClicked.getLocation())){
-//					resourceClicked.removeResource(10, a);
-//					System.out.println(resourceClicked.getNotification());
-//					collected = true;
-//					agentTimer.stop(); // Has to stop timer to keep from continally taking from resource.
-//				}
-//				else {
-//					// Agent should be moving if he reaches this conditional
-//				}
-//			}
-//			agentTimer.start();
-//		}
-//		else {
-//			agentTimer.stop();
-//		}
 	}
 
-
-//	public void agentToBuilding(Resource r){
-//		AbstractBuilding building = findBuildingForResource(r);
-//		sendAgentsToBuilding(building);
-//		for (AbstractAgent a: agents) {
-//			if (a.getPosition().equals(building.getLocation())){
-//				building.agentAddCapacity(r.getType(), a.getAmountCarried());
-//				collected = false;
-//			}
-//		}
-//	}
-
-//	private void sendAgentsToBuilding(AbstractBuilding b){
-//		for (AbstractAgent a: agents){
-//			a.setDestination(b.getLocation());
-//		}
-//	}
-
-//	private AbstractBuilding findBuildingForResource(Resource r){
-//		AbstractBuilding building = null;
-//		for (AbstractBuilding b: buildings){
-//			if (b.getResources().containsKey(r.getType())){
-//				building = b;
-//			}
-//		}
-//		return building;
-//	}
-//
-//	private void sendAgentsToResource(Resource r){
-//		for (AbstractAgent agent: agents){
-//			agent.setDestination(r.getLocation());
-//		}
-//	}
 
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
@@ -166,7 +103,15 @@ public class Game extends Observable implements Serializable{
 		return resource;
 	}
 
-	// Should create tool
+	/**
+	 * Creates a tool and equipts it to specific agent object
+	 * @param r1
+	 * resource one
+	 * @param r2
+	 * resource two
+	 * @param a
+	 * agent
+	 */
 	public void createTool(Resource r1, Resource r2, AbstractAgent a){
 		for (AbstractBuilding b : buildings){
 			if (b.getResources().containsKey(r1.getType())) {
@@ -181,9 +126,15 @@ public class Game extends Observable implements Serializable{
 		a.addTool(new Tool(r1, r2)); // adds tool to agent
 	}
 
-	// Interacts with builder agents to create a building
-	// Will also have user interaction to send builder agents to
-	// build this building.
+	/**
+	 * Creates a building by checking if the location is an empty tile 
+	 * and then using BuildingType to add a new instance of that type of building
+	 * to the buildingsInProgress ArrayList.
+	 * @param p
+	 * Point in which building is being placed.
+	 * @param b
+	 * BuildingType of new Building.
+	 */
 	public void createBuilding(Point p, BuildingType b){
 		// TODO Refactor once functionality is figured out
 		for (AbstractBuilding buildings: buildings){
@@ -411,33 +362,6 @@ public class Game extends Observable implements Serializable{
 	public ArrayList<AbstractBuilding> getBuildingsInProcess() {
 		return buildingsInProcess;
 	}
-
-//	private class AgentListener implements ActionListener {
-//
-//		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			if (collected){
-//				agentToBuilding(resourceClicked);
-//			}
-//			else {
-//				agentToResource(resourcePointClicked);	
-//			}
-//
-//			for (AbstractAgent a: agents){
-//				if (a.getPosition().equals(a.getDestination())){
-//					timer.stop();
-//				}
-//				else {	
-//					a.tic();
-//				}
-//			}
-//
-//			setChanged();
-//			notifyObservers();
-//			notifyObservers(resources);
-//		}
-//
-//	}
 
 	private class TickActionListener implements ActionListener{
 
