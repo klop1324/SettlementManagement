@@ -346,6 +346,10 @@ public class Game extends Observable implements Serializable{
 		return mapResources;
 	}
 
+	public HashMap<ResourceType, Integer> getPlayerResources(){
+		return playerResources;
+	}
+	
 	public ArrayList<Building> getBuildings() {
 		return buildings;
 	}

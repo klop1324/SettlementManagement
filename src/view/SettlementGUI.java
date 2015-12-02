@@ -415,33 +415,53 @@ class SettlementGUI extends JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
-		for (Building b: gameBuildings){
-			switch (b.getType()) { // Checks for each building in the arraylist and set's its info.
-			case ARMORY:
-				break;
-			case CHARGINGSTATION:
-				electricityAmount.setText("Electricity: " + b.getResources().get(ResourceType.ELECTRICITY));
-				repaint();
-				break;
-			case HOMEDEPOT:
-				break;
-			case JUNKYARD:
-				copperAmount.setText("Copper: " + b.getResources().get(ResourceType.COPPER));
-				goldAmount.setText("Gold: " + b.getResources().get(ResourceType.GOLD));
-				ironAmount.setText("Iron: " + b.getResources().get(ResourceType.IRON));
-				coalAmount.setText("Coal: " + b.getResources().get(ResourceType.COAL));
-				break;
-			case OILTANK:
-				oilAmount.setText("Oil: " + b.getResources().get(ResourceType.OIL));
-				break;
-			case OILWELL:
-				break;
-			case WORKSHOP:
-				break;
-			default:
-				break;
 
+		//SUPER HACKY CODE
+		ArrayList<JLabel> labels = new ArrayList<JLabel>();
+		labels.add(electricityAmount);
+		labels.add(copperAmount);
+		labels.add(coalAmount);
+		labels.add(goldAmount);
+		labels.add(ironAmount);
+		labels.add(oilAmount);
+		
+		for(JLabel l: labels){
+			l.setText("0");
+		}
+		
+		for (Building b: gameBuildings){
+			ArrayList<ResourceType> resources = b.getResources();
+			for(int i = 0; i < resources.size(); i++){
+				int currAmount = 0;
+				ResourceType resource = resources.get(i);
+				switch(resource){
+				case ELECTRICITY:
+					currAmount = Integer.parseInt(electricityAmount.getText());
+					electricityAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case COPPER:
+					currAmount = Integer.parseInt(copperAmount.getText());
+					copperAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case COAL:
+					currAmount = Integer.parseInt(coalAmount.getText());
+					coalAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case GOLD:
+					currAmount = Integer.parseInt(goldAmount.getText());
+					goldAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case IRON:
+					currAmount = Integer.parseInt(ironAmount.getText());
+					ironAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				case OIL:
+					currAmount = Integer.parseInt(oilAmount.getText());
+					oilAmount.setText(b.getResourceAmount(resource)+currAmount+"");
+					break;
+				}
 			}
+		// END SUPER HACKY CODE
 		}
 		String resourceNotification = "";
 		for (Resource r: game.getResources()) {
