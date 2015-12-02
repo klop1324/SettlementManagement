@@ -19,13 +19,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-<<<<<<< HEAD
-import javafx.scene.control.ComboBox;
-
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-=======
->>>>>>> ec1c9d8344870e6585e5d6f7827ece615d69c775
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -76,13 +69,10 @@ class SettlementGUI extends JFrame implements Observer {
 	private int next = 0;
 	private int clickX;
 	private int clickY;
-<<<<<<< HEAD
 	private JScrollBar vertical = new JScrollBar();
 	private JScrollBar horizontal = new JScrollBar();
 	private Point agentDest;
-=======
 	private Point userClick;
->>>>>>> ec1c9d8344870e6585e5d6f7827ece615d69c775
 	private JLayeredPane backgroundPanel = new JLayeredPane();
 	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
