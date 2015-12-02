@@ -1,5 +1,6 @@
 package model.buildings;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,5 +82,10 @@ public enum BuildingType {
 	}
 	public ResourceType getMaintCostType(){
 		return maintCostType;
+	}
+
+	public Image getImage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

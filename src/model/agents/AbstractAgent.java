@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.Game;
-import model.buildings.Building;
+import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -78,7 +78,7 @@ public abstract class AbstractAgent implements Serializable {
 		}
 	}
 
-	public void incrementCompletionAmount(Building b, int n){
+	public void incrementCompletionAmount(AbstractBuilding b, int n){
 		b.incrementCompletionAmount(n);
 	}
 
@@ -258,7 +258,7 @@ public abstract class AbstractAgent implements Serializable {
 		oilDistance = 999999999;
 		junkDistance = 999999999;
 
-		for (model.buildings.Building b : g.getBuildings()) {
+		for (AbstractBuilding b : g.getBuildings()) {
 			if (b.getType().equals(BuildingType.CHARGINGSTATION) && 
 					position.distance(b.getLocation()) < chargeDistance) {
 				nearestChargingStation = b.getLocation();

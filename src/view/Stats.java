@@ -32,7 +32,7 @@ import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
-import model.buildings.Building;
+import model.buildings.*;
 
 public class Stats extends JPanel {
 
