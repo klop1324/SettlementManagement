@@ -32,6 +32,7 @@ public class Building implements Serializable{
 		this.location = location;
 		this.building = building;
 		this.passiveProvider = building.isPassiveProvider();
+		this.currentAmount = new HashMap<ResourceType, Integer>();
 		if(this.isPassiveProvider()) 
 		isBuilt = false;
 		buildCompletion = 0;
@@ -156,5 +157,19 @@ public class Building implements Serializable{
 	public HashMap<ResourceType, Integer> getCost(){
 		return cost;
 	}	
-
+	
+	public void doFunction(Object o){
+		switch(building){
+		case ARMORY:
+			break;
+		case OILTANK:
+			break;
+		case CHARGINGSTATION:
+			break;
+		case WORKSHOP:
+			break;
+		case HOMEDEPOT:
+			break;
+		}
+	}
 }

@@ -24,7 +24,7 @@ public class BuildingTest {
 	public void newBuildingTest(){
 		Game game = new Game(); // turn the constructor back into private when done
 		BuilderAgent bobTheBuilder = new BuilderAgent(null);
-		HomeDepot home = new HomeDepot(100, new Point(12, 9));
+		Building home = new Building(BuildingType.HOMEDEPOT, new Point(5,5));
 		Resource coal = new Resource(10, null, ResourceType.COAL);
 		Resource gold = new Resource(10, new Point(12, 3), ResourceType.GOLD);
 		Resource iron = new Resource(10, new Point(12, 7), ResourceType.IRON);
@@ -32,7 +32,7 @@ public class BuildingTest {
 		home.agentAddCapacity(coal.getType(), 100);
 		home.agentAddCapacity(gold.getType(), 100);
 		home.agentAddCapacity(iron.getType(), 100);
-		game.addBuildingInProcess(new Armory(10, new Point(10, 4)));
+		game.addBuildingInProcess(new Building(BuildingType.ARMORY, new Point(5,5)));
 		game.createBuilding(new Point(12, 3), BuildingType.JUNKYARD);
 		bobTheBuilder.incrementCompletionAmount(game.getBuildingsInProcess().get(0));
 		assertEquals(game.getBuildingsInProcess().get(0).getCompletionAmount(), 3);

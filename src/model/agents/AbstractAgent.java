@@ -78,11 +78,7 @@ public abstract class AbstractAgent implements Serializable {
 		}
 	}
 
-<<<<<<< HEAD
 	public void incrementCompletionAmount(Building b, int n){
-=======
-	public void incrementCompletionAmount(AbstractBuilding b, int n) {
->>>>>>> 7caeb89c5f65ca69cbd2b6222d56eeb0902cefe6
 		b.incrementCompletionAmount(n);
 	}
 
@@ -262,14 +258,9 @@ public abstract class AbstractAgent implements Serializable {
 		oilDistance = 999999999;
 		junkDistance = 999999999;
 
-<<<<<<< HEAD
 		for (model.buildings.Building b : g.getBuildings()) {
 			if (b.getType().equals(BuildingType.CHARGINGSTATION) && 
 					position.distance(b.getLocation()) < chargeDistance) {
-=======
-		for (model.buildings.AbstractBuilding b : g.getBuildings()) {
-			if (b.getType().equals(BuildingType.CHARGINGSTATION) && position.distance(b.getLocation()) < chargeDistance) {
->>>>>>> 7caeb89c5f65ca69cbd2b6222d56eeb0902cefe6
 				nearestChargingStation = b.getLocation();
 				chargeDistance = position.distance(b.getLocation());
 			} else if (b.getType().equals(BuildingType.HOMEDEPOT) && position.distance(b.getLocation()) < depotDistance) {
