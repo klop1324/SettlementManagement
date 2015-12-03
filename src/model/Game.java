@@ -152,7 +152,7 @@ public class Game extends Observable implements Serializable{
 				break;
 			}
 		}
-		a.addTool(new Tool(r1, r2)); // adds tool to agent
+//		a.addTool(new Tool(r1, r2)); // adds tool to agent
 	}
 
 	/**
@@ -467,6 +467,8 @@ public class Game extends Observable implements Serializable{
 							agents.get(i).getCondition() <= 0)
 						agents.remove(agents.get(i));
 				}
+			} else { // LOSE CONDITION
+				System.out.println("All of your agents are dead!");
 			}
 			
 			// Updates enemies
