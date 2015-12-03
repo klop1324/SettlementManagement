@@ -41,6 +41,7 @@ import model.buildings.AbstractBuilding;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
+import model.agents.*;
 
 class SettlementGUI extends JFrame implements Observer {
 
@@ -493,7 +494,15 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+			System.out.println(userClick);
+			for (Enemy e: game.getEnemies()){
+				if (e.getPosition().equals(userClick)){
+					game.attack(e.getID());
+				}
+				else {
+					//notificationArea.append("You have not chosen an enemy to attack");
+				}
+			}
 		}
 	}
 
