@@ -11,6 +11,8 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +60,8 @@ public class Stats extends JPanel {
 	private boolean isAgent = false;
 	private boolean isBuilding = false;
 	private boolean isResource = false;
-	private Point userClick;
+	//private Point userClick;
+	private ViewController mapArea;
 	
 
 	public static void main(String[] args) {
@@ -68,6 +71,7 @@ public class Stats extends JPanel {
 
 	public Stats() {
 		game = Game.getInstance();
+		mapArea = new ViewController(game);
 		this.setLayout(new GridLayout(1, 5));
 		this.setBounds(197, 0, 400, 20);
 		this.setBackground(Color.BLACK);
@@ -84,24 +88,45 @@ public class Stats extends JPanel {
 		
 		resource.setForeground(Color.CYAN);
 		amountLeft.setForeground(Color.CYAN);
-		
-		update();
 	}
 	
-	public void update() {
+	public void update(Point userClick) {
+		int resourceAmount = 0;
 		for (AbstractAgent a: game.getAgents()){
 			if (a.getPosition().equals(userClick)){
-				
-			}
-		}
-		for (Resource r: game.getResources()){
-			if (r.getLocation().equals(userClick)){
-				
+				isAgent = true;
+				isResource = false;
+				isBuilding = false;
+				//agent.setText("Agent: " + a.get);
+				energy.setText("Energy: " + a.getEnergy());
+				condition.setText("Condition: " + a.getCondition());
+				oil.setText("Oil: " + a.getOil());
+				//carriedResources.setText("Carried Resources: " + a.get);
 			}
 		}
 		for (AbstractBuilding b: game.getBuildings()){
 			if (b.getLocation().equals(userClick)){
-				
+				isBuilding = true;
+				isAgent = false;
+				isResource = false;
+				//building.setText("Condition: ");
+				capacity.setText("Oil: " + b.getCapacity());
+				/*resourceAmount += b.getResourceAmount(ResourceType.COAL) +
+						b.getResourceAmount(ResourceType.COPPER) +
+						b.getResourceAmount(ResourceType.IRON) +
+						b.getResourceAmount(ResourceType.GOLD) +
+						b.getResourceAmount(ResourceType.OIL) +
+						b.getResourceAmount(ResourceType.ELECTRICITY);*/
+				amount.setText("Carried Resources: " + resourceAmount);
+			}
+		}
+		for (Resource r: game.getResources()){
+			if (r.getLocation().equals(userClick)){
+				isResource = true;
+				isAgent = false;
+				isBuilding = false;
+				//resource.setText("Oil: ");
+				amountLeft.setText("Carried Resources: " + r.getAmount());
 			}
 		}
 		if (isAgent) {
