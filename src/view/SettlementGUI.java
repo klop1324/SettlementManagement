@@ -37,8 +37,8 @@ import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
-import model.buildings.Building;
-import model.buildings.BuildingType;
+import model.buildings.AbstractBuilding;
+import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
 
@@ -83,7 +83,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private boolean duringTutorial = true;
 	String[] agentOrBuilding = {"select one", "create agent", "build building"};
 	// add keyListener and mouseMotionListener for the map
-	private ArrayList<Building> gameBuildings;
+	private ArrayList<AbstractBuilding> gameBuildings;
 
 	public static void main(String[] args) {
 		(new SettlementGUI()).setVisible(true);
@@ -545,7 +545,7 @@ class SettlementGUI extends JFrame implements Observer {
 			l.setText("0");
 		}
 		
-		for (Building b: gameBuildings){
+		for (AbstractBuilding b: gameBuildings){
 			ArrayList<ResourceType> resources = b.getResources();
 			for(int i = 0; i < resources.size(); i++){
 				int currAmount = 0;

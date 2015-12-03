@@ -11,8 +11,11 @@ public class BuilderAgent extends AbstractAgent {
 		filename = "???";
 		MAX_RESOURCES = 0;
 	}
+	public boolean hasWeldingGun(){
+		return false;
+	}
 	
-	public void incrementCompletionAmount(Building b){
+	public void incrementCompletionAmount(AbstractBuilding b){
 		if (this.hasWeldingGun()){
 			buildAmount += 5;
 			b.incrementCompletionAmount(buildAmount);

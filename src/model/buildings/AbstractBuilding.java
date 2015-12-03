@@ -1,52 +1,62 @@
 package model.buildings;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.Timer;
-
 import model.resources.ResourceType;
 
 
 
-public class Building implements Serializable{
-	private String name;
-	private BuildingType building;
-	private int capacity;
-	private boolean isBuilt;
-	private boolean passiveProvider = false;
-	private double passiveRate;
-	private ResourceType passiveResource;
-	private Point location;
-	private ArrayList<ResourceType> holdableResources;
-	private HashMap<ResourceType, Integer> currentAmount;
-	private int version;
-	private int buildTime;
-	private int buildCompletion;
-	private HashMap<ResourceType, Integer> cost;
-
-	public Building(BuildingType building, Point location){
-		this.capacity = building.getStartingCapacity();
+public abstract class AbstractBuilding implements Serializable{
+	
+	// general stuff
+	protected String name;
+	protected int capacity;
+	protected Point location;
+	protected ArrayList<ResourceType> holdableResources;
+	protected HashMap<ResourceType, Integer> currentAmount;
+	
+	//Build state stuff
+	protected int buildTime;
+	protected int buildCompletion = 0;
+	protected int version = 1;
+	protected boolean isBuilt = false;
+	
+	//Maintenence stuff
+	protected ResourceType maintCostType;
+	protected double maintCost;
+	
+	//passive provider stuffs
+	protected boolean isPassiveProvider;
+	protected double passiveRate;
+	protected ResourceType passiveResource;
+	
+	//type of building for image getting
+	protected BuildingType buildingType;
+	
+	public AbstractBuilding(Point location, int startingCapacity, boolean isPassiveProvider,
+			double passiveRate, ResourceType passiveResource, int buildTime, double maintCost, BuildingType buildingType){
+	
+		this.buildingType = buildingType;
+		this.name = buildingType.getName();
+		this.capacity = startingCapacity;
 		this.location = location;
-		this.building = building;
-		this.passiveProvider = building.isPassiveProvider();
+		this.isPassiveProvider = isPassiveProvider;
+		this.passiveRate = passiveRate;
+		this.passiveResource = passiveResource;
+		this.buildTime = buildTime;
+		this.holdableResources = new ArrayList<ResourceType>();
 		this.currentAmount = new HashMap<ResourceType, Integer>();
-		if(this.isPassiveProvider()) 
-		isBuilt = false;
-		buildCompletion = 0;
-		version = 1;
-		this.holdableResources = building.getHoldableResources();
-		for(int i = 0; i < this.holdableResources.size(); i++){
-			currentAmount.put(holdableResources.get(i), 0);
-		}
+		
+		this.maintCostType = ResourceType.ELECTRICITY;
+		this.maintCost = maintCost;
+		
 	}
 	
-	public BuildingType getBuildingType(){
-		return building;
-	}
-	
+
 	public int getBuildTime(){
 		return buildTime;
 	}
@@ -72,10 +82,6 @@ public class Building implements Serializable{
 		return version;
 	}
 
-	public BuildingType getType(){
-		return building;
-	}
-
 	public String getName(){
 		return name;
 	}
@@ -85,7 +91,7 @@ public class Building implements Serializable{
 	}
 
 	public boolean isPassiveProvider(){
-		return passiveProvider;
+		return isPassiveProvider;
 	}
 
 	public double getPassiveRate(){
@@ -95,7 +101,7 @@ public class Building implements Serializable{
 	public Point getLocation(){
 		return location;
 	}
-
+	
 	public ArrayList<ResourceType> getResources(){
 		return holdableResources;
 	}
@@ -150,26 +156,17 @@ public class Building implements Serializable{
 		if(total > capacity)return false;
 		else{
 			return true;
-		}
-		
+		}	
 	}
-
-	public HashMap<ResourceType, Integer> getCost(){
-		return cost;
-	}	
 	
-	public void doFunction(Object o){
-		switch(building){
-		case ARMORY:
-			break;
-		case OILTANK:
-			break;
-		case CHARGINGSTATION:
-			break;
-		case WORKSHOP:
-			break;
-		case HOMEDEPOT:
-			break;
-		}
+	public Image getImage(){
+		return buildingType.getImage();
+	}
+	
+	public abstract void upgrade();
+
+
+	public BuildingType getType() {
+		return buildingType;
 	}
 }

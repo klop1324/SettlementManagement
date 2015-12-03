@@ -52,7 +52,7 @@ public class Map extends Observable implements Serializable{
 	            float n = (float) noise.noise(xx, yy, 3f); // Noise values from Perlin's noise.
 	            
 	            // Since noise value returned is -1 to 1, we need it to be between 0 and Tile.values().length * total Spawn Rate
-	            int generation = (int) (((n + 1) * totalSpawnChance) / 1.8f); 
+	            int generation = (int) (((n + 1) * totalSpawnChance) / 2f); 
 	            // sets the tile
 	            boolean flag = true;
 	            //System.out.println(generation);
@@ -65,6 +65,7 @@ public class Map extends Observable implements Serializable{
 	            	
 	            }
 	            
+	            // hacky code
 	            if(map[x][y] == -1) map[x][y] = Tile.values()[Tile.values().length-1].getIntRepresentation();
 	            
 	            
