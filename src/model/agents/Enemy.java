@@ -16,7 +16,7 @@ import model.resources.ResourceType;
  *
  */
 public class Enemy {
-	int ticCounter, carriedResources, MAX_RESOURCES;
+	int ticCounter, carriedResources, MAX_RESOURCES, ID;
 	Point position, destination, home, targetBuildingLocation;
 	ResourceType stealingResource;
 
@@ -33,6 +33,11 @@ public class Enemy {
 		MAX_RESOURCES = 100;
 		home = position;
 		this.position = position;
+		ID = this.hashCode();
+	}
+	
+	public int getID() {
+		return ID;
 	}
 	
 	/**

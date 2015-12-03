@@ -73,15 +73,16 @@ public class ViewController extends JPanel implements Observer {
 			g2.drawImage(b.getImage(), b.getLocation().x*50, b.getLocation().y*50, null);
 		}
 		
+		// TODO all agents look the same lol
 		for (AbstractAgent a: game.getAgents()){
 			if (a.getClass().equals(BuilderAgent.class)){
-				
+				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
 			}
 			if (a.getClass().equals(WorkerAgent.class)){
 				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
 			}
 			if (a.getClass().equals(SoldierAgent.class)){
-				
+				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
 			}
 		}
 		
