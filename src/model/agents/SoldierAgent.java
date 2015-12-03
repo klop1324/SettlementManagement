@@ -10,6 +10,10 @@ public class SoldierAgent extends AbstractAgent{
 		MAX_RESOURCES = 0;
 	}
 	
+	public boolean hasSpear(){
+		return false;
+	}
+	
 	// Added this method for tool testing, can change later
 	public void attack(){
 		if (this.hasSpear()){

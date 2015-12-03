@@ -154,7 +154,7 @@ public class Game extends Observable implements Serializable{
 			
 			if(flag){
 				for(ResourceType r: resources){
-					
+					b.removeResource(r, tool.getCost().get(r));
 				}
 			}
 		}
