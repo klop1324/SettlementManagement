@@ -9,11 +9,9 @@ import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
 import model.resources.Resource;
 import model.resources.ResourceType;
-import model.tools.Tool;
 import model.tools.ToolType;
 
 public abstract class AbstractAgent implements Serializable {
-	Tool tool = null;
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
 			moveDelay;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
@@ -41,46 +39,7 @@ public abstract class AbstractAgent implements Serializable {
 		moveDelay = 10;
 	}
 
-	public boolean hasPickAxe() { // Tool for Worker Agents to get ore faster.
-		if (this.hasTool() && tool.getType().equals(ToolType.PICKAXE)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean hasArmor() { // Tool for Soldier Agents to lose less health
-								// in battle.
-		if (this.hasTool() && tool.getType().equals(ToolType.ARMOR)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean hasSpear() { // Tool for Soldier Agents to do more damage.
-		if (this.hasTool() && tool.getType().equals(ToolType.ROCKETS)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean hasWeldingGun() { // Tool for Builder Agents to build faster.
-		if (this.hasTool() && tool.getType().equals(ToolType.WELDINGGUN)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean hasTool() {
-		if (tool != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	
 
 	public void incrementCompletionAmount(AbstractBuilding b, int n) {
 		b.incrementCompletionAmount(n);
