@@ -26,7 +26,7 @@ import model.buildings.HomeDepot;
 import model.buildings.JunkYard;
 import model.buildings.OilTank;
 import model.buildings.OilWell;
-import model.buildings.WorkShop;
+import model.buildings.Workshop;
 import model.resources.Resource;
 import model.resources.ResourceType;
 import model.tools.ToolType;
@@ -251,6 +251,7 @@ public class Game extends Observable implements Serializable{
 				break;
 			}
 		}
+		if(flag)buildingsInProcess.add(b);
 	}
 
 	private void generateResources(){
