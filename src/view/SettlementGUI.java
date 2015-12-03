@@ -497,7 +497,7 @@ class SettlementGUI extends JFrame implements Observer {
 			System.out.println(userClick);
 			for (Enemy e: game.getEnemies()){
 				if (e.getPosition().equals(userClick)){
-					game.attack(e.getID());
+					//game.attack(e.getID());
 				}
 				else {
 					//notificationArea.append("You have not chosen an enemy to attack");

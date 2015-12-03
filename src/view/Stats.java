@@ -32,7 +32,10 @@ import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
+import model.agents.*;
 import model.buildings.*;
+import model.resources.*;
+
 
 public class Stats extends JPanel {
 
@@ -55,6 +58,7 @@ public class Stats extends JPanel {
 	private boolean isAgent = false;
 	private boolean isBuilding = false;
 	private boolean isResource = false;
+	private Point userClick;
 	
 
 	public static void main(String[] args) {
@@ -85,6 +89,21 @@ public class Stats extends JPanel {
 	}
 	
 	public void update() {
+		for (AbstractAgent a: game.getAgents()){
+			if (a.getPosition().equals(userClick)){
+				
+			}
+		}
+		for (Resource r: game.getResources()){
+			if (r.getLocation().equals(userClick)){
+				
+			}
+		}
+		for (AbstractBuilding b: game.getBuildings()){
+			if (b.getLocation().equals(userClick)){
+				
+			}
+		}
 		if (isAgent) {
 			this.add(agent);
 			this.add(energy);
