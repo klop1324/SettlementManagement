@@ -20,5 +20,12 @@ public enum AgentCommand {
 		
 		return false;
 	}
+	
+	public boolean isRefill() {
+		if(this.equals(REFILL_OIL) || this.equals(REFILL_ENERGY) || this.equals(REFILL_CONDITION))
+			return true;
+					
+		return false;
+	}
 
 }
