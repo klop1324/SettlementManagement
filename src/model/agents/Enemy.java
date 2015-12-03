@@ -1,6 +1,7 @@
 package model.agents;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import model.Game;
 import model.buildings.AbstractBuilding;
@@ -15,7 +16,7 @@ import model.resources.ResourceType;
  * @author mirandamots
  *
  */
-public class Enemy {
+public class Enemy implements Serializable{
 	int ticCounter, carriedResources, MAX_RESOURCES, ID;
 	Point position, destination, home, targetBuildingLocation;
 	ResourceType stealingResource;

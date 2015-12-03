@@ -399,6 +399,7 @@ public class Game extends Observable implements Serializable{
 	public static void onLoad(Game inc){
 		game = inc;
 	}
+
 	
 	private class TickActionListener implements ActionListener{
 

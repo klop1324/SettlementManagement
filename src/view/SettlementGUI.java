@@ -283,7 +283,7 @@ class SettlementGUI extends JFrame implements Observer {
 				int userSelection = JOptionPane.showConfirmDialog(currentFrame,"Save Data?", null, JOptionPane.YES_NO_CANCEL_OPTION);
 				if(userSelection == JOptionPane.YES_OPTION) {
 					try {
-						FileOutputStream outputStream = new FileOutputStream("jukeboxSaveState");
+						FileOutputStream outputStream = new FileOutputStream("SettlementManagement");
 						ObjectOutputStream objectStream = new ObjectOutputStream(outputStream);
 						objectStream.writeObject(Game.getInstance());
 						objectStream.close();
