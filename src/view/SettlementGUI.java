@@ -85,6 +85,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private int one = 0;
 	private int two = 0;
 	private int next = 0;
+	private int selectedEnemyID;
 	private int clickX;
 	private int clickY;
 	private JScrollBar vertical = new JScrollBar();
@@ -496,6 +497,12 @@ class SettlementGUI extends JFrame implements Observer {
 			clickX = (int) Math.floor(e.getPoint().x/50);
 			clickY = (int) Math.floor(e.getPoint().y/50);
 			userClick = new Point(clickX, clickY);
+			
+			for(Enemy m : game.getEnemies()) {
+				if(m.getPosition().equals(userClick))
+					selectedEnemyID = m.getID();
+			}
+			
 			System.out.println(userClick);
 			
 		}
@@ -596,13 +603,11 @@ class SettlementGUI extends JFrame implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			System.out.println(userClick);
-			for (Enemy e: game.getEnemies()){
-				if (e.getPosition().equals(userClick)){
-					//game.attack(e.getID());
-				}
-				else {
-					//notificationArea.append("You have not chosen an enemy to attack");
-				}
+			if (selectedEnemyID != 0){
+				game.agentToEnemy(selectedEnemyID);
+			}
+			else {
+				//notificationArea.append("You have not chosen an enemy to attack");
 			}
 		}
 	}

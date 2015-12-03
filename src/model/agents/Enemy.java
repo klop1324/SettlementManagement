@@ -34,6 +34,7 @@ public class Enemy {
 		home = position;
 		this.position = position;
 		ID = this.hashCode();
+		System.out.println(ID);
 	}
 	
 	public int getID() {
