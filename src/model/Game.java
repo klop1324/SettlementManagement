@@ -75,6 +75,8 @@ public class Game extends Observable implements Serializable{
 		//TODO intitial agent generation
 		
 		agents.add(new WorkerAgent(new Point(6, 6)));
+		agents.add(new WorkerAgent(new Point(6, 8)));
+		agents.add(new WorkerAgent(new Point(6, 4)));
 		agents.add(new SoldierAgent(new Point(7, 7)));
 		agents.add(new BuilderAgent(new Point(8, 7)));
 		enemies.add(new Enemy(new Point(10, 10)));
@@ -113,9 +115,12 @@ public class Game extends Observable implements Serializable{
 		this.resourcePointClicked = resourcePointClicked;
 		ResourceType resourceTypeClicked = getResourceClicked(resourcePointClicked).getType();
 		
+		int min = 0;
 		for(AbstractAgent a : agents) {
-			if(a.getClass() == WorkerAgent.class)
+			if(a.getClass() == WorkerAgent.class && a.getAI().getActionQueue().size() <= min) {
 				agentToSend = (WorkerAgent) a;
+				min = a.getAI().getActionQueue().size();
+			}
 		}
 		
 		switch(resourceTypeClicked) {
