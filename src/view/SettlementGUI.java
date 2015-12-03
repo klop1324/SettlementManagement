@@ -84,7 +84,6 @@ class SettlementGUI extends JFrame implements Observer {
 	private JPanel infoPanel = new JPanel();
 	private JPanel helpPanel = new JPanel();
 	private JComboBox selectAgent;
-	//private JPanel individual = new JPanel();
 	private Stats individual = new Stats();
 	private HelpMenu helpMenu = new HelpMenu();
 	private int one = 0;
@@ -240,9 +239,7 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		infoButton.setBounds(635, 20, 10, 40);
 		notifierButton.setBounds(20, 392, 40, 10);
-		
-		//this.setupKeyBinding();
-				
+						
 		this.add(backgroundPanel);
 		backgroundPanel.add(individual, new Integer(1), 0);
 		backgroundPanel.add(infoButton, new Integer(1), 0);
@@ -662,6 +659,7 @@ class SettlementGUI extends JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
+		individual.update(userClick);
 
 		//SUPER HACKY CODE
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
