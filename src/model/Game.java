@@ -27,6 +27,7 @@ import model.buildings.HomeDepot;
 import model.buildings.JunkYard;
 import model.buildings.OilTank;
 import model.buildings.OilWell;
+import model.buildings.VictoryMonument;
 import model.buildings.Workshop;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -46,6 +47,8 @@ public class Game extends Observable implements Serializable{
 
 	private Timer timer;
 	private Point resourcePointClicked = null;
+	
+	private boolean haveWon = false;
 
 	public static synchronized Game getInstance(){
 		if(game == null){
@@ -365,6 +368,10 @@ public class Game extends Observable implements Serializable{
 		this.agents.add(agent);
 	}
 
+	public boolean haveWonTheGame(){
+		return haveWon;
+	}
+	
 	public void addResource(Resource resource) {
 		this.mapResources.add(resource);
 	}
@@ -389,6 +396,10 @@ public class Game extends Observable implements Serializable{
 		return buildingsInProcess;
 	}
 
+	public static void onLoad(Game inc){
+		game = inc;
+	}
+	
 	private class TickActionListener implements ActionListener{
 
 		@Override
@@ -439,6 +450,21 @@ public class Game extends Observable implements Serializable{
 					}
 				}
 			}
+			
+			if(!buildings.isEmpty()){
+				for(AbstractBuilding b : buildings){
+					if(b.getClass().equals(VictoryMonument.class)){
+						haveWon = true;
+					}
+					if(b.isPassiveProvider()){
+						ResourceType resource = b.getPassiveResource();
+						if(b.canInsert(resource, b.getPassiveRate())){
+							b.addResource(resource, b.getPassiveRate());
+						}
+					}
+				}
+			}
+			
 
 			setChanged();
 			notifyObservers();

@@ -255,7 +255,7 @@ public abstract class AbstractAgent implements Serializable {
 
 	abstract void decrementOil();
 
-	public class AgentLogic {
+	public class AgentLogic implements Serializable{
 
 		/*
 		 * Agent should be doing things in this priority: 1. Addressing

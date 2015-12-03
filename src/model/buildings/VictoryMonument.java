@@ -12,7 +12,7 @@ public class VictoryMonument extends AbstractBuilding {
 	}
 	@Override
 	public void upgrade() {
-		//does nothing, this is win condition
+		//does nothing, the victory monument is the win condition
 	}
 
 	@Override

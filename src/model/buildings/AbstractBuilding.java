@@ -18,6 +18,7 @@ public abstract class AbstractBuilding implements Serializable{
 	protected Point location;
 	protected ArrayList<ResourceType> holdableResources;
 	protected HashMap<ResourceType, Integer> currentAmount;
+	protected int remaining = 0; //SUPER SKETCHY HACKY CODE
 	
 	//Build state stuff
 	protected int buildTime;
@@ -103,6 +104,10 @@ public abstract class AbstractBuilding implements Serializable{
 		return location;
 	}
 	
+	public ResourceType getPassiveResource(){
+		return passiveResource;
+	}
+	
 	public ArrayList<ResourceType> getResources(){
 		return holdableResources;
 	}
@@ -113,6 +118,17 @@ public abstract class AbstractBuilding implements Serializable{
 		}
 		else{
 			currentAmount.replace(resource, currentAmount.get(resource) + amount);
+		}
+	}
+	public void addResource(ResourceType resource, double amount){
+		remaining += amount;
+		int temp = (int)remaining;
+		remaining -= temp;
+		if(!holdableResources.contains(resource)){
+			throw new RuntimeException("does not contain This Resource!");
+		}
+		else{
+			currentAmount.replace(resource, currentAmount.get(resource) + temp);
 		}
 	}
 	
@@ -152,8 +168,8 @@ public abstract class AbstractBuilding implements Serializable{
 		}
 	}
 
-	public boolean canInsert(ResourceType resource, int amount){
-		int total = currentAmount.get(resource)+ amount;
+	public boolean canInsert(ResourceType resource, double amount){
+		double total = currentAmount.get(resource)+ amount;
 		if(total > capacity)return false;
 		else{
 			return true;

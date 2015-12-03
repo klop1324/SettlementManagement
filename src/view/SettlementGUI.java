@@ -15,6 +15,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,6 +31,7 @@ import javafx.scene.control.ComboBox;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
+import javax.swing.DefaultListModel;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -30,6 +39,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -45,6 +55,7 @@ import model.agents.*;
 
 class SettlementGUI extends JFrame implements Observer {
 
+	private JFrame currentFrame = this;
 	private ViewController mapArea;
 	private Game game;
 	private TextArea notificationArea = new TextArea();
@@ -92,6 +103,13 @@ class SettlementGUI extends JFrame implements Observer {
 	}
 
 	public SettlementGUI() {
+		
+		try {
+			readFromSaveState();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		game = Game.getInstance();
 		mapArea = new ViewController(game);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -230,9 +248,54 @@ class SettlementGUI extends JFrame implements Observer {
 		game.addObserver(mapArea);
 		game.addObserver(this);
 	}
+	
+	private void readFromSaveState() throws IOException{
+		int userSelection = JOptionPane.showConfirmDialog(this,"Load Previous State?", null, JOptionPane.YES_NO_CANCEL_OPTION);
+		if(userSelection == JOptionPane.YES_OPTION) {
+			try{
+			FileInputStream input;
+			input = new FileInputStream("SettlementManagement");
+			ObjectInputStream objectStream = new ObjectInputStream(input);
+			try {
+				Game.onLoad((Game) objectStream.readObject());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			input.close();
+			objectStream.close();
+			}
+			finally{
+				game.getInstance();
+			}
+		}
+		if(userSelection == JOptionPane.CANCEL_OPTION){
+			System.exit(0);
+		}
+	}
 
 	public void registerListeners() {
-
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				// closes, saves, or doesnt close based on user input
+				int userSelection = JOptionPane.showConfirmDialog(currentFrame,"Save Data?", null, JOptionPane.YES_NO_CANCEL_OPTION);
+				if(userSelection == JOptionPane.YES_OPTION) {
+					try {
+						FileOutputStream outputStream = new FileOutputStream("jukeboxSaveState");
+						ObjectOutputStream objectStream = new ObjectOutputStream(outputStream);
+						objectStream.writeObject(Game.getInstance());
+						objectStream.close();
+						outputStream.close();
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				}
+				
+				System.exit(0);
+			}});
 		collectButton.addActionListener(new CollectButtonListener());
 		repairButton.addActionListener(new RepairButtonListener());
 		attackButton.addActionListener(new AttackButtonListener());
