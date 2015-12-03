@@ -292,17 +292,29 @@ public abstract class AbstractAgent implements Serializable {
 		}
 
 		public void assessCurrentDestination() {
+			ArrayList<Enemy> enemyList = Game.getInstance().getEnemies();
+			
 			// Need low
-			if (oil < 200)
+			if (oil < 500 && actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_CONDITION && 
+					actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_ENERGY)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
-			else if (energy < 200)
+			if (energy < 500 && actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_CONDITION && 
+					actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_OIL)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
-			else if (condition < 200)
+			if (condition < 500 && actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_ENERGY && 
+					actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_OIL)
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 
 			// Sets destination
-			if (!actionQueue.isEmpty())
+			if (!actionQueue.isEmpty()) {
+				if(actionQueue.get(0).getAgentCommand() == AgentCommand.FIGHT) {
+					for(Enemy e : enemyList) {
+						if(e.getID() == actionQueue.get(0).getEnemyID())
+							setDestination(e.getPosition());
+					}
+				}
 				setDestination(actionQueue.get(0).getCommandDestination());
+			}
 			else
 				setDestination(null);
 
@@ -326,16 +338,16 @@ public abstract class AbstractAgent implements Serializable {
 
 			Game g = Game.getInstance();
 
-			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 50) {
-				oil += 50;
+			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 100) {
+				oil += 100;
 				return true;
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY)
-					&& energy <= MAX_NEED - 50) {
-				energy += 50;
+					&& energy <= MAX_NEED - 100) {
+				energy += 100;
 				return true;
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION)
-					&& condition <= MAX_NEED - 50) {
-				condition += 50;
+					&& condition <= MAX_NEED - 100) {
+				condition += 100;
 				return true;
 			}
 

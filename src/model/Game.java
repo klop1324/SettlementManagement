@@ -17,6 +17,7 @@ import model.agents.AgentCommand;
 import model.agents.AgentCommandWithDestination;
 import model.agents.BuilderAgent;
 import model.agents.Enemy;
+import model.agents.SoldierAgent;
 import model.agents.WorkerAgent;
 import model.buildings.AbstractBuilding;
 import model.buildings.Armory;
@@ -71,7 +72,9 @@ public class Game extends Observable implements Serializable{
 		//TODO intitial agent generation
 		
 		agents.add(new WorkerAgent(new Point(6, 6)));
-		enemies.add(new Enemy(new Point(6, 7)));
+		agents.add(new SoldierAgent(new Point(7, 7)));
+		agents.add(new BuilderAgent(new Point(8, 7)));
+		enemies.add(new Enemy(new Point(10, 10)));
 		
 		// TODO temp building generation for testing
 		
@@ -85,6 +88,21 @@ public class Game extends Observable implements Serializable{
 
 	}
 
+	
+	public void agentToEnemy(int enemyIDClicked) {
+		SoldierAgent agentToSend = null;
+		
+		for(AbstractAgent a : agents) {
+			if(a.getClass() == SoldierAgent.class)
+				agentToSend = (SoldierAgent) a;
+		}
+		
+		AgentCommandWithDestination fight = new AgentCommandWithDestination(AgentCommand.FIGHT, null);
+		fight.setEnemyID(enemyIDClicked);
+		
+		if(agentToSend != null)
+			agentToSend.sendCommand(fight);
+	}
 
 	public void agentToResource(Point resourcePointClicked) {
 		
@@ -383,6 +401,8 @@ public class Game extends Observable implements Serializable{
 							agents.get(i).getCondition() <= 0)
 						agents.remove(agents.get(i));
 				}
+			} else { // LOSE CONDITION
+				System.out.println("All of your agents are dead!");
 			}
 			
 			// Updates enemies
@@ -391,11 +411,14 @@ public class Game extends Observable implements Serializable{
 					e.tic();
 			}
 			
-			for (AbstractAgent ba : agents) {
-				if (ba.getClass().equals(BuilderAgent.class)){
-					ba.setDestination(buildingsInProcess.get(0).getLocation());
+			if(!buildingsInProcess.isEmpty()) {
+				for (AbstractAgent ba : agents) {
+					if (ba.getClass().equals(BuilderAgent.class)){
+						ba.setDestination(buildingsInProcess.get(0).getLocation());
+					}
 				}
 			}
+			
 			// removal of resources // causes sprite to stop halfway
 			for(int i = 0; i < mapResources.size(); i++){
 				if(!mapResources.get(i).hasResources()){

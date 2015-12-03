@@ -41,13 +41,16 @@ import model.buildings.AbstractBuilding;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
+import model.agents.*;
 
 class SettlementGUI extends JFrame implements Observer {
 
 	private ViewController mapArea;
 	private Game game;
 	private TextArea notificationArea = new TextArea();
-	private JButton collectButton = new JButton("Collect Resource");
+	private JButton collectButton = new JButton("Collect");
+	private JButton repairButton = new JButton("Repair");
+	private JButton attackButton = new JButton("Attack");
 	private JButton nextButton = new JButton(">>");
 	private JButton infoButton = new JButton();
 	private JButton notifierButton = new JButton();
@@ -102,6 +105,7 @@ class SettlementGUI extends JFrame implements Observer {
 		this.setLocation(width, height);
 		
 		Font courier = new Font("Courier", Font.PLAIN, 12);
+		Font courier2 = new Font("Courier", Font.PLAIN, 6);
 		
 		backgroundPanel.setBounds(0, 0, 800, 600);
 
@@ -142,6 +146,13 @@ class SettlementGUI extends JFrame implements Observer {
 		dropPanel.setBackground(Color.BLACK);
 		createPanel.add(createButton);
 		dropPanel.add(selectAgent);
+		
+		collectButton.setPreferredSize(new Dimension(65, 15));
+		collectButton.setFont(courier2);
+		repairButton.setPreferredSize(new Dimension(60, 15));
+		repairButton.setFont(courier2);
+		attackButton.setPreferredSize(new Dimension(60, 15));
+		attackButton.setFont(courier2);
 
 		TitledBorder infoBorder = new TitledBorder("Information");
 		infoBorder.setTitleColor(Color.WHITE);
@@ -154,6 +165,8 @@ class SettlementGUI extends JFrame implements Observer {
 		collectPanel.setOpaque(true);
 		collectPanel.setBackground(Color.BLACK);
 		collectPanel.add(collectButton);
+		collectPanel.add(repairButton);
+		collectPanel.add(attackButton);
 		infoPanel.add(collectPanel);
 		infoPanel.add(createPanel);
 		infoPanel.add(dropPanel);
@@ -179,7 +192,9 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		JPanel temp = new JPanel();
 		temp.setBackground(Color.BLUE);
-		JScrollPane cs = new JScrollPane(mapArea);
+		//JScrollPane cs = new JScrollPane(mapArea);
+		JScrollPane cs = new JScrollPane();
+		cs.setViewportView(mapArea);
 		cs.setBounds(0, 0, 795, 572);
 		temp.setBounds(cs.getX(), cs.getY(), 2000, 2000);
 		vertical = cs.getVerticalScrollBar();
@@ -219,6 +234,8 @@ class SettlementGUI extends JFrame implements Observer {
 	public void registerListeners() {
 
 		collectButton.addActionListener(new CollectButtonListener());
+		repairButton.addActionListener(new RepairButtonListener());
+		attackButton.addActionListener(new AttackButtonListener());
 		nextButton.addActionListener(new NextButtonListener());
 		infoButton.addActionListener(new InfoButtonListener());
 		notifierButton.addActionListener(new NotifierButtonListener());
@@ -229,64 +246,6 @@ class SettlementGUI extends JFrame implements Observer {
 		this.addKeyListener(new ArrowKeyListener());
 		addObservers();
 	}
-	
-	// can ignore this
-	/*private void setupKeyBinding() {
-	      int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
-	      InputMap inMap = mapArea.getInputMap(condition);
-	      ActionMap actMap = mapArea.getActionMap();
-
-	      // this uses an enum of Direction that holds ints for the arrow keys
-	      for (Direction direction : Direction.values()) {
-	         int key = direction.getKey();
-	         String name = direction.name();
-
-	         // add the key bindings for arrow key and shift-arrow key
-	         inMap.put(KeyStroke.getKeyStroke(key, 0), name);
-	         inMap.put(KeyStroke.getKeyStroke(key, InputEvent.SHIFT_DOWN_MASK), name);
-	         actMap.put(name, new MyKeyAction(direction));
-	      }
-	   }
-	
-	enum Direction {
-		   UP(KeyEvent.VK_UP), DOWN(KeyEvent.VK_DOWN), LEFT(KeyEvent.VK_LEFT), RIGHT(KeyEvent.VK_RIGHT);
-
-		   private int key;
-
-		   private Direction(int key) {
-		      this.key = key;
-		   }
-
-		   public int getKey() {
-		      return key;
-		   }
-		}
-	
-	class MyKeyAction extends AbstractAction {
-		   private Direction direction;
-
-		   public MyKeyAction(Direction direction) {
-		      this.direction = direction;
-		   }
-
-		   @Override
-		   public void actionPerformed(ActionEvent e) {
-		      switch (direction) {
-		      case UP:
-		    	  System.out.println("hello");
-		         break;
-		      case DOWN:
-		         break;
-		      case LEFT:
-		         break;
-		      case RIGHT:
-		         break;
-
-		      default:
-		         break;
-		      }
-		   }
-	}*/
 	
 	private class InfoButtonListener implements ActionListener {
 
@@ -556,6 +515,30 @@ class SettlementGUI extends JFrame implements Observer {
 				}
 				else {
 					//notificationArea.append("Please choose a resource");
+				}
+			}
+		}
+	}
+	
+	private class RepairButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+		}
+	}
+	
+	private class AttackButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			System.out.println(userClick);
+			for (Enemy e: game.getEnemies()){
+				if (e.getPosition().equals(userClick)){
+					//game.attack(e.getID());
+				}
+				else {
+					//notificationArea.append("You have not chosen an enemy to attack");
 				}
 			}
 		}
