@@ -107,7 +107,7 @@ public class Game extends Observable implements Serializable{
 		if(agentToSend != null)
 			agentToSend.sendCommand(fight);
 	}
-
+	
 	public void agentToResource(Point resourcePointClicked) {
 		
 		WorkerAgent agentToSend = null;
@@ -155,7 +155,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return resource;
 	}
-
+	
 	public boolean canCreatTool(ToolType tool){
 		boolean flag = false;
 		for (AbstractBuilding b : buildings){
@@ -206,7 +206,7 @@ public class Game extends Observable implements Serializable{
 			}
 		}
 	}
-
+	
 	private boolean canPlaceBuilding(Point p){
 		for (AbstractBuilding building: buildings){
 			// bip stands for building in process
@@ -240,7 +240,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return flag;
 	}
-
+	
 	public boolean canBuildBuilding(Point p, AbstractBuilding b){
 		return haveResourcesForBuilding(p,b) && canPlaceBuilding(p);
 	}
@@ -280,7 +280,7 @@ public class Game extends Observable implements Serializable{
 		}
 		if(flag)buildingsInProcess.add(b);
 	}
-
+	
 	private void generateResources(){
 		// generates log(sqrt(MapSizeX*MapSizeY))* MapRichness\
 		// magic numbers, i know.\
@@ -355,7 +355,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return array;
 	}
-
+	
 	public Map getMap() {
 		return map;
 	}
@@ -363,15 +363,15 @@ public class Game extends Observable implements Serializable{
 	public ArrayList<Enemy> getEnemies() {
 		return enemies;
 	}
-
+	
 	public void addBuildingInProcess(AbstractBuilding b){
 		
 	}
-
+	
 	public void addAgents(AbstractAgent agent){
 		this.agents.add(agent);
 	}
-
+	
 	public boolean haveWonTheGame(){
 		return haveWon;
 	}
@@ -379,15 +379,15 @@ public class Game extends Observable implements Serializable{
 	public void addResource(Resource resource) {
 		this.mapResources.add(resource);
 	}
-
+	
 	public ArrayList<AbstractAgent> getAgents() {
 		return agents;
 	}
-
+	
 	public ArrayList<Resource> getResources() {
 		return mapResources;
 	}
-
+	
 	public HashMap<ResourceType, Integer> getPlayerResources(){
 		return playerResources;
 	}
@@ -395,11 +395,11 @@ public class Game extends Observable implements Serializable{
 	public ArrayList<AbstractBuilding> getBuildings() {
 		return buildings;
 	}
-
+	
 	public ArrayList<AbstractBuilding> getBuildingsInProcess() {
 		return buildingsInProcess;
 	}
-
+	
 	public static void onLoad(Game inc){
 		game = inc;
 	}
@@ -481,4 +481,5 @@ public class Game extends Observable implements Serializable{
 
 		}
 	}
+
 }

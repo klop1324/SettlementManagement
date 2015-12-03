@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -43,8 +45,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
+
+import com.sun.prism.image.ViewPort;
 
 import model.Game;
 import model.buildings.AbstractBuilding;
@@ -91,6 +96,9 @@ class SettlementGUI extends JFrame implements Observer {
 	private JScrollBar horizontal = new JScrollBar();
 	private Point userClick;
 	private JLayeredPane backgroundPanel = new JLayeredPane();
+	private JScrollPane cs;
+
+	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
 	String[] agentOrBuilding = {"select one", "create agent", "build building"};
 	// add keyListener and mouseMotionListener for the map
@@ -200,18 +208,18 @@ class SettlementGUI extends JFrame implements Observer {
 //		tutorial.showMessageDialog(this, "Please read the tutorial first.");
 //		tutorial.setVisible(false); // set to true
 		
-		this.setFocusable(false);
-		backgroundPanel.setFocusable(false);
-		mapArea.setFocusable(false);
-		mapArea.setEnabled(true);
+		this.setFocusable(true);
 		notifierPanel.setFocusable(false);
 		infoPanel.setFocusable(false);
 		
 		JPanel temp = new JPanel();
 		temp.setBackground(Color.BLUE);
 		//JScrollPane cs = new JScrollPane(mapArea);
-		JScrollPane cs = new JScrollPane();
+		cs = new JScrollPane();
 		cs.setViewportView(mapArea);
+		mapArea.setFocusable(true);
+		this.getContentPane().add(cs);
+		
 		cs.setBounds(0, 0, 795, 572);
 		temp.setBounds(cs.getX(), cs.getY(), 2000, 2000);
 		vertical = cs.getVerticalScrollBar();
@@ -543,10 +551,19 @@ class SettlementGUI extends JFrame implements Observer {
 			if (key == KeyEvent.VK_UP) {
 				//System.out.println("up");
 				imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+				if(cs.getViewport().getHeight()-5 >= 0){
+					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()-5));
+					currentFrame.repaint();
+				}
+				
 				System.out.println("up");
 			}
 			else if (key == KeyEvent.VK_DOWN) {
 				imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
+				if(cs.getViewport().getHeight()+5 >= 0){
+					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()+5));
+					currentFrame.repaint();
+				}
 				System.out.println("down");
 			}
 			else if (key == KeyEvent.VK_RIGHT) {
