@@ -24,6 +24,14 @@ public class ChargingStation extends AbstractBuilding{
 		
 	}
 
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.COAL, 10000);
+		buildingCost.put(ResourceType.COPPER, 100);
+		buildingCost.put(ResourceType.OIL, 5000);
+	}
+
 
 
 

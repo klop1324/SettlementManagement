@@ -73,6 +73,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private int one = 0;
 	private int two = 0;
 	private int next = 0;
+	private int selectedEnemyID;
 	private int clickX;
 	private int clickY;
 	private JScrollBar vertical = new JScrollBar();
@@ -337,47 +338,85 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("armory")) {
 				if (userClick != null){
-					game.createBuilding(userClick, BuildingType.ARMORY);
-					System.out.println(selected);
+					if(game.canBuildBuilding(userClick, new Armory(userClick))){
+						game.createBuilding(userClick, new Armory(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
 					return;
 				}
 			}
 			else if (selected.equals("charging station")) {
 				if (userClick != null){
-					game.createBuilding(userClick, BuildingType.CHARGINGSTATION);
-					System.out.println(selected);
+					if(game.canBuildBuilding(userClick, new ChargingStation(userClick))){
+						game.createBuilding(userClick, new ChargingStation(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
 					return;
 				}
 			}
 			else if (selected.equals("home depot")) {
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					if(game.canBuildBuilding(userClick, new HomeDepot(userClick))){
+						game.createBuilding(userClick, new HomeDepot(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
+					return;
+				}
 			}
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
-					game.createBuilding(userClick, BuildingType.JUNKYARD);
-					System.out.println(selected);
+					if(game.canBuildBuilding(userClick, new JunkYard(userClick))){
+						game.createBuilding(userClick, new JunkYard(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
 					return;
 				}
 			}
 			else if (selected.equals("oil tank")) {
 				if (userClick != null){
-					game.createBuilding(userClick, BuildingType.OILTANK);
-					System.out.println(selected);
+					if(game.canBuildBuilding(userClick, new OilTank(userClick))){
+						game.createBuilding(userClick, new OilTank(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
 					return;
 				}
 			}
 			else if (selected.equals("oil well")) {
 				if (userClick != null){
-					game.createBuilding(userClick, BuildingType.OILWELL);
-					System.out.println(selected);
+					if(game.canBuildBuilding(userClick, new OilWell(userClick))){
+						game.createBuilding(userClick, new OilWell(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
 					return;
 				}
 			}
 			else if (selected.equals("workshop")) {
 				if (userClick != null){
-					game.createBuilding(userClick, BuildingType.WORKSHOP);
-					System.out.println(selected);
+					if(game.canBuildBuilding(userClick, new Workshop(userClick))){
+						game.createBuilding(userClick, new Workshop(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
 					return;
 				}
 			}
@@ -393,6 +432,12 @@ class SettlementGUI extends JFrame implements Observer {
 			userClick = new Point(clickX, clickY);
 			individual.update(userClick);
 			individual.setVisible(true);
+			
+			for(Enemy m : game.getEnemies()) {
+				if(m.getPosition().equals(userClick))
+					selectedEnemyID = m.getID();
+			}
+			
 			System.out.println(userClick);
 			
 		}
@@ -493,13 +538,11 @@ class SettlementGUI extends JFrame implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			System.out.println(userClick);
-			for (Enemy e: game.getEnemies()){
-				if (e.getPosition().equals(userClick)){
-					game.agentToEnemy(e.getID());
-				}
-				else {
-					//notificationArea.append("You have not chosen an enemy to attack");
-				}
+			if (selectedEnemyID != 0){
+				game.agentToEnemy(selectedEnemyID);
+			}
+			else {
+				//notificationArea.append("You have not chosen an enemy to attack");
 			}
 		}
 	}

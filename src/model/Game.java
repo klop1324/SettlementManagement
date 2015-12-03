@@ -27,7 +27,7 @@ import model.buildings.HomeDepot;
 import model.buildings.JunkYard;
 import model.buildings.OilTank;
 import model.buildings.OilWell;
-import model.buildings.WorkShop;
+import model.buildings.Workshop;
 import model.resources.Resource;
 import model.resources.ResourceType;
 import model.tools.ToolType;
@@ -45,10 +45,7 @@ public class Game extends Observable implements Serializable{
 	private Map map;
 
 	private Timer timer;
-	private Timer agentTimer;
-	private boolean collected = false;
-	private Point resourcePointClicked;
-	private Resource resourceClicked = null;
+	private Point resourcePointClicked = null;
 
 	public static synchronized Game getInstance(){
 		if(game == null){
@@ -137,6 +134,8 @@ public class Game extends Observable implements Serializable{
 		case OIL:
 			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.COLLECT_OIL, resourcePointClicked));
 			break;
+		default:
+			break;
 		}
 	}
 	
@@ -150,6 +149,23 @@ public class Game extends Observable implements Serializable{
 		return resource;
 	}
 
+	public boolean canCreatTool(ToolType tool){
+		boolean flag = false;
+		for (AbstractBuilding b : buildings){
+			Set<ResourceType> resources = tool.getCost().keySet();
+			for(ResourceType trt: resources){
+				if(b.getResources().contains(trt)){
+					flag = true;
+				}
+				if(!flag){
+					flag = false;
+					break;
+				}
+			}
+			if(flag) break;
+		}
+		return flag;
+	}
 	/**
 	 * Creates a tool and equipts it to specific agent object
 	 * @param r1
@@ -160,24 +176,66 @@ public class Game extends Observable implements Serializable{
 	 * agent
 	 */
 	public void createTool(ToolType tool, AbstractAgent a){
+		boolean flag = false;
 		for (AbstractBuilding b : buildings){
 			Set<ResourceType> resources = tool.getCost().keySet();
-			// checks if the resources can be deducted
-			boolean flag = true;
-			for(ResourceType r: b.getResources()){
-				if(!resources.contains(r)){
+			for(ResourceType trt: resources){
+				if(b.getResources().contains(trt)){
+					flag = true;
+				}
+				if(!flag){
 					flag = false;
+					break;
 				}
 			}
-			
 			if(flag){
-				for(ResourceType r: resources){
-					b.removeResource(r, tool.getCost().get(r));
+				for(ResourceType trt: resources){
+					for(ResourceType brt: b.getResources()){
+						b.removeResource(trt, tool.getCost().get(trt));
+					}
 				}
+				a.addTool(tool);
+				break;
 			}
 		}
 	}
 
+	private boolean canPlaceBuilding(Point p){
+		for (AbstractBuilding building: buildings){
+			// bip stands for building in process
+			if(p.equals(building.getLocation()))
+				return false;
+		}
+		for(AbstractBuilding bip: buildingsInProcess) {
+			if(p.equals(bip.getLocation()))
+				return false;
+		}
+		for (Resource r: mapResources){
+			if(p.equals(r.getLocation()))
+				return false;
+		}
+		return true;
+	}
+	private boolean haveResourcesForBuilding(Point p, AbstractBuilding b){
+		boolean flag = false;
+		for (AbstractBuilding tb : buildings){
+			Set<ResourceType> resources = b.getCost().keySet();
+			for(ResourceType trt: resources){
+				if(tb.getResources().contains(trt)){
+					flag = true;
+				}
+				if(!flag){
+					flag = false;
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+	public boolean canBuildBuilding(Point p, AbstractBuilding b){
+		return haveResourcesForBuilding(p,b) && canPlaceBuilding(p);
+	}
+	
 	/**
 	 * Creates a building by checking if the location is an empty tile 
 	 * and then using BuildingType to add a new instance of that type of building
@@ -187,174 +245,31 @@ public class Game extends Observable implements Serializable{
 	 * @param b
 	 * BuildingType of new Building.
 	 */
-	public void createBuilding(Point p, BuildingType b){
+	public void createBuilding(Point p, AbstractBuilding b){
 		// TODO Refactor once functionality is figured out
-		for (AbstractBuilding buildings: buildings){
-			// bip stands for building in process
-			for(AbstractBuilding bip: buildingsInProcess) {
-				for (Resource r: mapResources){
-					if ((p.equals(r.getLocation()) || p.equals(bip.getLocation()) 
-							|| p.equals(buildings.getLocation()))){
-						System.out.println("Cannot be placed over another object!");
-						return;
-					}
+		boolean flag = false;
+		for (AbstractBuilding tb : buildings){
+			Set<ResourceType> resources = b.getCost().keySet();
+			for(ResourceType trt: resources){
+				if(tb.getResources().contains(trt)){
+					flag = true;
+				}
+				if(!flag){
+					flag = false;
+					break;
 				}
 			}
-		}
-		
-		switch (b){
-		case ARMORY:
-			armoryCost();
-			buildingsInProcess.add(new Armory(p));
-			break;
-		case CHARGINGSTATION:
-			chargingStationCost();
-			buildingsInProcess.add(new ChargingStation(p));
-			break;
-		case HOMEDEPOT:
-			homeDepotCost();
-			buildingsInProcess.add(new HomeDepot(p));
-			break;
-		case JUNKYARD:
-			junkYardCost();
-			buildingsInProcess.add(new JunkYard(p));
-			break;
-		case OILTANK:
-			oilTankCost();
-			buildingsInProcess.add(new OilTank(p));
-			break;
-		case OILWELL:
-			oilWellCost();
-			buildingsInProcess.add(new OilWell(p));
-			break;
-		case WORKSHOP:
-			workShopCost();
-			buildingsInProcess.add(new WorkShop(p));
-			break;
-		default:
-			break;
+			if(flag){
+				for(ResourceType trt: resources){
+					for(ResourceType brt: tb.getResources()){
+						tb.removeResource(trt, b.getCost().get(trt));
+					}
+				}
 
-		}
-		System.out.println(buildingsInProcess);
-	}
-
-	public void armoryCost(){
-		for (Resource r: mapResources){ // Removing from user resources
-			if (r.getType().equals(ResourceType.COAL)){
-				r.spendResource(10);
-			}
-			if (r.getType().equals(ResourceType.GOLD)){
-				r.spendResource(5);
-			}
-			if (r.getType().equals(ResourceType.IRON)){
-				r.spendResource(15);
-			}
-			else {
-				// Else statement
+				break;
 			}
 		}
-	}
-
-	public void chargingStationCost(){
-		for (Resource r: mapResources){ // Removing from user resources
-			if (r.getType().equals(ResourceType.COAL)){
-				r.spendResource(10);
-			}
-			if (r.getType().equals(ResourceType.GOLD)){
-				r.spendResource(5);
-			}
-			if (r.getType().equals(ResourceType.IRON)){
-				r.spendResource(15);
-			}
-			else {
-				// Else statement
-			}
-		}
-	}
-
-	public void homeDepotCost(){
-		for (Resource r: mapResources){ // Removing from user resources
-			if (r.getType().equals(ResourceType.COAL)){
-				r.spendResource(10);
-			}
-			if (r.getType().equals(ResourceType.GOLD)){
-				r.spendResource(5);
-			}
-			if (r.getType().equals(ResourceType.IRON)){
-				r.spendResource(15);
-			}
-			else {
-				// Else statement
-			}
-		}
-	}
-
-	public void junkYardCost(){
-		for (Resource r: mapResources){ // Removing from user resources
-			if (r.getType().equals(ResourceType.COAL)){
-				r.spendResource(10);
-			}
-			if (r.getType().equals(ResourceType.GOLD)){
-				r.spendResource(5);
-			}
-			if (r.getType().equals(ResourceType.IRON)){
-				r.spendResource(15);
-			}
-			else {
-				// Else statement
-			}
-		}
-	}
-
-	public void oilTankCost(){
-		for (Resource r: mapResources){ // Removing from user resources
-			if (r.getType().equals(ResourceType.COAL)){
-				r.spendResource(10);
-			}
-			if (r.getType().equals(ResourceType.GOLD)){
-				r.spendResource(5);
-			}
-			if (r.getType().equals(ResourceType.IRON)){
-				r.spendResource(15);
-			}
-			else {
-				// Else statement
-			}
-		}
-	}
-
-	public void oilWellCost(){
-		for (Resource r: mapResources){ // Removing from user resources
-			if (r.getType().equals(ResourceType.COAL)){
-				r.spendResource(10);
-			}
-			if (r.getType().equals(ResourceType.GOLD)){
-				r.spendResource(5);
-			}
-			if (r.getType().equals(ResourceType.IRON)){
-				r.spendResource(15);
-			}
-			else {
-				// Else statement
-			}
-		}
-	}
-
-	public void workShopCost(){
-		for (Resource r: mapResources){ // Removing from user resources
-			if (r.getType().equals(ResourceType.COAL)){
-				r.spendResource(10);
-			}
-			if (r.getType().equals(ResourceType.GOLD)){
-				r.spendResource(5);
-			}
-			if (r.getType().equals(ResourceType.IRON)){
-				r.spendResource(15);
-			}
-			else {
-				// Else statement
-			}
-		}
+		if(flag)buildingsInProcess.add(b);
 	}
 
 	private void generateResources(){
@@ -414,7 +329,7 @@ public class Game extends Observable implements Serializable{
 	private int[][] generationHelper(int array[][], int x, int y, ResourceType resource){
 		if(array[x][y] == -1){
 			if(Tile.values()[this.map.get(x, y)].isPassible()){
-				mapResources.add(new Resource((int) (Math.random() + 100) * 10 * GlobalSettings.MAP_RICHNESS, new Point(x,y), resource));
+				mapResources.add(new Resource((int) (Math.random()+1) * 1000 * GlobalSettings.MAP_RICHNESS, new Point(x,y), resource));
 			}
 			//base case
 			array[x][y] = 0;
@@ -441,11 +356,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	public void addBuildingInProcess(AbstractBuilding b){
-		this.buildingsInProcess.add(b);
-	}
-
-	public void addBuilding(AbstractBuilding b){
-		this.buildings.add(b);
+		
 	}
 
 	public void addAgents(AbstractAgent agent){
