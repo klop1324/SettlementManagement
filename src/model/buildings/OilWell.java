@@ -20,4 +20,12 @@ public class OilWell extends AbstractBuilding{
 		
 	}
 
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.COAL, 500);
+		buildingCost.put(ResourceType.IRON, 5000);
+		buildingCost.put(ResourceType.ELECTRICITY, 100);		
+	}
+
 }
