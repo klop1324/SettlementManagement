@@ -259,6 +259,7 @@ class SettlementGUI extends JFrame implements Observer {
 			ObjectInputStream objectStream = new ObjectInputStream(input);
 			try {
 				Game.onLoad((Game) objectStream.readObject());
+				game.getInstance().startGame();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

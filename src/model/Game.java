@@ -86,8 +86,7 @@ public class Game extends Observable implements Serializable{
 		buildings.add(new OilTank(new Point(4,6)));
 		buildings.add(new HomeDepot(new Point(4,7)));
 
-		timer = new Timer(50, new TickActionListener());
-		timer.start();
+		this.startGame();
 
 	}
 
@@ -399,7 +398,11 @@ public class Game extends Observable implements Serializable{
 	public static void onLoad(Game inc){
 		game = inc;
 	}
-
+	
+	public void startGame(){
+		timer = new Timer(50, new TickActionListener());
+		timer.start();
+	}
 	
 	private class TickActionListener implements ActionListener{
 

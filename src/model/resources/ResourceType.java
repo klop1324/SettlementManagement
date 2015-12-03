@@ -10,7 +10,7 @@ public enum ResourceType {
 	
 	COAL(1,true, "coal"),
 	COPPER(2,true, "copper"),
-	ELECTRICITY(3,false),
+	ELECTRICITY(3,true, "solar"),
 	GOLD(4,true, "gold"),
 	IRON(5,true, "iron"),
 	OIL(6,true, "oil"),
