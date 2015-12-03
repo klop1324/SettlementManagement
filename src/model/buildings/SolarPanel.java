@@ -19,4 +19,12 @@ public class SolarPanel extends AbstractBuilding{
 		
 	}
 
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.COPPER, 15000);
+		buildingCost.put(ResourceType.IRON, 1000);		
+	}
+	
+
 }

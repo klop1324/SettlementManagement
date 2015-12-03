@@ -22,4 +22,14 @@ public class WorkShop extends AbstractBuilding{
 		
 	}
 
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.IRON, 5000);
+		buildingCost.put(ResourceType.COAL, 1000);
+		buildingCost.put(ResourceType.GOLD, 6000);
+	}
+	
+	
+
 }

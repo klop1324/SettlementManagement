@@ -28,4 +28,12 @@ public class JunkYard extends AbstractBuilding{
 		version++;
 		
 	}
+
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.IRON, 20000);
+		buildingCost.put(ResourceType.COAL, 5000);
+		
+	}
 }

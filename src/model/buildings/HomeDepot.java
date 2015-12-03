@@ -26,6 +26,14 @@ public class HomeDepot extends AbstractBuilding{
 		version++;
 	}
 
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.GOLD, 5000);
+		buildingCost.put(ResourceType.ELECTRICITY, 1000);
+		buildingCost.put(ResourceType.IRON, 10000);
+	}
+
 
 
 }

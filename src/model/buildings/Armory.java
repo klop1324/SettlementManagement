@@ -1,6 +1,9 @@
 package model.buildings;
 
 import java.awt.Point;
+import java.util.HashMap;
+
+import model.resources.ResourceType;
 
 public class Armory extends AbstractBuilding {
 	public Armory(Point location){
@@ -14,5 +17,14 @@ public class Armory extends AbstractBuilding {
 		version++;
 		
 	}
+
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.IRON, 5000);
+		buildingCost.put(ResourceType.ELECTRICITY, 100);
+	}
+
+	
 }
 	

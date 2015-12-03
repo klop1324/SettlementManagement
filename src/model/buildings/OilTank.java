@@ -22,4 +22,10 @@ public class OilTank extends AbstractBuilding{
 		
 	}
 
+	@Override
+	protected void initCostHashMap() {
+		buildingCost = new HashMap<ResourceType, Integer>();
+		buildingCost.put(ResourceType.IRON, 9000);
+	}
+
 }

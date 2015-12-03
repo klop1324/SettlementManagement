@@ -24,6 +24,7 @@ public abstract class AbstractBuilding implements Serializable{
 	protected int buildCompletion = 0;
 	protected int version = 1;
 	protected boolean isBuilt = false;
+	protected HashMap<ResourceType, Integer> buildingCost;
 	
 	//Maintenence stuff
 	protected ResourceType maintCostType;
@@ -54,8 +55,8 @@ public abstract class AbstractBuilding implements Serializable{
 		this.maintCostType = ResourceType.ELECTRICITY;
 		this.maintCost = maintCost;
 		
+		initCostHashMap();
 	}
-	
 
 	public int getBuildTime(){
 		return buildTime;
@@ -114,6 +115,7 @@ public abstract class AbstractBuilding implements Serializable{
 			currentAmount.replace(resource, currentAmount.get(resource) + amount);
 		}
 	}
+	
 	public void removeResource(ResourceType resource, int amount){
 		if(!holdableResources.contains(resource)){
 			throw new RuntimeException("does not contain This Resource!");
@@ -150,7 +152,6 @@ public abstract class AbstractBuilding implements Serializable{
 		}
 	}
 
-
 	public boolean canInsert(ResourceType resource, int amount){
 		int total = currentAmount.get(resource)+ amount;
 		if(total > capacity)return false;
@@ -165,8 +166,14 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	public abstract void upgrade();
 
-
 	public BuildingType getType() {
 		return buildingType;
 	}
+
+	
+	public HashMap<ResourceType, Integer> getCost() {
+		return buildingCost;
+	}
+	
+	protected abstract void initCostHashMap();
 }
