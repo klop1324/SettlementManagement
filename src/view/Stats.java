@@ -50,10 +50,10 @@ public class Stats extends JPanel {
 	private JLabel energy = new JLabel("Energy: ");
 	private JLabel condition = new JLabel("Condition: ");
 	private JLabel oil = new JLabel("Oil: ");
-	private JLabel carriedResources = new JLabel("Carried Resources: ");
+	private JLabel carriedResources = new JLabel("Carrying: ");
 	private JLabel capacity = new JLabel("Capacity: ");
 	private JLabel amount = new JLabel("Amount: ");
-	private JLabel amountLeft = new JLabel("Amount Left: ");
+	private JLabel amountLeft = new JLabel("Amount: ");
 	private JLabel blank1 = new JLabel("");
 	private JLabel blank2 = new JLabel("");
 	private JLabel blank3 = new JLabel("");
@@ -73,21 +73,33 @@ public class Stats extends JPanel {
 		game = Game.getInstance();
 		mapArea = new ViewController(game);
 		this.setLayout(new GridLayout(1, 5));
-		this.setBounds(197, 0, 400, 20);
+		this.setBounds(10, 0, 600, 20);
 		this.setBackground(Color.BLACK);
 		
+		Font courier = new Font("Courier", Font.PLAIN, 10);
+		
 		agent.setForeground(Color.CYAN);
+		agent.setFont(courier);
 		energy.setForeground(Color.CYAN);
+		energy.setFont(courier);
 		condition.setForeground(Color.CYAN);
+		condition.setFont(courier);
 		oil.setForeground(Color.CYAN);
+		oil.setFont(courier);
 		carriedResources.setForeground(Color.CYAN);
+		carriedResources.setFont(courier);
 		
 		building.setForeground(Color.CYAN);
+		building.setFont(courier);
 		capacity.setForeground(Color.CYAN);
+		capacity.setFont(courier);
 		amount.setForeground(Color.CYAN);
+		amount.setFont(courier);
 		
 		resource.setForeground(Color.CYAN);
+		resource.setFont(courier);
 		amountLeft.setForeground(Color.CYAN);
+		amountLeft.setFont(courier);
 	}
 	
 	public void update(Point userClick) {
@@ -109,15 +121,23 @@ public class Stats extends JPanel {
 				isBuilding = true;
 				isAgent = false;
 				isResource = false;
-				//building.setText("Condition: ");
+				building.setText("Building: " + b.getName());
 				capacity.setText("Oil: " + b.getCapacity());
-				/*resourceAmount += b.getResourceAmount(ResourceType.COAL) +
-						b.getResourceAmount(ResourceType.COPPER) +
-						b.getResourceAmount(ResourceType.IRON) +
-						b.getResourceAmount(ResourceType.GOLD) +
-						b.getResourceAmount(ResourceType.OIL) +
-						b.getResourceAmount(ResourceType.ELECTRICITY);*/
-				amount.setText("Carried Resources: " + resourceAmount);
+				for (ResourceType r: b.getResources()){
+					if (r == ResourceType.COAL)
+						resourceAmount += b.getResourceAmount(ResourceType.COAL);
+					if (r == ResourceType.COPPER)
+						resourceAmount += b.getResourceAmount(ResourceType.COPPER);
+					if (r == ResourceType.IRON)
+						resourceAmount += b.getResourceAmount(ResourceType.IRON);
+					if (r == ResourceType.GOLD)
+						resourceAmount += b.getResourceAmount(ResourceType.GOLD);
+					if (r == ResourceType.OIL)
+						resourceAmount += b.getResourceAmount(ResourceType.OIL);
+					if (r == ResourceType.ELECTRICITY)
+						resourceAmount += b.getResourceAmount(ResourceType.ELECTRICITY);
+				}
+				amount.setText("Carrying: " + resourceAmount);
 			}
 		}
 		for (Resource r: game.getResources()){
@@ -125,8 +145,8 @@ public class Stats extends JPanel {
 				isResource = true;
 				isAgent = false;
 				isBuilding = false;
-				//resource.setText("Oil: ");
-				amountLeft.setText("Carried Resources: " + r.getAmount());
+				//resource.setText("Resource: ");
+				amountLeft.setText("Amount: " + r.getAmount());
 			}
 		}
 		if (isAgent) {

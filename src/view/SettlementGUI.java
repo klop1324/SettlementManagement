@@ -430,8 +430,6 @@ class SettlementGUI extends JFrame implements Observer {
 			clickX = (int) Math.floor(e.getPoint().x/50);
 			clickY = (int) Math.floor(e.getPoint().y/50);
 			userClick = new Point(clickX, clickY);
-			individual.update(userClick);
-			individual.setVisible(true);
 			
 			for(Enemy m : game.getEnemies()) {
 				if(m.getPosition().equals(userClick))
@@ -580,6 +578,7 @@ class SettlementGUI extends JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
+		individual.update(userClick);
 
 		//SUPER HACKY CODE
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
