@@ -13,7 +13,7 @@ import model.tools.ToolType;
 
 public abstract class AbstractAgent implements Serializable {
 	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
-			moveDelay;
+			moveDelay, numberOfTasks;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
 	String filename;
@@ -26,10 +26,10 @@ public abstract class AbstractAgent implements Serializable {
 	 *            position
 	 */
 	public AbstractAgent(Point position) {
-		energy = 2000;
-		condition = 2000;
-		oil = 2000;
-		MAX_NEED = 2000;
+		energy = 10000;
+		condition = 10000;
+		oil = 10000;
+		MAX_NEED = 10000;
 		carriedResources = 0;
 		AI = new AgentLogic();
 		destination = null;
@@ -38,8 +38,10 @@ public abstract class AbstractAgent implements Serializable {
 		damageFromEnemies = 500;
 		moveDelay = 10;
 	}
-
 	
+	public AgentLogic getAI() {
+		return AI;
+	}
 
 	public void incrementCompletionAmount(AbstractBuilding b, int n) {
 		b.incrementCompletionAmount(n);
@@ -255,7 +257,7 @@ public abstract class AbstractAgent implements Serializable {
 
 	abstract void decrementOil();
 
-	public class AgentLogic {
+	public class AgentLogic implements Serializable{
 
 		/*
 		 * Agent should be doing things in this priority: 1. Addressing

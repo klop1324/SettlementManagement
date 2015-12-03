@@ -27,6 +27,7 @@ import model.buildings.HomeDepot;
 import model.buildings.JunkYard;
 import model.buildings.OilTank;
 import model.buildings.OilWell;
+import model.buildings.VictoryMonument;
 import model.buildings.Workshop;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -46,6 +47,8 @@ public class Game extends Observable implements Serializable{
 
 	private Timer timer;
 	private Point resourcePointClicked = null;
+	
+	private boolean haveWon = false;
 
 	public static synchronized Game getInstance(){
 		if(game == null){
@@ -72,6 +75,8 @@ public class Game extends Observable implements Serializable{
 		//TODO intitial agent generation
 		
 		agents.add(new WorkerAgent(new Point(6, 6)));
+		agents.add(new WorkerAgent(new Point(6, 8)));
+		agents.add(new WorkerAgent(new Point(6, 4)));
 		agents.add(new SoldierAgent(new Point(7, 7)));
 		agents.add(new BuilderAgent(new Point(8, 7)));
 		enemies.add(new Enemy(new Point(10, 10)));
@@ -83,8 +88,7 @@ public class Game extends Observable implements Serializable{
 		buildings.add(new OilTank(new Point(4,6)));
 		buildings.add(new HomeDepot(new Point(4,7)));
 
-		timer = new Timer(50, new TickActionListener());
-		timer.start();
+		this.startGame();
 
 	}
 
@@ -110,9 +114,12 @@ public class Game extends Observable implements Serializable{
 		this.resourcePointClicked = resourcePointClicked;
 		ResourceType resourceTypeClicked = getResourceClicked(resourcePointClicked).getType();
 		
+		int min = 0;
 		for(AbstractAgent a : agents) {
-			if(a.getClass() == WorkerAgent.class)
+			if(a.getClass() == WorkerAgent.class && a.getAI().getActionQueue().size() <= min) {
 				agentToSend = (WorkerAgent) a;
+				min = a.getAI().getActionQueue().size();
+			}
 		}
 		
 		switch(resourceTypeClicked) {
@@ -216,6 +223,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return true;
 	}
+	
 	private boolean haveResourcesForBuilding(Point p, AbstractBuilding b){
 		boolean flag = false;
 		for (AbstractBuilding tb : buildings){
@@ -232,6 +240,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return flag;
 	}
+
 	public boolean canBuildBuilding(Point p, AbstractBuilding b){
 		return haveResourcesForBuilding(p,b) && canPlaceBuilding(p);
 	}
@@ -363,6 +372,10 @@ public class Game extends Observable implements Serializable{
 		this.agents.add(agent);
 	}
 
+	public boolean haveWonTheGame(){
+		return haveWon;
+	}
+	
 	public void addResource(Resource resource) {
 		this.mapResources.add(resource);
 	}
@@ -387,6 +400,15 @@ public class Game extends Observable implements Serializable{
 		return buildingsInProcess;
 	}
 
+	public static void onLoad(Game inc){
+		game = inc;
+	}
+	
+	public void startGame(){
+		timer = new Timer(50, new TickActionListener());
+		timer.start();
+	}
+	
 	private class TickActionListener implements ActionListener{
 
 		@Override
@@ -437,6 +459,21 @@ public class Game extends Observable implements Serializable{
 					}
 				}
 			}
+			
+			if(!buildings.isEmpty()){
+				for(AbstractBuilding b : buildings){
+					if(b.getClass().equals(VictoryMonument.class)){
+						haveWon = true;
+					}
+					if(b.isPassiveProvider()){
+						ResourceType resource = b.getPassiveResource();
+						if(b.canInsert(resource, b.getPassiveRate())){
+							b.addResource(resource, b.getPassiveRate());
+						}
+					}
+				}
+			}
+			
 
 			setChanged();
 			notifyObservers();
