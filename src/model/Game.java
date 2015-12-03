@@ -216,6 +216,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return true;
 	}
+	
 	private boolean haveResourcesForBuilding(Point p, AbstractBuilding b){
 		boolean flag = false;
 		for (AbstractBuilding tb : buildings){
@@ -232,6 +233,7 @@ public class Game extends Observable implements Serializable{
 		}
 		return flag;
 	}
+
 	public boolean canBuildBuilding(Point p, AbstractBuilding b){
 		return haveResourcesForBuilding(p,b) && canPlaceBuilding(p);
 	}
