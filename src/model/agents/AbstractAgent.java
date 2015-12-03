@@ -295,15 +295,24 @@ public abstract class AbstractAgent implements Serializable {
 			ArrayList<Enemy> enemyList = Game.getInstance().getEnemies();
 			
 			// Need low
-			if (oil < 500 && actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_CONDITION && 
-					actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_ENERGY)
-				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
-			if (energy < 500 && actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_CONDITION && 
-					actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_OIL)
-				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
-			if (condition < 500 && actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_ENERGY && 
-					actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_OIL)
-				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
+			if (oil < 500) {
+				if(actionQueue.isEmpty())
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
+				else if(!actionQueue.get(0).getAgentCommand().isRefill())
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
+			}
+			if (energy < 500) {
+				if(actionQueue.isEmpty())
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
+				else if(!actionQueue.get(0).getAgentCommand().isRefill())
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
+			}
+			if (condition < 500) {
+				if(actionQueue.isEmpty())
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
+				else if(!actionQueue.get(0).getAgentCommand().isRefill())
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
+			}
 
 			// Sets destination
 			if (!actionQueue.isEmpty()) {
@@ -339,16 +348,43 @@ public abstract class AbstractAgent implements Serializable {
 			Game g = Game.getInstance();
 
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 100) {
-				oil += 100;
-				return true;
+				for(AbstractBuilding b : g.getBuildings()) {
+					if(b.getLocation().equals(position)) {
+						if(b.getResourceAmount(ResourceType.OIL) < 100)
+							return false;
+						else {
+							b.agentRemoveCapacity(ResourceType.OIL, 100);
+							oil += 100;
+							return true;
+						}
+					}
+				}
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY)
 					&& energy <= MAX_NEED - 100) {
-				energy += 100;
-				return true;
+				for(AbstractBuilding b : g.getBuildings()) {
+					if(b.getLocation().equals(position)) {
+						if(b.getResourceAmount(ResourceType.ELECTRICITY) < 100)
+							return false;
+						else {
+							b.agentRemoveCapacity(ResourceType.ELECTRICITY, 100);
+							energy += 100;
+							return true;
+						}
+					}
+				}
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION)
 					&& condition <= MAX_NEED - 100) {
-				condition += 100;
-				return true;
+				for(AbstractBuilding b : g.getBuildings()) {
+					if(b.getLocation().equals(position)) {
+						if(b.getResourceAmount(ResourceType.IRON) < 100)
+							return false;
+						else {
+							b.agentRemoveCapacity(ResourceType.IRON, 100);
+							condition += 100;
+							return true;
+						}
+					}
+				}
 			}
 
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
