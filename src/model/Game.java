@@ -92,7 +92,7 @@ public class Game extends Observable implements Serializable{
 	}
 
 	
-	public void agentToEnemy(Point enemyClicked) {
+	public void agentToEnemy(int enemyIDClicked) {
 		SoldierAgent agentToSend = null;
 		
 		for(AbstractAgent a : agents) {
@@ -100,8 +100,11 @@ public class Game extends Observable implements Serializable{
 				agentToSend = (SoldierAgent) a;
 		}
 		
+		AgentCommandWithDestination fight = new AgentCommandWithDestination(AgentCommand.FIGHT, null);
+		fight.setEnemyID(enemyIDClicked);
+		
 		if(agentToSend != null)
-			agentToSend.sendCommand(new AgentCommandWithDestination(AgentCommand.FIGHT, enemyClicked));
+			agentToSend.sendCommand(fight);
 	}
 
 	public void agentToResource(Point resourcePointClicked) {

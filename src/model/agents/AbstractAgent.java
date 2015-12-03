@@ -292,6 +292,8 @@ public abstract class AbstractAgent implements Serializable {
 		}
 
 		public void assessCurrentDestination() {
+			ArrayList<Enemy> enemyList = Game.getInstance().getEnemies();
+			
 			// Need low
 			if (oil < 500 && actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_CONDITION && 
 					actionQueue.get(0).getAgentCommand() != AgentCommand.REFILL_ENERGY)
@@ -304,8 +306,15 @@ public abstract class AbstractAgent implements Serializable {
 				actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 
 			// Sets destination
-			if (!actionQueue.isEmpty())
+			if (!actionQueue.isEmpty()) {
+				if(actionQueue.get(0).getAgentCommand() == AgentCommand.FIGHT) {
+					for(Enemy e : enemyList) {
+						if(e.getID() == actionQueue.get(0).getEnemyID())
+							setDestination(e.getPosition());
+					}
+				}
 				setDestination(actionQueue.get(0).getCommandDestination());
+			}
 			else
 				setDestination(null);
 
