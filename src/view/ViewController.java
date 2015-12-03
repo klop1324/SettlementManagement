@@ -17,6 +17,7 @@ import model.Map;
 import model.Tile;
 import model.agents.AbstractAgent;
 import model.agents.BuilderAgent;
+import model.agents.Enemy;
 import model.agents.SoldierAgent;
 import model.agents.WorkerAgent;
 import model.buildings.AbstractBuilding;
@@ -25,7 +26,7 @@ import model.resources.Resource;
 public class ViewController extends JPanel implements Observer {
 	private Game game;
 	private Map map;
-	private Image agent1, agent2, oilTank, charge, oil, solar, ground, water, sand, grass;
+	private Image agent1, enemy, oilTank, charge, oil, solar, ground, water, sand, grass;
 	private Image junkYard, armory, homeDepot, coal, copper, iron, gold, oilWell, workShop;
 	private ArrayList<AbstractAgent> agents;
 	private int tic = 0;
@@ -40,7 +41,7 @@ public class ViewController extends JPanel implements Observer {
 		this.game = game;
 		try {			
 			agent1 = ImageIO.read(new File("./ImageSet/destroyer.png"));
-			agent2 = ImageIO.read(new File("./ImageSet/defender.png"));
+			enemy = ImageIO.read(new File("./ImageSet/defender.png"));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -82,6 +83,10 @@ public class ViewController extends JPanel implements Observer {
 			if (a.getClass().equals(SoldierAgent.class)){
 				
 			}
+		}
+		
+		for (Enemy e : game.getEnemies()) {
+			g2.drawImage(enemy, e.getPosition().x*50, e.getPosition().y*50, null);
 		}
 	}
 

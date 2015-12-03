@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Set;
 
 import javax.swing.Timer;
 
@@ -17,10 +18,18 @@ import model.agents.AgentCommandWithDestination;
 import model.agents.BuilderAgent;
 import model.agents.Enemy;
 import model.agents.WorkerAgent;
-import model.buildings.*;
+import model.buildings.AbstractBuilding;
+import model.buildings.Armory;
+import model.buildings.BuildingType;
+import model.buildings.ChargingStation;
+import model.buildings.HomeDepot;
+import model.buildings.JunkYard;
+import model.buildings.OilTank;
+import model.buildings.OilWell;
+import model.buildings.WorkShop;
 import model.resources.Resource;
 import model.resources.ResourceType;
-import model.tools.Tool;
+import model.tools.ToolType;
 
 
 public class Game extends Observable implements Serializable{
@@ -112,16 +121,6 @@ public class Game extends Observable implements Serializable{
 			break;
 		}
 	}
-
-	private AbstractBuilding findBuildingForResource(Resource r){
-		AbstractBuilding building = null;
-		for (AbstractBuilding b: buildings){
-			if (b.getResources().contains(r)){
-				building = b;
-			}
-		}
-		return building;
-	}
 	
 	private Resource getResourceClicked(Point resourcePoint){
 		Resource resource = null;
@@ -142,17 +141,23 @@ public class Game extends Observable implements Serializable{
 	 * @param a
 	 * agent
 	 */
-	public void createTool(Resource r1, Resource r2, AbstractAgent a){
+	public void createTool(ToolType tool, AbstractAgent a){
 		for (AbstractBuilding b : buildings){
-			// if the building has the resource
-			if (b.getResources().contains(r1.getType())&& b.getResources().contains(r2.getType())) {
-				// Removes that resource amount
-				b.removeResource(r1.getType(), b.getResourceAmount(r1.getType()) - 1);
-				b.removeResource(r2.getType(), b.getResourceAmount(r2.getType()) - 1);
-				break;
+			Set<ResourceType> resources = tool.getCost().keySet();
+			// checks if the resources can be deducted
+			boolean flag = true;
+			for(ResourceType r: b.getResources()){
+				if(!resources.contains(r)){
+					flag = false;
+				}
+			}
+			
+			if(flag){
+				for(ResourceType r: resources){
+					
+				}
 			}
 		}
-//		a.addTool(new Tool(r1, r2)); // adds tool to agent
 	}
 
 	/**
