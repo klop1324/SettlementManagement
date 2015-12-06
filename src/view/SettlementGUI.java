@@ -112,12 +112,10 @@ class SettlementGUI extends JFrame implements Observer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+			
 		game = Game.getInstance();
 		mapArea = new ViewController(game);
-		
-
+	
 		setupGui();
 	
 		Font courier2 = new Font("Courier", Font.PLAIN, 6);		
@@ -633,7 +631,7 @@ class SettlementGUI extends JFrame implements Observer {
 					selectedEnemyID = m.getID();
 			}
 			
-			System.out.println(userClick);
+			//System.out.println(userClick);
 			
 		}
 
