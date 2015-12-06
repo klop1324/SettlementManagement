@@ -506,6 +506,10 @@ public class Game extends Observable implements Serializable {
 					}
 				}
 			}
+			if(Math.random()<0.001){
+				Point p = new Point((int)(map.getXLength()*Math.random()), (int) (map.getYLength() *Math.random()));
+				if(Tile.values()[map.get(p.x, p.y)].isPassible())enemies.add(new Enemy(p));
+			}
 
 			setChanged();
 			notifyObservers();

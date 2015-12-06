@@ -158,6 +158,8 @@ public class Stats extends JPanel {
 				isAgent = false;
 				isBuilding = false;
 				amountLeft.setText("Amount: " + r.getAmount());
+				resource.setText("Resource: "+ r.getType().name());
+				
 			}
 		}
 		if (isAgent) {
