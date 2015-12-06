@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
@@ -40,7 +41,6 @@ import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
-import model.buildings.AbstractBuilding;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -361,6 +361,7 @@ class SettlementGUI extends JFrame implements Observer {
 				selectAgent.addItem("oil tank");
 				selectAgent.addItem("oil well");
 				selectAgent.addItem("workshop");
+				selectAgent.addItem("victory monument");
 				selectAgent.addItem("BACK TO MAIN");
 			}
 			else if (selected.equals("BACK TO MAIN")) {
@@ -472,6 +473,18 @@ class SettlementGUI extends JFrame implements Observer {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new Workshop(userClick))){
 						game.createBuilding(new Workshop(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
+					return;
+				}
+			}
+			else if (selected.equals("victory monument")) {
+				if (userClick != null){
+					if(game.canBuildBuilding(userClick, new VictoryMonument(userClick))){
+						game.createBuilding(new VictoryMonument(userClick));
 						System.out.println(selected);
 					}
 					else{
