@@ -329,9 +329,6 @@ class SettlementGUI extends JFrame implements Observer {
 				game.getInstance();
 			}
 		}
-		if(userSelection == JOptionPane.CANCEL_OPTION){
-			System.exit(0);
-		}
 	}
 	
 	public void dialogBoxes(){

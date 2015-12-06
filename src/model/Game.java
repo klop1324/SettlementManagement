@@ -71,31 +71,25 @@ public class Game extends Observable implements Serializable {
 
 		generateResources();
 
-		// TODO intitial agent generation
-
-		agents.add(new WorkerAgent(new Point(6, 6)));
-		agents.add(new WorkerAgent(new Point(6, 8)));
-		agents.add(new WorkerAgent(new Point(6, 4)));
-		agents.add(new SoldierAgent(new Point(7, 7)));
-		agents.add(new BuilderAgent(new Point(8, 7)));
-		enemies.add(new Enemy(new Point(10, 10)));
-
-		// TODO temp building generation for testing
-
-		buildings.add(new JunkYard(new Point(4, 4)));
-		buildings.add(new ChargingStation(new Point(4, 5)));
-		buildings.add(new OilTank(new Point(4, 6)));
-		buildings.add(new HomeDepot(new Point(4, 7)));
-
 		Point temp;
+		// building and agent generation
 		do{
 			temp = new Point((int)(Math.random() * GlobalSettings.MAP_SIZE_X),(int) (Math.random() * GlobalSettings.MAP_SIZE_Y));
 		}
 		while(!canInitBuildings(temp));
 		initBuildings(temp);
+		initAgents(temp);
+		
 		
 		this.startGame();
 
+	}
+	private void initAgents(Point p){
+		agents.add(new WorkerAgent(p));
+		agents.add(new WorkerAgent(new Point(p.x+1, p.y)));
+		agents.add(new WorkerAgent(new Point(p.x-1, p.y)));
+		agents.add(new SoldierAgent(new Point(p.x+1, p.y+1)));
+		agents.add(new BuilderAgent(new Point(p.x+1, p.y-1)));
 	}
 	
 	private void initBuildings(Point p){
@@ -330,17 +324,60 @@ public class Game extends Observable implements Serializable {
 		return true;
 	}
 
-	private boolean haveResourcesForBuilding(Point p, AbstractBuilding b) {
-		boolean flag = false;
+	private boolean canRemoveResources(HashMap<ResourceType, Integer> reqResources) {
+		boolean flag = true;
+		long resourceAmounts[] = new long[ResourceType.values().length+1];
+		// adds all the resources to a total, so we can subtract later
 		for (AbstractBuilding tb : buildings) {
-			Set<ResourceType> resources = b.getCost().keySet();
-			for (ResourceType trt : resources) {
-				if (tb.getResources().contains(trt)) {
-					flag = true;
-				}
-				if (!flag) {
-					flag = false;
-					break;
+			for(ResourceType r: tb.getCost().keySet()){
+				if(tb.getResources().contains(r))resourceAmounts[r.getValue()] += tb.getResourceAmount(r);
+			}
+		}
+		
+		// goes through and checks that there are the correct amount of resources in the buildings
+		for(ResourceType r: reqResources.keySet()){
+			// if there is not the correct amount of resources
+			if(!(resourceAmounts[r.getValue()]>= reqResources.get(r))) flag = false;
+		}
+		return flag;
+	}
+	
+	private boolean removeResources(HashMap<ResourceType, Integer> reqResources) {
+		boolean flag = true;
+		int resourceAmounts[] = new int[ResourceType.values().length+1];
+		// adds all the resources to a total, so we can subtract later
+		for (AbstractBuilding tb : buildings) {
+			for(ResourceType r: tb.getCost().keySet()){
+				if(tb.getResources().contains(r))resourceAmounts[r.getValue()] += tb.getResourceAmount(r);
+			}
+		}
+		
+		// goes through and checks that there are the correct amount of resources in the buildings
+		for(ResourceType r: reqResources.keySet()){
+			// if there is not the correct amount of resources
+			for(AbstractBuilding tb:buildings){
+				// if there is more than 0 required resources of the resource type
+				if(resourceAmounts[r.getValue()]>0){
+					// if the building can hold a resource					
+					if(tb.getResources().contains(r)){
+						// if there is more than 0 resources in the building
+						if(tb.getResourceAmount(r)>0){
+							int buildingResources = tb.getResourceAmount(r);
+							int required = reqResources.get(r);
+							
+							// if you can straight up remove buildingResources from required resources
+							if(required - buildingResources >= 0){
+								tb.removeResource(r, buildingResources);
+								reqResources.replace(r, required - buildingResources);
+							}
+							// if you can only partially remove buildingResources from resource
+							else{
+								tb.removeResource(r, required);
+								reqResources.replace(r, 0);
+							}
+							
+						}
+					}
 				}
 			}
 		}
@@ -348,7 +385,7 @@ public class Game extends Observable implements Serializable {
 	}
 
 	public boolean canBuildBuilding(AbstractBuilding b) {
-		return haveResourcesForBuilding(b.getLocation(), b) && canPlaceBuilding(b.getLocation());
+		return canRemoveResources(b.getCost()) && canPlaceBuilding(b.getLocation());
 	}
 
 	/**
@@ -366,25 +403,8 @@ public class Game extends Observable implements Serializable {
 		Point p = b.getLocation();
 		if(!canBuildBuilding(b)) throw new RuntimeException("cannot create!");
 		
-		boolean flag = true;
-		for (AbstractBuilding tb : buildings){
-			Set<ResourceType> resources = b.getCost().keySet();
-			for(ResourceType trt: resources){
-				if(!tb.getResources().contains(trt)){
-					flag = false;
-				}
-			}
-			if (flag) {
-				for (ResourceType trt : resources) {
-					for (ResourceType brt : tb.getResources()) {
-						tb.removeResource(trt, b.getCost().get(trt));
-					}
-				}
-
-				break;
-			}
-		}
-		if (flag)buildingsInProcess.add(b);
+		removeResources(b.getCost());
+		buildings.add(b);
 	}
 
 	private void generateResources() {
