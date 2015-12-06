@@ -479,12 +479,9 @@ class SettlementGUI extends JFrame implements Observer {
 				return;
 			else if (selected.equals("builder")) {
 				if (userClick != null){
-					JOptionPane builderBox = new JOptionPane();
-					builderBox.showMessageDialog(infoPanel, "This robot takes:\n");
-					builderBox.setVisible(true);
-						game.createAgent(BuilderAgent.class, userClick);
-						System.out.println(selected);
-						return;
+					game.createAgent(BuilderAgent.class, userClick);
+					System.out.println(selected);
+					return;
 				}
 			}
 			else if (selected.equals("soldier")) {
