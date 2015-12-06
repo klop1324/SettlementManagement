@@ -179,10 +179,7 @@ public abstract class AbstractBuilding implements Serializable{
 	// Allows agents to add their resource to the building
 	public void agentAddCapacity(ResourceType resource, int amount) {
 		int newResourceAmount = currentAmount.get(resource) + amount;
-		if(newResourceAmount < 0)throw new RuntimeException("Added too much resources!");
-		else{
-			currentAmount.replace(resource, newResourceAmount);
-		}
+		currentAmount.replace(resource, newResourceAmount);
 	}
 
 	public boolean canInsert(ResourceType resource, double amount){
