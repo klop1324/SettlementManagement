@@ -114,6 +114,10 @@ public abstract class AbstractAgent implements Serializable {
 	public int getOil() {
 		return oil;
 	}
+	
+	public int getCarriedResources(){
+		return carriedResources;
+	}
 
 	/**
 	 * Sends a command and a destination to the Agent. Agent sends this to its

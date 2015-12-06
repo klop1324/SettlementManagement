@@ -329,6 +329,12 @@ class SettlementGUI extends JFrame implements Observer {
 			System.exit(0);
 		}
 	}
+	
+	public void dialogBoxes(){
+//		if (game.hasError()){
+//			JOptionPane.showMessageDialog(this, game.getErrorMessage());
+//		}
+	}
 
 	public void registerListeners() {
 		this.addWindowListener(new WindowAdapter() {
@@ -461,19 +467,25 @@ class SettlementGUI extends JFrame implements Observer {
 			if (selected.equals("select agent type"))
 				return;
 			else if (selected.equals("builder")) {
-				game.createAgent(BuilderAgent.class, userClick);
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+						game.createAgent(BuilderAgent.class, userClick);
+						System.out.println(selected);
+						return;
+				}
 			}
 			else if (selected.equals("soldier")) {
-				game.createAgent(SoldierAgent.class, userClick);
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createAgent(SoldierAgent.class, userClick);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("worker")) {
-				game.createAgent(WorkerAgent.class, userClick);
-				System.out.println(selected);
-				return;
+				if (userClick != null){
+					game.createAgent(WorkerAgent.class, userClick);
+					System.out.println(selected);
+					return;
+				}
 			}
 			else if (selected.equals("armory")) {
 				if (userClick != null){
@@ -504,6 +516,7 @@ class SettlementGUI extends JFrame implements Observer {
 					if(game.canBuildBuilding(userClick, new HomeDepot(userClick))){
 						game.createBuilding(new HomeDepot(userClick));
 						System.out.println(selected);
+						System.out.println(game.getBuildingsInProcess());
 					}
 					else{
 						System.out.println("You dont have enough resources to build a(n)"+selected);
@@ -573,24 +586,28 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("armor")) {
 				if (userClick != null){
+					game.createTool(ToolType.ARMOR);
 					System.out.println(selected);
 					return;
 				}
 			}
 			else if (selected.equals("pickaxe")) {
 				if (userClick != null){
+					game.createTool(ToolType.PICKAXE);
 					System.out.println(selected);
 					return;
 				}
 			}
 			else if (selected.equals("rocket")) {
 				if (userClick != null){
+					game.createTool(ToolType.ROCKETS);
 					System.out.println(selected);
 					return;
 				}
 			}
 			else if (selected.equals("welding gun")) {
 				if (userClick != null){
+					game.createTool(ToolType.WELDINGGUN);
 					System.out.println(selected);
 					return;
 				}
@@ -769,7 +786,7 @@ class SettlementGUI extends JFrame implements Observer {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
 		individual.update(userClick);
-
+		dialogBoxes();
 		//SUPER HACKY CODE
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
 		labels.add(electricityAmount);
