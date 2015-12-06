@@ -127,7 +127,6 @@ public abstract class AbstractAgent implements Serializable {
 	 */
 	public void sendCommand(AgentCommandWithDestination c) {
 		AI.recieveCommand(c);
-		System.out.println("Command recieved: " + c);
 	}
 
 	/**
@@ -288,7 +287,6 @@ public abstract class AbstractAgent implements Serializable {
 
 		public void recieveCommand(AgentCommandWithDestination c) {
 			actionQueue.add(c);
-			System.out.println("Command recieved @ AgentLogic: " + c);
 		}
 
 		public ArrayList<AgentCommandWithDestination> getActionQueue() {
@@ -330,10 +328,8 @@ public abstract class AbstractAgent implements Serializable {
 			if (!actionQueue.isEmpty()) {
 				if(actionQueue.get(0).getAgentCommand() == AgentCommand.FIGHT) {
 					for(Enemy e : enemyList) {
-						if(e.getID() == actionQueue.get(0).getEnemyID()) {
+						if(e.getID() == actionQueue.get(0).getEnemyID())
 							setDestination(e.getPosition());
-							System.out.println("Destination set to enemy");
-						}
 					}
 				} else
 					setDestination(actionQueue.get(0).getCommandDestination());
