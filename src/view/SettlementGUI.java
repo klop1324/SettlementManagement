@@ -218,7 +218,7 @@ class SettlementGUI extends JFrame implements Observer {
 		panel5.add(ironAmount);
 		JPanel panel6 = new JPanel();
 		panel6.setBackground(Color.BLACK);
-		panel6.add(goldAmount);
+		panel6.add(goldLabel);
 		panel6.add(goldAmount);
 		infoPanel.add(panel1);
 		infoPanel.add(panel2);
