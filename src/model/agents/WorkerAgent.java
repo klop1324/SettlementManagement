@@ -7,7 +7,7 @@ public class WorkerAgent extends AbstractAgent {
 	public WorkerAgent(Point position) {
 		super(position);
 		AI = new AgentLogic(WorkerAgent.class);
-		MAX_RESOURCES = 1000;
+		MAX_RESOURCES = 5000;
 	}
 
 	@Override
