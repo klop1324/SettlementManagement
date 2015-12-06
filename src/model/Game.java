@@ -49,6 +49,7 @@ public class Game extends Observable implements Serializable {
 
 	private boolean haveWon = false;
 	private boolean haveLost = false;
+	private AbstractAgent a;
 
 	public static synchronized Game getInstance() {
 		if (game == null) {
@@ -208,13 +209,49 @@ public class Game extends Observable implements Serializable {
 		}
 	}
 	
-	public void createAgent(Class agentClass, Point position) {
-		if(agentClass == WorkerAgent.class)
-			agents.add(new WorkerAgent(position));
-		if(agentClass == SoldierAgent.class)
-			agents.add(new SoldierAgent(position));
-		if(agentClass == BuilderAgent.class)
-			agents.add(new BuilderAgent(position));
+	public boolean canCreateAgent(AbstractAgent a){
+		this.a = a;
+		Set<ResourceType> setResources = a.getResourceSet();
+		HashMap<AbstractBuilding, ResourceType> have = new HashMap<AbstractBuilding, ResourceType>();
+		boolean canCreate = false;
+		for (AbstractBuilding b: buildings){
+			for (ResourceType r: setResources){
+				if (b.getResources().contains(r)){
+					if (b.getCurrentAmount().get(r) != null && b.getCurrentAmount().get(r) >= a.getCostMap().get(r)){
+						have.put(b, r);
+						System.out.println(b);
+					}
+				}
+			}
+		}
+		for (Entry<AbstractBuilding, ResourceType> e: have.entrySet()){
+			for (ResourceType r: a.getResourceSet()){
+				if (r.equals(e.getValue())){
+					if (e.getKey().getCurrentAmount().get(e.getValue()) >= a.getCostMap().get(r)){
+						System.out.println("Building Amount: " + e.getKey().getCurrentAmount().get(e.getValue()));
+						System.out.println("Cost: " + a.getCostMap().get(r));
+						canCreate = true;
+					}
+					else {
+						System.out.println("I came in here");
+						canCreate = false;
+					}
+				}
+			}
+		}
+		return canCreate;
+	}
+
+	
+	public void createAgent(AbstractAgent agentClass, Point position) {
+		if (canCreateAgent(agentClass)){
+			if(agentClass.getClass() == WorkerAgent.class)
+				agents.add(new WorkerAgent(position));
+			if(agentClass.getClass() == SoldierAgent.class)
+				agents.add(new SoldierAgent(position));
+			if(agentClass.getClass() == BuilderAgent.class)
+				agents.add(new BuilderAgent(position));
+		}
 	}
 
 	private Resource getResourceClicked(Point resourcePoint) {

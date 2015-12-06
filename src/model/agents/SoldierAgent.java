@@ -41,4 +41,10 @@ public class SoldierAgent extends AbstractAgent{
 		oil = oil - 3;
 	}
 
+	@Override
+	public void initCostHashMap() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

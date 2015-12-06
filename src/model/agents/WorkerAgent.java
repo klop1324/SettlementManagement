@@ -25,4 +25,10 @@ public class WorkerAgent extends AbstractAgent {
 		oil--;	
 	}
 
+	@Override
+	public void initCostHashMap() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

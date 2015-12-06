@@ -215,11 +215,15 @@ public abstract class AbstractBuilding implements Serializable{
 	public BuildingType getType() {
 		return buildingType;
 	}
-
+	
+	public HashMap<ResourceType, Integer> getCurrentAmount(){
+		return currentAmount;
+	}
 	
 	public HashMap<ResourceType, Integer> getCost() {
 		return buildingCost;
 	}
 	
 	protected abstract void initCostHashMap();
+	
 }

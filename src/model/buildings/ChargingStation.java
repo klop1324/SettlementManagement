@@ -9,7 +9,7 @@ import model.resources.ResourceType;
 public class ChargingStation extends AbstractBuilding{
 
 	public ChargingStation(Point location) {
-		super(location, 30000, true, .005, ResourceType.ELECTRICITY, 100, 0.5, BuildingType.CHARGINGSTATION);
+		super(location, 30000, true, .05, ResourceType.ELECTRICITY, 100, 0.5, BuildingType.CHARGINGSTATION);
 		holdableResources.add(ResourceType.ELECTRICITY);
 		currentAmount.put(ResourceType.ELECTRICITY, 0);
 	}
