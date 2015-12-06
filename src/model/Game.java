@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Set;
 
@@ -365,7 +366,9 @@ public class Game extends Observable implements Serializable {
 	public void createBuilding(AbstractBuilding b){
 		// TODO Refactor once functionality is figured out
 		Point p = b.getLocation();
-		if(!canBuildBuilding(b)) throw new RuntimeException("cannot create!");
+		if(!canBuildBuilding(b)){
+			throw new RuntimeException("cannot create!");
+		}
 		
 		boolean flag = true;
 		for (AbstractBuilding tb : buildings){
@@ -385,7 +388,9 @@ public class Game extends Observable implements Serializable {
 				break;
 			}
 		}
-		if (flag)buildingsInProcess.add(b);
+		if (flag){
+			buildingsInProcess.add(b);
+		}
 	}
 
 	private void generateResources() {
