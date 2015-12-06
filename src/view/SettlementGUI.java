@@ -587,29 +587,49 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("armor")) {
 				if (userClick != null){
-					game.createTool(ToolType.ARMOR);
-					System.out.println(selected);
+					if(game.canCreateTool(ToolType.ARMOR)){
+						game.createTool(ToolType.ARMOR);
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a " + ToolType.ARMOR.name());
+					}
 					return;
 				}
 			}
 			else if (selected.equals("pickaxe")) {
 				if (userClick != null){
-					game.createTool(ToolType.PICKAXE);
-					System.out.println(selected);
+					if(game.canCreateTool(ToolType.PICKAXE)){
+						game.createTool(ToolType.PICKAXE);
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a " + ToolType.PICKAXE.name());
+					}
 					return;
 				}
 			}
 			else if (selected.equals("rocket")) {
 				if (userClick != null){
-					game.createTool(ToolType.ROCKETS);
-					System.out.println(selected);
+					if(game.canCreateTool(ToolType.ROCKETS)){
+						game.createTool(ToolType.ROCKETS);
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a " + ToolType.ROCKETS.name());
+					}
 					return;
 				}
 			}
 			else if (selected.equals("welding gun")) {
 				if (userClick != null){
-					game.createTool(ToolType.WELDINGGUN);
-					System.out.println(selected);
+					if(game.canCreateTool(ToolType.WELDINGGUN)){
+						game.createTool(ToolType.WELDINGGUN);
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a " + ToolType.WELDINGGUN.name());
+					}
 					return;
 				}
 			}

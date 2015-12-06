@@ -227,22 +227,7 @@ public class Game extends Observable implements Serializable {
 	}
 	
 	public boolean canCreateTool(ToolType tool){
-		boolean flag = false;
-		for (AbstractBuilding b : buildings) {
-			Set<ResourceType> resources = tool.getCost().keySet();
-			for (ResourceType trt : resources) {
-				if (b.getResources().contains(trt)) {
-					flag = true;
-				}
-				if (!flag) {
-					flag = false;
-					break;
-				}
-			}
-			if (flag)
-				break;
-		}
-		return flag;
+		return canRemoveResources(tool.getCost());
 	}
 
 	/**
@@ -256,6 +241,9 @@ public class Game extends Observable implements Serializable {
 	 *            agent
 	 */
 	public void createTool(ToolType tool) {
+		if(!canRemoveResources(tool.getCost())){
+			throw new RuntimeException("You didnt check if you could build the tool!");
+		}
 		AbstractAgent assignedAgent = null;
 		for (AbstractAgent a: agents){
 			switch(tool){
@@ -281,30 +269,11 @@ public class Game extends Observable implements Serializable {
 				break;
 			
 			}
+			if(assignedAgent != null) break;
 		}
-		boolean flag = false;
-		for (AbstractBuilding b : buildings) {
-			Set<ResourceType> resources = tool.getCost().keySet();
-			for (ResourceType trt : resources) {
-				if (b.getResources().contains(trt)) {
-					flag = true;
-				}
-				if (!flag) {
-					flag = false;
-					break;
-				}
-			}
-			if (flag) {
-				for (ResourceType trt : resources) {
-					for (ResourceType brt : b.getResources()) {
-						b.removeResource(trt, tool.getCost().get(trt));
-					}
-				}
-				assignedAgent.addTool(tool);
-				System.out.println(assignedAgent);
-				break;
-			}
-		}
+		removeResources(tool.getCost());
+		assignedAgent.addTool(tool);
+		
 	}
 
 	private boolean canPlaceBuilding(Point p) {
