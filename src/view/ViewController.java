@@ -27,7 +27,8 @@ public class ViewController extends JPanel implements Observer {
 	private Game game;
 	private Map map;
 	private Image agent1, enemy, oilTank, charge, oil, solar, ground, water, sand, grass;
-	private Image junkYard, armory, homeDepot, coal, copper, iron, gold, oilWell, workShop;
+	private Image junkYard, armory, homeDepot, coal, copper, iron, gold, oilWell, workShop, 
+	agent2, agent3;
 	private ArrayList<AbstractAgent> agents;
 	private int tic = 0;
 
@@ -40,8 +41,10 @@ public class ViewController extends JPanel implements Observer {
 	public ViewController(Game game) {
 		this.game = game;
 		try {			
-			agent1 = ImageIO.read(new File("./ImageSet/destroyer.png"));
-			enemy = ImageIO.read(new File("./ImageSet/defender.png"));
+			agent1 = ImageIO.read(new File("./ImageSet/defender.png"));
+			agent2 = ImageIO.read(new File("./ImageSet/distractor.png"));
+			agent3 = ImageIO.read(new File("./ImageSet/destroyer.png"));
+			enemy = ImageIO.read(new File("./ImageSet/Agent1.png"));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -82,10 +85,10 @@ public class ViewController extends JPanel implements Observer {
 				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
 			}
 			if (a.getClass().equals(WorkerAgent.class)){
-				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
+				g2.drawImage(agent2, a.getPosition().x*50, a.getPosition().y*50, null);
 			}
 			if (a.getClass().equals(SoldierAgent.class)){
-				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
+				g2.drawImage(agent3, a.getPosition().x*50, a.getPosition().y*50, null);
 			}
 		}
 		

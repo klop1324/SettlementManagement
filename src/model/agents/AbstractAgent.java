@@ -275,7 +275,7 @@ public abstract class AbstractAgent implements Serializable {
 
 		public AgentLogic(Class agentClass) {
 			actionQueue = new ArrayList<AgentCommandWithDestination>();
-			this.agentClass = BuilderAgent.class;
+			this.agentClass = agentClass;
 		}
 
 		public void recieveCommand(AgentCommandWithDestination c) {

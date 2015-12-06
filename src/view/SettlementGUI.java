@@ -137,7 +137,7 @@ class SettlementGUI extends JFrame implements Observer {
 		notifierPanel.setBackground(Color.DARK_GRAY);
 		notifierPanel.setBounds(0, 402, 795, 170);
 		notificationArea.setBackground(Color.BLACK);
-		notificationArea.setPreferredSize(new Dimension(700, 130));
+		notificationArea.setPreferredSize(new Dimension(650, 130));
 		notificationArea.setEditable(false);
 		notificationArea.setFont(courier);
 		notificationArea.setForeground(Color.GREEN);
@@ -421,8 +421,9 @@ class SettlementGUI extends JFrame implements Observer {
 				System.out.println(selected);
 				selectAgent.removeAllItems();
 				selectAgent.addItem("select one");
-				selectAgent.addItem("create agent");
 				selectAgent.addItem("build building");
+				selectAgent.addItem("create agent");
+				selectAgent.addItem("create tool");
 			}
 		}
 	}
@@ -440,14 +441,17 @@ class SettlementGUI extends JFrame implements Observer {
 			if (selected.equals("select agent type"))
 				return;
 			else if (selected.equals("builder")) {
+				game.createAgent(BuilderAgent.class, userClick);
 				System.out.println(selected);
 				return;
 			}
 			else if (selected.equals("soldier")) {
+				game.createAgent(SoldierAgent.class, userClick);
 				System.out.println(selected);
 				return;
 			}
 			else if (selected.equals("worker")) {
+				game.createAgent(WorkerAgent.class, userClick);
 				System.out.println(selected);
 				return;
 			}
