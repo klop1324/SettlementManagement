@@ -10,15 +10,14 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,11 +26,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javafx.scene.control.ComboBox;
-
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.DefaultListModel;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -47,7 +41,6 @@ import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
-import model.buildings.AbstractBuilding;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -91,6 +84,9 @@ class SettlementGUI extends JFrame implements Observer {
 	private JScrollBar horizontal = new JScrollBar();
 	private Point userClick;
 	private JLayeredPane backgroundPanel = new JLayeredPane();
+	private JScrollPane cs;
+
+	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
 	String[] agentOrBuilding = {"select one", "create agent", "build building"};
 	// add keyListener and mouseMotionListener for the map
@@ -200,18 +196,18 @@ class SettlementGUI extends JFrame implements Observer {
 //		tutorial.showMessageDialog(this, "Please read the tutorial first.");
 //		tutorial.setVisible(false); // set to true
 		
-		this.setFocusable(false);
-		backgroundPanel.setFocusable(false);
-		mapArea.setFocusable(false);
-		mapArea.setEnabled(true);
+		this.setFocusable(true);
 		notifierPanel.setFocusable(false);
 		infoPanel.setFocusable(false);
 		
 		JPanel temp = new JPanel();
 		temp.setBackground(Color.BLUE);
 		//JScrollPane cs = new JScrollPane(mapArea);
-		JScrollPane cs = new JScrollPane();
+		cs = new JScrollPane();
 		cs.setViewportView(mapArea);
+		mapArea.setFocusable(true);
+		this.getContentPane().add(cs);
+		
 		cs.setBounds(0, 0, 795, 572);
 		temp.setBounds(cs.getX(), cs.getY(), 2000, 2000);
 		vertical = cs.getVerticalScrollBar();
@@ -404,7 +400,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("armory")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new Armory(userClick))){
-						game.createBuilding(userClick, new Armory(userClick));
+						game.createBuilding(new Armory(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -416,7 +412,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("charging station")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new ChargingStation(userClick))){
-						game.createBuilding(userClick, new ChargingStation(userClick));
+						game.createBuilding(new ChargingStation(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -428,7 +424,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("home depot")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new HomeDepot(userClick))){
-						game.createBuilding(userClick, new HomeDepot(userClick));
+						game.createBuilding(new HomeDepot(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -440,7 +436,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new JunkYard(userClick))){
-						game.createBuilding(userClick, new JunkYard(userClick));
+						game.createBuilding(new JunkYard(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -452,7 +448,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("oil tank")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new OilTank(userClick))){
-						game.createBuilding(userClick, new OilTank(userClick));
+						game.createBuilding(new OilTank(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -464,7 +460,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("oil well")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new OilWell(userClick))){
-						game.createBuilding(userClick, new OilWell(userClick));
+						game.createBuilding(new OilWell(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -476,7 +472,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("workshop")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new Workshop(userClick))){
-						game.createBuilding(userClick, new Workshop(userClick));
+						game.createBuilding(new Workshop(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -556,10 +552,19 @@ class SettlementGUI extends JFrame implements Observer {
 			if (key == KeyEvent.VK_UP) {
 				//System.out.println("up");
 				imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
+				if(cs.getViewport().getHeight()-5 >= 0){
+					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()-5));
+					currentFrame.repaint();
+				}
+				
 				System.out.println("up");
 			}
 			else if (key == KeyEvent.VK_DOWN) {
 				imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
+				if(cs.getViewport().getHeight()+5 >= 0){
+					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()+5));
+					currentFrame.repaint();
+				}
 				System.out.println("down");
 			}
 			else if (key == KeyEvent.VK_RIGHT) {
