@@ -72,6 +72,9 @@ public class ViewController extends JPanel implements Observer {
 		for (AbstractBuilding b: game.getBuildings()){
 			g2.drawImage(b.getImage(), b.getLocation().x*50, b.getLocation().y*50, null);
 		}
+		for(AbstractBuilding b: game.getBuildingsInProcess()){
+			g2.drawImage(b.getType().getUnbuiltImage(), b.getLocation().x*50, b.getLocation().y*50, null);
+		}
 		
 		// TODO all agents look the same lol
 		for (AbstractAgent a: game.getAgents()){
