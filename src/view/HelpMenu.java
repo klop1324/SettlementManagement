@@ -29,9 +29,9 @@ public class HelpMenu extends JFrame {
 	public HelpMenu() {
 		// this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
-		this.setTitle("Helpful Information");
-		this.setMinimumSize(new Dimension(550, 350));
-		this.setMaximumSize(new Dimension(550, 350));
+		this.setTitle("Quick Guide");
+		this.setMinimumSize(new Dimension(500, 350));
+		this.setMaximumSize(new Dimension(500, 350));
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = screensize.width / 2 - this.getSize().width / 2;
 		int height = screensize.height / 2 - this.getSize().height / 2;
@@ -41,26 +41,32 @@ public class HelpMenu extends JFrame {
 		gameObje.setBackground(Color.BLACK);
 		gameObje.setForeground(Color.WHITE);
 		gameObje.setEditable(false);
+		gameObje.setWrapStyleWord(true);
+		gameObje.setLineWrap(true);
 		JScrollPane one = new JScrollPane(gameObje);
 		one.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
 
 		panelArea.setBackground(Color.BLACK);
 		panelArea.setForeground(Color.WHITE);
 		panelArea.setEditable(false);
+		panelArea.setWrapStyleWord(true);
+		panelArea.setLineWrap(true);
 		JScrollPane two = new JScrollPane(panelArea);
 		two.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
 
 		howToArea.setBackground(Color.BLACK);
 		howToArea.setForeground(Color.WHITE);
 		howToArea.setEditable(false);
+		howToArea.setWrapStyleWord(true);
+		howToArea.setLineWrap(true);
 		JScrollPane three = new JScrollPane(howToArea);
 		three.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
 
-		// robots.setBounds(0, 0, multiPanels.getWidth(),
-		// multiPanels.getHeight());
 		robots.setBackground(Color.BLACK);
 		robots.setForeground(Color.WHITE);
 		robots.setEditable(false);
+		robots.setWrapStyleWord(true);
+		robots.setLineWrap(true);
 		JScrollPane four = new JScrollPane(robots);
 		four.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
 
@@ -83,41 +89,41 @@ public class HelpMenu extends JFrame {
 
 		gameObje.setText("GAME OBJECTIVE:\n\n\n"
 				+ "TO WIN\n"
-				+ "The objective of this game is to build up a population of robots who specialize \n"
-				+ "in three areas and collect resources to build buildings and tools. To win, you \n"
+				+ "The objective of this game is to build up a population of robots who specialize "
+				+ "in three areas and collect resources to build buildings and tools. To win, you "
 				+ "must collect enough resources to upgrade the Home Base to level six.\n\n"
 				+ "TO LOSE\n"
-				+ "The game will be over and you will lose if there are no worker robots left. \n"
-				+ "Without them, resources cannot be collected and building materials will get used \n"
-				+ "up without a way for more to be collected. This means the last level of the Home \n"
+				+ "The game will be over and you will lose if there are no worker robots left. "
+				+ "Without them, resources cannot be collected and building materials will get used "
+				+ "up without a way for more to be collected. This means the last level of the Home "
 				+ "Base cannot be reached.\n\n"
 				+ "TO SAVE\n"
-				+ "To save the game, simply click the exit button at the top corner of the window. \n"
-				+ "A pop up will appear asking if you would like to save. Click \"Yes\" if you want \n"
-				+ "to save your progress or \"No\" if you don't. You will have the option to play \n"
+				+ "To save the game, simply click the exit button at the top corner of the window. "
+				+ "A pop up will appear asking if you would like to save. Click \"Yes\" if you want "
+				+ "to save your progress or \"No\" if you don't. You will have the option to play "
 				+ "the saved game when the game is run again.\n");
 
 		panelArea
 				.setText("PANELS:\n\n"
 						+ "This is a brief overview of the different panels found in the game window.\n\n\n"
 						+ "INFORMATION PANEL\n"
-						+ "The information panel can be found on the far right side of the window. This \n"
-						+ "is where you will perform most of your actions, such as collecting resources, \n"
-						+ "building things, and fighting invading robots. In this panel you will also find \n"
+						+ "The information panel can be found on the far right side of the window. This "
+						+ "is where you will perform most of your actions, such as collecting resources, "
+						+ "building things, and fighting invading robots. In this panel you will also find "
 						+ "the total amount of each resource held in all the buildings.\n\n"
 						+ "NOTIFICATION PANEL\n"
-						+ "The notification panel can be found at the bottom of the window. This is where \n"
+						+ "The notification panel can be found at the bottom of the window. This is where "
 						+ "you will see any hint messages and updates on your progress.\n\n"
 						+ "TOP PANEL\n"
-						+ "This panel displays the status of agents, buildings, and resources when you \n"
+						+ "This panel displays the status of agents, buildings, and resources when you "
 						+ "click on a specific one.\n\n"
-						+ "    AGENTS - for agents, the information displayed is the type of agent, the \n"
-						+ "    amount of energy the agent has, the condition it is in, the amount of oil \n"
-						+ "    it has, and the amount of resources it is holding.\n"
-						+ "    BUILDING - for buildings, the information displayed is the building type, \n"
-						+ "    the capacity of the building, and the amount currently stored in it.\n"
-						+ "    RESOURCES - for resources, the information displayed is the resource type \n"
-						+ "    and the amount left at that location.\n");
+						+ "\tAGENTS - for agents, the information displayed is the type of agent, \t\tthe "
+						+ "amount of energy the agent has, the condition it is in, the amount \t\tof oil "
+						+ "it has, and the amount of resources it is holding.\n"
+						+ "\tBUILDING - for buildings, the information displayed is the building \t\ttype, "
+						+ "the capacity of the building, and the amount currently stored in it.\n"
+						+ "\tRESOURCES - for resources, the information displayed is the \t\t\tresource type "
+						+ "and the amount left at that location.\n");
 
 		howToArea
 				.setText("HOW TO:\n\n"
