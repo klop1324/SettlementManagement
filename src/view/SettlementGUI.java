@@ -42,6 +42,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
+import model.GlobalSettings;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -112,12 +113,10 @@ class SettlementGUI extends JFrame implements Observer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+			
 		game = Game.getInstance();
 		mapArea = new ViewController(game);
-		
-
+	
 		setupGui();
 	
 		Font courier2 = new Font("Courier", Font.PLAIN, 6);		
@@ -198,6 +197,7 @@ class SettlementGUI extends JFrame implements Observer {
 		notifierPanel.setFocusable(false);
 		infoPanel.setFocusable(false);
 		
+		mapArea.setPreferredSize(new Dimension(GlobalSettings.MAP_SIZE_X*50, GlobalSettings.MAP_SIZE_Y*50));
 		JPanel temp = new JPanel();
 		temp.setBackground(Color.BLUE);
 		//JScrollPane cs = new JScrollPane(mapArea);
@@ -633,7 +633,7 @@ class SettlementGUI extends JFrame implements Observer {
 					selectedEnemyID = m.getID();
 			}
 			
-			System.out.println(userClick);
+			//System.out.println(userClick);
 			
 		}
 
