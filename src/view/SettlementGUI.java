@@ -470,9 +470,9 @@ class SettlementGUI extends JFrame implements Observer {
 				return;
 			else if (selected.equals("builder")) {
 				if (userClick != null){
-						game.createAgent(BuilderAgent.class, userClick);
-						System.out.println(selected);
-						return;
+					game.createAgent(BuilderAgent.class, userClick);
+					System.out.println(selected);
+					return;
 				}
 			}
 			else if (selected.equals("soldier")) {
@@ -500,9 +500,8 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
-		
+
 			else if (selected.equals("charging station")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new ChargingStation(userClick))){
@@ -513,7 +512,6 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
 
 			else if (selected.equals("home depot")) {
@@ -527,7 +525,6 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
@@ -539,7 +536,6 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
 
 			else if (selected.equals("oil tank")) {
@@ -552,7 +548,6 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
 
 			else if (selected.equals("oil well")) {
@@ -565,7 +560,6 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
 			else if (selected.equals("workshop")) {
 				if (userClick != null){
@@ -577,7 +571,6 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
 			else if (selected.equals("victory monument")) {
 				if (userClick != null){
@@ -589,7 +582,6 @@ class SettlementGUI extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
 					}
 				}
-				return;
 			}
 			else if (selected.equals("armor")) {
 				if (userClick != null){
@@ -618,7 +610,7 @@ class SettlementGUI extends JFrame implements Observer {
 					}
 				}
 			}
-			
+
 			else if (selected.equals("rocket")) {
 				if (userClick != null){
 					if (game.canCreateTool(ToolType.PICKAXE)){
