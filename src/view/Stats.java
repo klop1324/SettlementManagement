@@ -41,8 +41,6 @@ import model.resources.*;
 
 public class Stats extends JPanel {
 
-	private int clickX;
-	private int clickY;
 	private Game game;
 	private JLabel agent = new JLabel("Agent: ");
 	private JLabel resource = new JLabel("Resource: ");
@@ -54,14 +52,9 @@ public class Stats extends JPanel {
 	private JLabel capacity = new JLabel("Capacity: ");
 	private JLabel amount = new JLabel("Amount: ");
 	private JLabel amountLeft = new JLabel("Amount: ");
-	private JLabel blank1 = new JLabel("");
-	private JLabel blank2 = new JLabel("");
-	private JLabel blank3 = new JLabel("");
 	private boolean isAgent = false;
 	private boolean isBuilding = false;
 	private boolean isResource = false;
-	//private Point userClick;
-	private ViewController mapArea;
 	
 
 	public static void main(String[] args) {
@@ -71,7 +64,6 @@ public class Stats extends JPanel {
 
 	public Stats() {
 		game = Game.getInstance();
-		mapArea = new ViewController(game);
 		this.setLayout(new GridLayout(1, 5));
 		this.setBounds(20, 0, 500, 20);
 		this.setBackground(Color.BLACK);
@@ -179,18 +171,13 @@ public class Stats extends JPanel {
 		else if (isBuilding) {
 			this.setLayout(new GridLayout(1, 3));
 			this.add(building);
-			//this.add(blank1);
 			this.add(capacity);
-			//this.add(blank2);
 			this.add(amount);
 		}
 		else if (isResource) {
 			this.setLayout(new GridLayout(1, 2));
-			//this.add(blank1);
 			this.add(resource);
-			//this.add(blank2);
 			this.add(amountLeft);
-			//this.add(blank3);
 		}
 	}
 }
