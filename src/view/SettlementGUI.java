@@ -212,12 +212,16 @@ class SettlementGUI extends JFrame implements Observer {
 		horizontal = cs.getHorizontalScrollBar();
 		cs.setVerticalScrollBarPolicy(cs.VERTICAL_SCROLLBAR_ALWAYS);
 		cs.setHorizontalScrollBarPolicy(cs.HORIZONTAL_SCROLLBAR_ALWAYS);
-		/*InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		vertical.setUnitIncrement(10);
+		horizontal.setUnitIncrement(10);
+		vertical.setPreferredSize(new Dimension(0, 0));
+		horizontal.setPreferredSize(new Dimension(0, 0));
+		InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
 		imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
 		imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
-		imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");*/
+		imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
 		InputMap input = mapArea.getInputMap();
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.PGDN);
 		input.put(key, vertical.getActionForKeyStroke(KeyStroke.getKeyStroke("DOWN")));
@@ -667,7 +671,7 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if (e.isActionKey())
+			/*if (e.isActionKey())
 				System.out.println("hello");
 			InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 			InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -698,7 +702,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (key == KeyEvent.VK_LEFT) {
 				imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
 				System.out.println("left");
-			}
+			}*/
 		}
 
 		@Override
