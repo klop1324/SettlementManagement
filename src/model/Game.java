@@ -319,8 +319,8 @@ public class Game extends Observable implements Serializable {
 		return flag;
 	}
 
-	public boolean canBuildBuilding(Point p, AbstractBuilding b) {
-		return haveResourcesForBuilding(p, b) && canPlaceBuilding(p);
+	public boolean canBuildBuilding(AbstractBuilding b) {
+		return haveResourcesForBuilding(b.getLocation(), b) && canPlaceBuilding(b.getLocation());
 	}
 
 	/**
@@ -336,7 +336,8 @@ public class Game extends Observable implements Serializable {
 	public void createBuilding(AbstractBuilding b){
 		// TODO Refactor once functionality is figured out
 		Point p = b.getLocation();
-
+		if(!canBuildBuilding(b)) throw new RuntimeException("cannot create!");
+		
 		boolean flag = true;
 		for (AbstractBuilding tb : buildings){
 			Set<ResourceType> resources = b.getCost().keySet();
@@ -355,8 +356,7 @@ public class Game extends Observable implements Serializable {
 				break;
 			}
 		}
-		if (flag)
-			buildingsInProcess.add(b);
+		if (flag)buildingsInProcess.add(b);
 	}
 
 	private void generateResources() {
