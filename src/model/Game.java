@@ -336,7 +336,7 @@ public class Game extends Observable implements Serializable {
 	public void createBuilding(AbstractBuilding b){
 		// TODO Refactor once functionality is figured out
 		Point p = b.getLocation();
-		
+
 		boolean flag = true;
 		for (AbstractBuilding tb : buildings){
 			Set<ResourceType> resources = b.getCost().keySet();

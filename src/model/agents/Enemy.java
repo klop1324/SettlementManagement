@@ -35,7 +35,6 @@ public class Enemy implements Serializable{
 		home = position;
 		this.position = position;
 		ID = this.hashCode();
-		System.out.println(ID);
 	}
 	
 	public int getID() {
