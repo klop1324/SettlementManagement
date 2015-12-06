@@ -7,7 +7,7 @@ import model.resources.ResourceType;
 
 public class Armory extends AbstractBuilding {
 	public Armory(Point location){
-	super(location, 25000, false, 0.0, null, 100, 0, BuildingType.SOLARPANEL);
+	super(location, 25000, false, 0.0, null, 100, 0, BuildingType.ARMORY);
 		
 	}
 	

@@ -123,7 +123,6 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	public void passiveAddResource(ResourceType resource, double amount){
 		grow += amount;
-		System.out.println(grow);
 		if (Math.floor(grow) == 1){
 			remaining += grow;
 			int temp = (int)remaining;

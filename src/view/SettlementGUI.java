@@ -478,7 +478,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("armory")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new Armory(userClick))){
-						game.createBuilding(new Armory(userClick));
+						game.addBuildingInProcess(new Armory(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -715,7 +715,9 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+			for(AbstractBuilding b : game.getInstance().getBuildingsInProcess()){
+				System.out.println("Building Type: "+ b.getType() + "Building Point: " + b.getLocation());
+			}
 		}
 	}
 	
