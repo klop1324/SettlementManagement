@@ -38,24 +38,18 @@ public class HelpMenu extends JFrame {
 		this.setLocation(width, height);
 		this.setForeground(Color.BLACK);
 
-		// gameObje.setBounds(0, 0, multiPanels.getWidth(),
-		// multiPanels.getHeight());
 		gameObje.setBackground(Color.BLACK);
 		gameObje.setForeground(Color.WHITE);
 		gameObje.setEditable(false);
 		JScrollPane one = new JScrollPane(gameObje);
 		one.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
 
-		// panelArea.setBounds(0, 0, multiPanels.getWidth(),
-		// multiPanels.getHeight());
 		panelArea.setBackground(Color.BLACK);
 		panelArea.setForeground(Color.WHITE);
 		panelArea.setEditable(false);
 		JScrollPane two = new JScrollPane(panelArea);
 		two.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
 
-		// howToArea.setBounds(0, 0, multiPanels.getWidth(),
-		// multiPanels.getHeight());
 		howToArea.setBackground(Color.BLACK);
 		howToArea.setForeground(Color.WHITE);
 		howToArea.setEditable(false);

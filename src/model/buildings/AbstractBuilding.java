@@ -35,6 +35,7 @@ public abstract class AbstractBuilding implements Serializable{
 	protected boolean isPassiveProvider;
 	protected double passiveRate;
 	protected ResourceType passiveResource;
+	protected double grow = 0.0;
 	
 	//type of building for image getting
 	protected BuildingType buildingType;
@@ -52,7 +53,6 @@ public abstract class AbstractBuilding implements Serializable{
 		this.buildTime = buildTime;
 		this.holdableResources = new ArrayList<ResourceType>();
 		this.currentAmount = new HashMap<ResourceType, Integer>();
-		
 		this.maintCostType = ResourceType.ELECTRICITY;
 		this.maintCost = maintCost;
 		
@@ -120,8 +120,25 @@ public abstract class AbstractBuilding implements Serializable{
 			currentAmount.replace(resource, currentAmount.get(resource) + amount);
 		}
 	}
+	
+	public void passiveAddResource(ResourceType resource, double amount){
+		grow += amount;
+		System.out.println(grow);
+		if (Math.floor(grow) == 1){
+			remaining += grow;
+			int temp = (int)remaining;
+			remaining -= temp;
+			grow = 0.0;
+			if(!holdableResources.contains(resource)){
+				throw new RuntimeException("does not contain This Resource!");
+			}
+			else{
+				currentAmount.replace(resource, currentAmount.get(resource) + temp);
+			}
+		}
+	}
+	
 	public void addResource(ResourceType resource, double amount){
-		remaining += amount;
 		int temp = (int)remaining;
 		remaining -= temp;
 		if(!holdableResources.contains(resource)){

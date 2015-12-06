@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -61,12 +62,18 @@ class SettlementGUI extends JFrame implements Observer {
 	private JButton individualButton = new JButton();
 	private JButton createButton = new JButton("Create/Build");
 	private JButton helpButton = new JButton("Help");
-	private JLabel electricityAmount = new JLabel("Electricity: ");
-	private JLabel oilAmount = new JLabel("Oil: ");	
-	private JLabel coalAmount = new JLabel("Coal: ");
-	private JLabel copperAmount = new JLabel("Copper: ");
-	private JLabel ironAmount = new JLabel("Iron: ");
-	private JLabel goldAmount = new JLabel("Gold: ");
+	private JLabel electricityLabel = new JLabel("Electricity: ");
+	private JLabel oilLabel = new JLabel("Oil: ");	
+	private JLabel coalLabel = new JLabel("Coal: ");
+	private JLabel copperLabel = new JLabel("Copper: ");
+	private JLabel ironLabel = new JLabel("Iron: ");
+	private JLabel goldLabel = new JLabel("Gold: ");
+	private JLabel electricityAmount = new JLabel("");
+	private JLabel oilAmount = new JLabel("");	
+	private JLabel coalAmount = new JLabel("");
+	private JLabel copperAmount = new JLabel("");
+	private JLabel ironAmount = new JLabel("");
+	private JLabel goldAmount = new JLabel("");
 	private JLabel name = new JLabel("Click Something");
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
@@ -138,6 +145,12 @@ class SettlementGUI extends JFrame implements Observer {
 		notifierPanel.add(notificationArea);
 		notifierPanel.add(nextButton);
 		
+		electricityLabel.setForeground(Color.WHITE);
+		oilLabel.setForeground(Color.WHITE);
+		coalLabel.setForeground(Color.WHITE);
+		copperLabel.setForeground(Color.WHITE);
+		ironLabel.setForeground(Color.WHITE);
+		goldLabel.setForeground(Color.WHITE);
 		electricityAmount.setForeground(Color.WHITE);
 		oilAmount.setForeground(Color.WHITE);
 		coalAmount.setForeground(Color.WHITE);
@@ -183,12 +196,36 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.add(collectPanel);
 		infoPanel.add(createPanel);
 		infoPanel.add(dropPanel);
-		infoPanel.add(electricityAmount);
-		infoPanel.add(oilAmount);	
-		infoPanel.add(coalAmount);
-		infoPanel.add(copperAmount);
-		infoPanel.add(ironAmount);
-		infoPanel.add(goldAmount);
+		JPanel panel1 = new JPanel();
+		panel1.setBackground(Color.BLACK);
+		panel1.add(electricityLabel);
+		panel1.add(electricityAmount);
+		JPanel panel2 = new JPanel();
+		panel2.setBackground(Color.BLACK);
+		panel2.add(oilLabel);
+		panel2.add(oilAmount);
+		JPanel panel3 = new JPanel();
+		panel3.setBackground(Color.BLACK);
+		panel3.add(coalLabel);
+		panel3.add(coalAmount);
+		JPanel panel4 = new JPanel();
+		panel4.setBackground(Color.BLACK);
+		panel4.add(copperLabel);
+		panel4.add(copperAmount);
+		JPanel panel5 = new JPanel();
+		panel5.setBackground(Color.BLACK);
+		panel5.add(ironLabel);
+		panel5.add(ironAmount);
+		JPanel panel6 = new JPanel();
+		panel6.setBackground(Color.BLACK);
+		panel6.add(goldLabel);
+		panel6.add(goldAmount);
+		infoPanel.add(panel1);
+		infoPanel.add(panel2);
+		infoPanel.add(panel3);
+		infoPanel.add(panel4);
+		infoPanel.add(panel5);
+		infoPanel.add(panel6);
 		
 		registerListeners();
 		
@@ -361,6 +398,7 @@ class SettlementGUI extends JFrame implements Observer {
 				selectAgent.addItem("oil tank");
 				selectAgent.addItem("oil well");
 				selectAgent.addItem("workshop");
+				selectAgent.addItem("victory monument");
 				selectAgent.addItem("BACK TO MAIN");
 			}
 			else if (selected.equals("BACK TO MAIN")) {
@@ -480,6 +518,18 @@ class SettlementGUI extends JFrame implements Observer {
 					return;
 				}
 			}
+			else if (selected.equals("victory monument")) {
+				if (userClick != null){
+					if(game.canBuildBuilding(userClick, new VictoryMonument(userClick))){
+						game.createBuilding(new VictoryMonument(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
+					return;
+				}
+			}
 		}
 	}
 	
@@ -490,6 +540,10 @@ class SettlementGUI extends JFrame implements Observer {
 			clickX = (int) Math.floor(e.getPoint().x/50);
 			clickY = (int) Math.floor(e.getPoint().y/50);
 			userClick = new Point(clickX, clickY);
+			individual.update(userClick);
+
+			
+			individual.update(userClick);
 			
 			for(Enemy m : game.getEnemies()) {
 				if(m.getPosition().equals(userClick))

@@ -24,6 +24,7 @@ public enum BuildingType {
 	// general stuff
 	private Image image;
 	private String name;
+	private Image unBuilt;
 	
 	
 	
@@ -31,6 +32,7 @@ public enum BuildingType {
 		this.name = name;
 		try {
 			this.image = ImageIO.read(new File("ImageSet/building/"+ name +".png"));
+			this.unBuilt = ImageIO.read(new File("ImageSet/building/rubble.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,5 +44,9 @@ public enum BuildingType {
 
 	public Image getImage() {
 		return image;
+	}
+	
+	public Image getUnbuiltImage(){
+		return unBuilt;
 	}
 }
