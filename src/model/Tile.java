@@ -21,7 +21,7 @@ public enum Tile {
 	private double spawnRate;
 	private String name;
 	private Boolean isPassable;
-	private static int tileSize;
+	private static int tileSize = 50;
 	
 	Tile(int i, char c, double chance, String name, Boolean isPassible){
 		this.intRep = i;
