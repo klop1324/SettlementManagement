@@ -154,7 +154,7 @@ public class Game extends Observable implements Serializable {
 		return resource;
 	}
 	
-	public boolean canCreatTool(ToolType tool){
+	public boolean canCreateTool(ToolType tool){
 		boolean flag = false;
 		for (AbstractBuilding b : buildings) {
 			Set<ResourceType> resources = tool.getCost().keySet();
@@ -487,7 +487,15 @@ public class Game extends Observable implements Serializable {
 					i--;
 				}
 			}
-
+			// Allows for building passive generation
+			for (AbstractBuilding b: buildings){
+				if (b.isPassiveProvider()){
+					System.out.println(b.getResources());
+					b.passiveAddResource(b.getPassiveResource(), b.getPassiveRate());
+					System.out.println("I have passively generated in " + b.getName() + "!");
+				}
+			}
+			
 			// Checks if buildings are completed and adds the completed ones to
 			// the buildings list.
 			if (!buildingsInProcess.isEmpty()) {
@@ -498,7 +506,8 @@ public class Game extends Observable implements Serializable {
 					}
 				}
 			}
-
+			
+			// Win condition
 			if (!buildings.isEmpty()) {
 				for (AbstractBuilding b : buildings) {
 					if (b.getClass().equals(VictoryMonument.class)) {
