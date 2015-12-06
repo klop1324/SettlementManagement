@@ -139,6 +139,7 @@ public abstract class AbstractBuilding implements Serializable{
 	}
 	
 	public void addResource(ResourceType resource, double amount){
+		remaining += amount;
 		int temp = (int)remaining;
 		remaining -= temp;
 		if(!holdableResources.contains(resource)){
@@ -148,6 +149,7 @@ public abstract class AbstractBuilding implements Serializable{
 			currentAmount.replace(resource, currentAmount.get(resource) + temp);
 		}
 	}
+
 	
 	public void removeResource(ResourceType resource, int amount){
 		if(!holdableResources.contains(resource)){
