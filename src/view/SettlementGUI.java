@@ -307,9 +307,9 @@ class SettlementGUI extends JFrame implements Observer {
 	}
 	
 	public void dialogBoxes(){
-		if (game.hasError()){
-			JOptionPane.showMessageDialog(this, game.getErrorMessage());
-		}
+//		if (game.hasError()){
+//			JOptionPane.showMessageDialog(this, game.getErrorMessage());
+//		}
 	}
 
 	public void registerListeners() {

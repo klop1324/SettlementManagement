@@ -47,8 +47,6 @@ public class Game extends Observable implements Serializable {
 	private Point resourcePointClicked = null;
 
 	private boolean haveWon = false;
-	private String errorMessage;
-	private boolean error = false;
 
 	public static synchronized Game getInstance() {
 		if (game == null) {
@@ -196,34 +194,7 @@ public class Game extends Observable implements Serializable {
 	 * @param a
 	 *            agent
 	 */
-	public void createTool(ToolType tool) {
-		AbstractAgent agent = null;
-		for (AbstractAgent a : agents){
-			switch (tool){
-			case ARMOR:
-				if (a.getClass().equals(SoldierAgent.class)){
-					agent = a;
-				}
-				break;
-			case PICKAXE:
-				if (a.getClass().equals(WorkerAgent.class)){
-					agent = a;
-				}
-				break;
-			case ROCKETS:
-				agent = a;
-				break;
-			case WELDINGGUN:
-				if (a.getClass().equals(BuilderAgent.class)){
-					agent = a;
-				}
-				break;
-			default:
-				break;
-			
-			}
-		}
-		
+	public void createTool(ToolType tool, AbstractAgent a) {
 		boolean flag = false;
 		for (AbstractBuilding b : buildings) {
 			Set<ResourceType> resources = tool.getCost().keySet();
@@ -242,7 +213,7 @@ public class Game extends Observable implements Serializable {
 						b.removeResource(trt, tool.getCost().get(trt));
 					}
 				}
-				agent.addTool(tool);
+				a.addTool(tool);
 				break;
 			}
 		}
@@ -438,7 +409,7 @@ public class Game extends Observable implements Serializable {
 	}
 
 	public void addBuildingInProcess(AbstractBuilding b) {
-		buildingsInProcess.add(b);
+
 	}
 
 	public void addAgents(AbstractAgent agent) {
@@ -488,29 +459,12 @@ public class Game extends Observable implements Serializable {
 				enemies.remove(i);
 		}
 	}
-	
-	private void errorMessages(){
-		for (AbstractBuilding b: buildings){
-			if (b.hasError()){
-				errorMessage = b.getErrorMessage();
-				error = true;
-			}
-		}
-	}
-	
-	public String getErrorMessage(){
-		return errorMessage;
-	}
-	public boolean hasError(){
-		return error;
-	}
+
 	private class TickActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
-			errorMessages();
-			
+
 			// Updates agents
 			if (!agents.isEmpty()) {
 				for (int i = 0; i < agents.size(); i++) {
@@ -555,7 +509,6 @@ public class Game extends Observable implements Serializable {
 					}
 				}
 			}
-			
 			
 			// Win condition
 			if (!buildings.isEmpty()) {
