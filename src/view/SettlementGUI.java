@@ -112,55 +112,16 @@ class SettlementGUI extends JFrame implements Observer {
 			e.printStackTrace();
 		}
 		
+		
 		game = Game.getInstance();
 		mapArea = new ViewController(game);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
-		this.setTitle("Game Name Goes Here");
-		this.setMinimumSize(new Dimension(800, 600));
-		this.setMaximumSize(new Dimension(800, 600));
-		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = screensize.width / 2 - this.getSize().width / 2;
-		int height = screensize.height / 2 - this.getSize().height / 2;
-		this.setLocation(width, height);
 		
-		Font courier = new Font("Courier", Font.PLAIN, 12);
+		setupGui();
+		
+		
 		Font courier2 = new Font("Courier", Font.PLAIN, 6);
 		
-		backgroundPanel.setBounds(0, 0, 800, 600);
-
-		TitledBorder noticeBorder = new TitledBorder("Notifications");
-		noticeBorder.setTitleColor(Color.WHITE);
-		notifierPanel.setOpaque(true);
-		notifierPanel.setBorder(noticeBorder);
-		notifierPanel.setBackground(Color.DARK_GRAY);
-		notifierPanel.setBounds(0, 402, 795, 170);
-		notificationArea.setBackground(Color.BLACK);
-		notificationArea.setPreferredSize(new Dimension(700, 130));
-		notificationArea.setEditable(false);
-		notificationArea.setFont(courier);
-		notificationArea.setForeground(Color.GREEN);
-		notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
-				"button to continue this tutorial.\n");
-		notifierPanel.add(notificationArea);
-		notifierPanel.add(nextButton);
 		
-		electricityLabel.setForeground(Color.WHITE);
-		oilLabel.setForeground(Color.WHITE);
-		coalLabel.setForeground(Color.WHITE);
-		copperLabel.setForeground(Color.WHITE);
-		ironLabel.setForeground(Color.WHITE);
-		goldLabel.setForeground(Color.WHITE);
-		electricityAmount.setForeground(Color.WHITE);
-		oilAmount.setForeground(Color.WHITE);
-		coalAmount.setForeground(Color.WHITE);
-		copperAmount.setForeground(Color.WHITE);
-		ironAmount.setForeground(Color.WHITE);
-		goldAmount.setForeground(Color.WHITE);
-		
-		helpButton.setBackground(Color.DARK_GRAY);
-		helpButton.setForeground(Color.BLACK);
-		helpPanel.setBackground(Color.DARK_GRAY);
 		helpPanel.add(helpButton);
 		helpPanel.setBounds(750, 542, 40, 25);
 		
@@ -274,6 +235,70 @@ class SettlementGUI extends JFrame implements Observer {
 		backgroundPanel.add(helpPanel, new Integer(2), 0);
 	}
 	
+	private void setupGui(){
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		this.setTitle("Game Name Goes Here");
+		this.setMinimumSize(new Dimension(800, 600));
+		this.setMaximumSize(new Dimension(800, 600));
+		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = screensize.width / 2 - this.getSize().width / 2;
+		int height = screensize.height / 2 - this.getSize().height / 2;
+		this.setLocation(width, height);
+		
+		backgroundPanel.setBounds(0, 0, 800, 600);
+		
+		setupNotifierPanel();
+		setupNotificationArea();
+		colorEverything();
+	}
+	
+	private void setupNotifierPanel(){
+		TitledBorder noticeBorder = new TitledBorder("Notifications");
+		noticeBorder.setTitleColor(Color.WHITE);
+		
+		notifierPanel.setOpaque(true);
+		notifierPanel.setBorder(noticeBorder);
+		notifierPanel.setBackground(Color.DARK_GRAY);
+		notifierPanel.setBounds(0, 402, 795, 170);
+		notifierPanel.add(notificationArea);
+		notifierPanel.add(nextButton);
+		
+	}
+	
+	private void setupNotificationArea(){
+		Font courier = new Font("Courier", Font.PLAIN, 12);
+		
+		notificationArea.setBackground(Color.BLACK);
+		notificationArea.setPreferredSize(new Dimension(700, 130));
+		notificationArea.setEditable(false);
+		notificationArea.setFont(courier);
+		notificationArea.setForeground(Color.GREEN);
+		notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
+				"button to continue this tutorial.\n");
+		
+	}
+	
+	private void colorEverything(){
+		electricityLabel.setForeground(Color.WHITE);
+		oilLabel.setForeground(Color.WHITE);
+		coalLabel.setForeground(Color.WHITE);
+		copperLabel.setForeground(Color.WHITE);
+		ironLabel.setForeground(Color.WHITE);
+		goldLabel.setForeground(Color.WHITE);
+		electricityAmount.setForeground(Color.WHITE);
+		oilAmount.setForeground(Color.WHITE);
+		coalAmount.setForeground(Color.WHITE);
+		copperAmount.setForeground(Color.WHITE);
+		ironAmount.setForeground(Color.WHITE);
+		goldAmount.setForeground(Color.WHITE);
+		
+		helpButton.setBackground(Color.DARK_GRAY);
+		helpButton.setForeground(Color.BLACK);
+		helpPanel.setBackground(Color.DARK_GRAY);
+		
+	}
+	
 	public void addObservers(){ // Adds observers to game
 		game.addObserver(mapArea);
 		game.addObserver(this);
@@ -315,7 +340,9 @@ class SettlementGUI extends JFrame implements Observer {
 					try {
 						FileOutputStream outputStream = new FileOutputStream("SettlementManagement");
 						ObjectOutputStream objectStream = new ObjectOutputStream(outputStream);
+						game.getInstance().stopGame();
 						objectStream.writeObject(Game.getInstance());
+						
 						objectStream.close();
 						outputStream.close();
 						

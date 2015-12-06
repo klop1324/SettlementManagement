@@ -47,6 +47,7 @@ public class Game extends Observable implements Serializable {
 	private Point resourcePointClicked = null;
 
 	private boolean haveWon = false;
+	private boolean haveLost = false;
 
 	public static synchronized Game getInstance() {
 		if (game == null) {
@@ -88,6 +89,44 @@ public class Game extends Observable implements Serializable {
 
 		this.startGame();
 
+	}
+	
+	private boolean canInitBuildings(Point p){
+		Tile values[] = Tile.values();
+		boolean flag = true;
+		//mess to check is there's a empty square around p.x,p.y
+		Point tempP = p;
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x+1, p.y);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x+1, p.y+1);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x+1, p.y-1);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x, p.y);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x, p.y+1);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x, p.y-1);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x-1, p.y);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x-1, p.y+1);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		tempP = new Point(p.x-1, p.y-1);
+		if(!values[map.get(p)].isPassible()) flag = false;
+		
+		if(flag){
+			buildings.add(new HomeDepot(p));
+			buildings.add(new JunkYard(p));
+			buildings.add(new ChargingStation(p));
+			buildings.add(new OilTank(p));
+			for(AbstractBuilding b: buildings){
+				b.incrementCompletionAmount(b.getBuildTime()+1);
+			}
+		}
+		
+		return false;
 	}
 
 	public void agentToEnemy(int enemyIDClicked) {
@@ -398,7 +437,10 @@ public class Game extends Observable implements Serializable {
 	}
 
 	public void addBuildingInProcess(AbstractBuilding b) {
-
+		this.buildingsInProcess.add(b);
+	}
+	public boolean haveLOst(){
+		return haveLost;
 	}
 
 	public void addAgents(AbstractAgent agent) {
@@ -441,6 +483,9 @@ public class Game extends Observable implements Serializable {
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
 	}
+	public void stopGame(){
+		if(timer!=null)timer.stop();
+	}
 
 	private class TickActionListener implements ActionListener {
 
@@ -458,7 +503,7 @@ public class Game extends Observable implements Serializable {
 				}
 			} else { // LOSE CONDITION
 				System.out.println("All of your agents are dead!");
-				System.exit(0);
+				game.haveLost = true;
 			}
 
 			// Updates enemies
