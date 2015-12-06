@@ -35,7 +35,6 @@ public abstract class AbstractBuilding implements Serializable{
 	protected boolean isPassiveProvider;
 	protected double passiveRate;
 	protected ResourceType passiveResource;
-	protected double grow = 0.0;
 	
 	//type of building for image getting
 	protected BuildingType buildingType;
@@ -122,12 +121,12 @@ public abstract class AbstractBuilding implements Serializable{
 	}
 	
 	public void passiveAddResource(ResourceType resource, double amount){
-		grow += amount;
-		if (Math.floor(grow) == 1){
-			remaining += grow;
-			int temp = (int)remaining;
-			remaining -= temp;
-			grow = 0.0;
+		remaining += amount;
+		if (remaining >= 1){
+			int temp = (int) remaining;
+			remaining = remaining - temp;
+			this.addResource(resource, temp);
+			
 			if(!holdableResources.contains(resource)){
 				System.out.println("does not contain This Resource!");
 				return;
