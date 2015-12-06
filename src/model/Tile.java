@@ -11,9 +11,9 @@ public enum Tile {
 	//==> DO NOT SKIP NUMBERS!!!! <==
 	//===============================
 	PLATING(0, 'o',5.0, "Plating",true),
-	OIL(1, ' ', 5.0, "Oil", false),
+	GRAVEL(1, 'G', 5.0, "Gravel", true),
 	SHALLOWS(2, 'S', 5.0, "Shallows", true),
-	GRAVEL(3, 'G', 5.0, "Gravel", false);
+	QUICKSAND(3, ' ', 2.0, "Sand", false);
 	
 	private int intRep;
 	private char charRep;
