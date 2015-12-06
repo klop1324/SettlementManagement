@@ -620,10 +620,9 @@ class SettlementGUI extends JFrame implements Observer {
 
 			else if (selected.equals("rocket")) {
 				if (userClick != null){
-					if (game.canCreateTool(ToolType.PICKAXE)){
+					if (game.canCreateTool(ToolType.ROCKETS)){
 						game.createTool(ToolType.ROCKETS);
 						JOptionPane.showMessageDialog(currentFrame, "You've created a rocket and have given it to an Agent");
-
 						System.out.println(selected);
 					}
 					else{
@@ -634,7 +633,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("welding gun")) {
 				if (userClick != null){
-					if (game.canCreateTool(ToolType.PICKAXE)){
+					if (game.canCreateTool(ToolType.WELDINGGUN)){
 						game.createTool(ToolType.WELDINGGUN);
 						JOptionPane.showMessageDialog(currentFrame, "You've created a Welding Gun and have given it to a Builder Agent");
 						System.out.println(selected);
