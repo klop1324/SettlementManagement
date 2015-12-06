@@ -324,8 +324,8 @@ public abstract class AbstractAgent implements Serializable {
 						if(e.getID() == actionQueue.get(0).getEnemyID())
 							setDestination(e.getPosition());
 					}
-				}
-				setDestination(actionQueue.get(0).getCommandDestination());
+				} else
+					setDestination(actionQueue.get(0).getCommandDestination());
 			}
 			else
 				setDestination(null);
@@ -402,9 +402,9 @@ public abstract class AbstractAgent implements Serializable {
 			}
 
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
-				for (Enemy e : g.getEnemies()) {
-					if (e.getPosition().equals(position)) {
-						e.kill();
+				for (int i = 0; i < g.getEnemies().size(); i++) {
+					if (g.getEnemies().get(0).getPosition().equals(position)) {
+						g.killEnemy(g.getEnemies().get(0).getID());
 						condition -= damageFromEnemies;
 					}
 				}

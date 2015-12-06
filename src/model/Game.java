@@ -118,6 +118,8 @@ public class Game extends Observable implements Serializable {
 				min = a.getAI().getActionQueue().size();
 			}
 		}
+		
+		if(agentToSend == null) return;
 
 		switch (resourceTypeClicked) {
 		case COAL:
@@ -440,6 +442,13 @@ public class Game extends Observable implements Serializable {
 	public void startGame() {
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
+	}
+	
+	public void killEnemy(int enemyID) {
+		for(int i = 0; i < enemies.size(); i++) {
+			if(enemies.get(i).getID() == enemyID)
+				enemies.remove(i);
+		}
 	}
 
 	private class TickActionListener implements ActionListener {
