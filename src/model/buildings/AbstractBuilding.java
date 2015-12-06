@@ -129,7 +129,8 @@ public abstract class AbstractBuilding implements Serializable{
 			remaining -= temp;
 			grow = 0.0;
 			if(!holdableResources.contains(resource)){
-				throw new RuntimeException("does not contain This Resource!");
+				System.out.println("does not contain This Resource!");
+				return;
 			}
 			else{
 				currentAmount.replace(resource, currentAmount.get(resource) + temp);
@@ -141,7 +142,8 @@ public abstract class AbstractBuilding implements Serializable{
 		int temp = (int)remaining;
 		remaining -= temp;
 		if(!holdableResources.contains(resource)){
-			throw new RuntimeException("does not contain This Resource!");
+			System.out.println("does not contain This Resource!");
+			return;
 		}
 		else{
 			currentAmount.replace(resource, currentAmount.get(resource) + temp);
@@ -150,16 +152,23 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	public void removeResource(ResourceType resource, int amount){
 		if(!holdableResources.contains(resource)){
-			throw new RuntimeException("does not contain This Resource!");
+			System.out.println("does not contain This Resource!");
+			return;
 		}
 		else{
 			int result = currentAmount.get(resource) - amount;
-			if(result > capacity) throw new RuntimeException("Cannot Add Resource! We would go over Capacity!");
+			if(result > capacity){
+				System.out.println("Cannot Add Resource! We would go over Capacity!");
+				return;
+			}
 			// Comment this out if you need to test creating when you don't have enough resources
-//			if (result < 0){
-//				throw new RuntimeException("Can't take more than you have.");
-//			}
-			currentAmount.replace(resource, result);
+			if (result < 0){
+				System.out.println("Can't take more than you have.");
+				return;
+			}
+			else{
+				currentAmount.replace(resource, result);
+			}
 		}
 	}
 	
@@ -173,7 +182,10 @@ public abstract class AbstractBuilding implements Serializable{
 	// Allows agents to remove amount of resources from building
 	public void agentRemoveCapacity(ResourceType resource, int amount) {
 		int newResourceAmount = currentAmount.get(resource) - amount;
-		if(newResourceAmount < 0)throw new RuntimeException("Cannot remove that many resources!");
+		if(newResourceAmount < 0){
+			System.out.println("Cannot remove that many resources!");
+			return;
+		}
 		else{
 			currentAmount.replace(resource, newResourceAmount);
 		}

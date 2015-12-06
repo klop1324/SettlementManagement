@@ -217,8 +217,9 @@ public class Game extends Observable implements Serializable {
 					break;
 				}
 			}
-			if (flag)
+			if (flag){
 				break;
+			}
 		}
 		return flag;
 	}
