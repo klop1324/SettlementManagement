@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Set;
 
@@ -615,7 +616,7 @@ public class Game extends Observable implements Serializable {
 				}
 			}
 			
-			if(Math.random()<0.01){
+			if(Math.random()<0.001){
 				Point p = new Point((int)(map.getXLength()*Math.random()), (int) (map.getYLength() *Math.random()));
 				if(Tile.values()[map.get(p.x, p.y)].isPassible())
 					enemies.add(new Enemy(p));

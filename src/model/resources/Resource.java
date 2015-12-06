@@ -45,13 +45,10 @@ public class Resource implements Serializable{
 	public void removeResource(int removeAmount){
 		if (hasResources()){
 			resourceAmount-= removeAmount;
-			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
+			agentResourceNotify = ("Agent removed: 1000 " + resources);
 			if (!hasResources()){
-				agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources + " \nYou have used all of this " + resources + " resource");
+				agentResourceNotify = ("Agent removed: 1000 " + resources + " \nYou have used all of this " + resources + " resource");
 				return;
-			}
-			else {
-				//agentResourceNotify = ("You've used up all of this resource. D:");
 			}
 		}
 		else {
