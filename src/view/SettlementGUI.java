@@ -123,7 +123,7 @@ class SettlementGUI extends JFrame implements Observer {
 		int width = screensize.width / 2 - this.getSize().width / 2;
 		int height = screensize.height / 2 - this.getSize().height / 2;
 		this.setLocation(width, height);
-		
+				
 		Font courier = new Font("Courier", Font.PLAIN, 12);
 		Font courier2 = new Font("Courier", Font.PLAIN, 6);
 		
