@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.Game;
+import model.Map;
 import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
 import model.resources.Resource;
@@ -12,12 +13,12 @@ import model.resources.ResourceType;
 import model.tools.ToolType;
 
 public abstract class AbstractAgent implements Serializable {
-	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
+	protected int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
 			moveDelay, numberOfTasks;
-	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
-	AgentLogic AI;
-	ResourceType carriedResourceType;
-	double buildRate;
+	protected Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
+	protected AgentLogic AI;
+	protected ResourceType carriedResourceType;
+	protected double buildRate;
 
 	/**
 	 * Creates a new AbstractAgent at a given position.
@@ -135,11 +136,8 @@ public abstract class AbstractAgent implements Serializable {
 	 * diagonal target.
 	 */
 	private void move() {
-		// TODO DIJKSTRA'S, BABY
 		if (atDestination() || destination == null)
 			return;
-		
-//		Game g = Game.getInstance();
 
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
@@ -299,19 +297,19 @@ public abstract class AbstractAgent implements Serializable {
 			ArrayList<AbstractBuilding> incompleteBuildingList = g.getBuildingsInProcess();
 			
 			// Need low
-			if (oil < 500) {
+			if (oil < 1000) {
 				if(actionQueue.isEmpty())
 					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
 			}
-			if (energy < 500) {
+			if (energy < 1000) {
 				if(actionQueue.isEmpty())
 					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 			}
-			if (condition < 500) {
+			if (condition < 1000) {
 				if(actionQueue.isEmpty())
 					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
@@ -357,42 +355,46 @@ public abstract class AbstractAgent implements Serializable {
 
 			Game g = Game.getInstance();
 
-			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 100) {
+			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 500) {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
-						if(b.getResourceAmount(ResourceType.OIL) < 100)
+						if(b.getResourceAmount(ResourceType.OIL) < 500) {
+							energy += b.getResourceAmount(ResourceType.OIL);
+							b.agentRemoveCapacity(ResourceType.OIL, b.getResourceAmount(ResourceType.OIL));
 							return false;
-						else {
-							b.agentRemoveCapacity(ResourceType.OIL, 100);
-							oil += 100;
+						} else {
+							b.agentRemoveCapacity(ResourceType.OIL, 500);
+							oil += 500;
 							return true;
 						}
 					}
 				}
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY)
-					&& energy <= MAX_NEED - 100) {
+					&& energy <= MAX_NEED - 500) {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
-						if(b.getResourceAmount(ResourceType.ELECTRICITY) < 100) {
+						if(b.getResourceAmount(ResourceType.ELECTRICITY) < 500) {
 							energy += b.getResourceAmount(ResourceType.ELECTRICITY);
 							b.agentRemoveCapacity(ResourceType.ELECTRICITY, b.getResourceAmount(ResourceType.ELECTRICITY));
 							return false;
 						} else {
-							energy += 100;
-							b.agentRemoveCapacity(ResourceType.ELECTRICITY, 100);
+							energy += 500;
+							b.agentRemoveCapacity(ResourceType.ELECTRICITY, 500);
 							return true;
 						}
 					}
 				}
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION)
-					&& condition <= MAX_NEED - 100) {
+					&& condition <= MAX_NEED - 500) {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
-						if(b.getResourceAmount(ResourceType.IRON) < 100)
+						if(b.getResourceAmount(ResourceType.IRON) < 500) {
+							energy += b.getResourceAmount(ResourceType.IRON);
+							b.agentRemoveCapacity(ResourceType.IRON, b.getResourceAmount(ResourceType.IRON));
 							return false;
-						else {
-							b.agentRemoveCapacity(ResourceType.IRON, 100);
-							condition += 100;
+						} else {
+							b.agentRemoveCapacity(ResourceType.IRON, 500);
+							condition += 500;
 							return true;
 						}
 					}

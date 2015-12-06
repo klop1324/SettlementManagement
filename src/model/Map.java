@@ -92,6 +92,18 @@ public class Map extends Observable implements Serializable{
 		return yLength;
 	}
 	
+	/**
+	 * Checks a Point to see if that point on the map is blocked.
+	 * @param p
+	 * @return true if blocked, false if passable
+	 */
+	public boolean blocked(Point p) {
+		if(map[p.x][p.y] == 1 || map[p.x][p.y] == 3)
+			return true;
+		
+		return false;
+	}
+	
 	// for point objects because comparing with doubles can be... problematic
 	private class Node{
 		private int x, y;
