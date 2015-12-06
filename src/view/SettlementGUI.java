@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
@@ -40,7 +41,6 @@ import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
-import model.buildings.AbstractBuilding;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
