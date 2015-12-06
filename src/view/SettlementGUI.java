@@ -117,10 +117,10 @@ class SettlementGUI extends JFrame implements Observer {
 		game = Game.getInstance();
 		mapArea = new ViewController(game);
 		
+
 		setupGui();
 	
-		Font courier2 = new Font("Courier", Font.PLAIN, 6);
-		
+		Font courier2 = new Font("Courier", Font.PLAIN, 6);		
 		
 		helpPanel.add(helpButton);
 		helpPanel.setBounds(750, 542, 40, 25);
@@ -441,8 +441,9 @@ class SettlementGUI extends JFrame implements Observer {
 				System.out.println(selected);
 				selectAgent.removeAllItems();
 				selectAgent.addItem("select one");
-				selectAgent.addItem("create agent");
 				selectAgent.addItem("build building");
+				selectAgent.addItem("create agent");
+				selectAgent.addItem("create tool");
 			}
 		}
 	}
@@ -460,14 +461,17 @@ class SettlementGUI extends JFrame implements Observer {
 			if (selected.equals("select agent type"))
 				return;
 			else if (selected.equals("builder")) {
+				game.createAgent(BuilderAgent.class, userClick);
 				System.out.println(selected);
 				return;
 			}
 			else if (selected.equals("soldier")) {
+				game.createAgent(SoldierAgent.class, userClick);
 				System.out.println(selected);
 				return;
 			}
 			else if (selected.equals("worker")) {
+				game.createAgent(WorkerAgent.class, userClick);
 				System.out.println(selected);
 				return;
 			}
