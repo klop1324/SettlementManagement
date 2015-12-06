@@ -46,6 +46,7 @@ import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
 import model.agents.*;
+import model.tools.*;
 
 class SettlementGUI extends JFrame implements Observer {
 
@@ -95,7 +96,7 @@ class SettlementGUI extends JFrame implements Observer {
 
 	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
-	String[] agentOrBuilding = {"select one", "create agent", "build building"};
+	String[] agentOrBuilding = {"select one", "build building", "create agent", "create tool"};
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
 
@@ -401,6 +402,15 @@ class SettlementGUI extends JFrame implements Observer {
 				selectAgent.addItem("victory monument");
 				selectAgent.addItem("BACK TO MAIN");
 			}
+			else if (selected.equals("create tool")) {
+				System.out.println(selected);
+				selectAgent.removeAllItems();
+				selectAgent.addItem("armor");
+				selectAgent.addItem("pickaxe");
+				selectAgent.addItem("rocket");
+				selectAgent.addItem("welding gun");
+				selectAgent.addItem("BACK TO MAIN");
+			}
 			else if (selected.equals("BACK TO MAIN")) {
 				System.out.println(selected);
 				selectAgent.removeAllItems();
@@ -527,6 +537,30 @@ class SettlementGUI extends JFrame implements Observer {
 					else{
 						System.out.println("You dont have enough resources to build a(n)"+selected);
 					}
+					return;
+				}
+			}
+			else if (selected.equals("armor")) {
+				if (userClick != null){
+					System.out.println(selected);
+					return;
+				}
+			}
+			else if (selected.equals("pickaxe")) {
+				if (userClick != null){
+					System.out.println(selected);
+					return;
+				}
+			}
+			else if (selected.equals("rocket")) {
+				if (userClick != null){
+					System.out.println(selected);
+					return;
+				}
+			}
+			else if (selected.equals("welding gun")) {
+				if (userClick != null){
+					System.out.println(selected);
 					return;
 				}
 			}
