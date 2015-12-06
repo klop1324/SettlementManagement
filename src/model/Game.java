@@ -386,38 +386,10 @@ public class Game extends Observable implements Serializable {
 		for (int y = 0; y < GlobalSettings.MAP_SIZE_X; y++) {
 			for (int x = 0; x < GlobalSettings.MAP_SIZE_Y; x++) {
 
-				float xx = (float) x / generationArray.length * size; // Where
-																		// does
-																		// the
-																		// point
-																		// lie
-																		// in
-																		// the
-																		// noise
-																		// space
-																		// according
-																		// to
-																		// image
-																		// space.
-				float yy = (float) y / generationArray[0].length * size; // Where
-																			// does
-																			// the
-																			// point
-																			// lie
-																			// in
-																			// the
-																			// noise
-																			// space
-																			// according
-																			// to
-																			// image
-																			// space.
+				float xx = (float) x / generationArray.length * size; 
+				float yy = (float) y / generationArray[0].length * size; 
 
-				float n = (float) noise.noise(xx, yy, 1.7f); // Noise values
-																// from Perlin's
-																// noise.
-				// Since noise value returned is -1 to 1, we need it to be
-				// between 0 and Tile.values().length * total Spawn Rate
+				float n = (float) noise.noise(xx, yy, 1.7f); 
 				int generation = (int) (((n + 1) * (Tile.values().length - 1)));
 				if (generation >= (Tile.values().length)) {
 					generationArray[x][y] = -1;
@@ -494,7 +466,7 @@ public class Game extends Observable implements Serializable {
 	public void addBuildingInProcess(AbstractBuilding b) {
 		this.buildingsInProcess.add(b);
 	}
-	public boolean haveLOst(){
+	public boolean haveLost(){
 		return haveLost;
 	}
 
@@ -565,7 +537,6 @@ public class Game extends Observable implements Serializable {
 						agents.remove(i);
 				}
 			} else { // LOSE CONDITION
-				System.out.println("All of your agents are dead!");
 				game.haveLost = true;
 			}
 
