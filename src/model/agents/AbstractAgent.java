@@ -420,6 +420,9 @@ public abstract class AbstractAgent implements Serializable {
 					if (r.getLocation().x == position.x && r.getLocation().y == position.y)
 						collectingResource = r;
 				}
+				
+				if(collectingResource == null) // collectingResource has been depleted and removed already
+					return false;
 
 				if (collectingResource.getAmount() <= gatherRate) {
 					carriedResources += collectingResource.getAmount();
