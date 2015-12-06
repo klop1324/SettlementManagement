@@ -42,6 +42,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
+import model.GlobalSettings;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -112,12 +113,10 @@ class SettlementGUI extends JFrame implements Observer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+			
 		game = Game.getInstance();
 		mapArea = new ViewController(game);
-		
-
+	
 		setupGui();
 	
 		Font courier2 = new Font("Courier", Font.PLAIN, 6);		
@@ -198,6 +197,7 @@ class SettlementGUI extends JFrame implements Observer {
 		notifierPanel.setFocusable(false);
 		infoPanel.setFocusable(false);
 		
+		mapArea.setPreferredSize(new Dimension(GlobalSettings.MAP_SIZE_X*50, GlobalSettings.MAP_SIZE_Y*50));
 		JPanel temp = new JPanel();
 		temp.setBackground(Color.BLUE);
 		//JScrollPane cs = new JScrollPane(mapArea);
@@ -212,12 +212,16 @@ class SettlementGUI extends JFrame implements Observer {
 		horizontal = cs.getHorizontalScrollBar();
 		cs.setVerticalScrollBarPolicy(cs.VERTICAL_SCROLLBAR_ALWAYS);
 		cs.setHorizontalScrollBarPolicy(cs.HORIZONTAL_SCROLLBAR_ALWAYS);
-		/*InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		vertical.setUnitIncrement(10);
+		horizontal.setUnitIncrement(10);
+		vertical.setPreferredSize(new Dimension(0, 0));
+		horizontal.setPreferredSize(new Dimension(0, 0));
+		InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
 		imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
 		imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
-		imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");*/
+		imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
 		InputMap input = mapArea.getInputMap();
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.PGDN);
 		input.put(key, vertical.getActionForKeyStroke(KeyStroke.getKeyStroke("DOWN")));
@@ -489,7 +493,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("armory")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new Armory(userClick))){
+					if(game.canBuildBuilding(new Armory(userClick))){
 						game.createBuilding(new Armory(userClick));
 						System.out.println(selected);
 					}
@@ -501,7 +505,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("charging station")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new ChargingStation(userClick))){
+					if(game.canBuildBuilding(new ChargingStation(userClick))){
 						game.createBuilding(new ChargingStation(userClick));
 						System.out.println(selected);
 					}
@@ -513,7 +517,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("home depot")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new HomeDepot(userClick))){
+					if(game.canBuildBuilding(new HomeDepot(userClick))){
 						game.createBuilding(new HomeDepot(userClick));
 						System.out.println(selected);
 						System.out.println(game.getBuildingsInProcess());
@@ -526,7 +530,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new JunkYard(userClick))){
+					if(game.canBuildBuilding(new JunkYard(userClick))){
 						game.createBuilding(new JunkYard(userClick));
 						System.out.println(selected);
 					}
@@ -538,7 +542,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("oil tank")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new OilTank(userClick))){
+					if(game.canBuildBuilding(new OilTank(userClick))){
 						game.createBuilding(new OilTank(userClick));
 						System.out.println(selected);
 					}
@@ -550,7 +554,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("oil well")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new OilWell(userClick))){
+					if(game.canBuildBuilding(new OilWell(userClick))){
 						game.createBuilding(new OilWell(userClick));
 						System.out.println(selected);
 					}
@@ -562,7 +566,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("workshop")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new Workshop(userClick))){
+					if(game.canBuildBuilding(new Workshop(userClick))){
 						game.createBuilding(new Workshop(userClick));
 						System.out.println(selected);
 					}
@@ -574,7 +578,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("victory monument")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new VictoryMonument(userClick))){
+					if(game.canBuildBuilding(new VictoryMonument(userClick))){
 						game.createBuilding(new VictoryMonument(userClick));
 						System.out.println(selected);
 					}
@@ -633,7 +637,7 @@ class SettlementGUI extends JFrame implements Observer {
 					selectedEnemyID = m.getID();
 			}
 			
-			System.out.println(userClick);
+			//System.out.println(userClick);
 			
 		}
 
@@ -667,7 +671,7 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if (e.isActionKey())
+			/*if (e.isActionKey())
 				System.out.println("hello");
 			InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 			InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -698,7 +702,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (key == KeyEvent.VK_LEFT) {
 				imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
 				System.out.println("left");
-			}
+			}*/
 		}
 
 		@Override
