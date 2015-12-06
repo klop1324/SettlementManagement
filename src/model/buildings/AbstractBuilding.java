@@ -22,7 +22,7 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	//Build state stuff
 	protected int buildTime;
-	protected int buildCompletion = 0;
+	protected double buildCompletion = 0;
 	protected int version = 1;
 	protected boolean isBuilt = false;
 	protected HashMap<ResourceType, Integer> buildingCost;
@@ -39,6 +39,9 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	//type of building for image getting
 	protected BuildingType buildingType;
+	
+	protected boolean error = false;
+	protected String errorMessage;
 	
 	public AbstractBuilding(Point location, int startingCapacity, boolean isPassiveProvider,
 			double passiveRate, ResourceType passiveResource, int buildTime, double maintCost, BuildingType buildingType){
@@ -63,12 +66,12 @@ public abstract class AbstractBuilding implements Serializable{
 		return buildTime;
 	}
 
-	public void incrementCompletionAmount(int n){
-		buildCompletion+=n;
+	public void incrementCompletionAmount(double n){
+		buildCompletion += n;
 	}
-
+	
 	public boolean isCompleted(){
-		if (buildCompletion == 100){
+		if (buildCompletion >= 100) {
 			return true;
 		}
 		else {
@@ -76,7 +79,7 @@ public abstract class AbstractBuilding implements Serializable{
 		}
 	}
 
-	public int getCompletionAmount(){
+	public double getCompletionAmount(){
 		return buildCompletion;
 	}
 	
@@ -152,15 +155,33 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	public void removeResource(ResourceType resource, int amount){
 		if(!holdableResources.contains(resource)){
-			throw new RuntimeException("does not contain This Resource!");
+			error = true;
+			errorMessage = "Capacity is full! Please upgrade this building!";
 		}
-		else{
+		else {
 			int result = currentAmount.get(resource) - amount;
-			if(result > capacity) throw new RuntimeException("Cannot Add Resource! We would go over Capacity!");
-			currentAmount.replace(resource, result);
+			if(result > capacity) {
+				error = true;
+				errorMessage = "Capcity is full! Please upgrade this building!";
+			}
+			if (result < 0){
+				error = true;
+				errorMessage = "You don't have enough " +  resource + "!";
+				System.out.println("I was called!");
+			}
+			else {
+				currentAmount.replace(resource, result);
+			}
 		}
 	}
 	
+	public boolean hasError(){
+		return error;
+	}
+	
+	public void resetError(){
+		error = false;
+	}
 	public int getResourceAmount(ResourceType resource){
 		if(currentAmount.get(resource)== null)throw new RuntimeException("This Building does not hold this Resource!");
 		else{
@@ -171,7 +192,9 @@ public abstract class AbstractBuilding implements Serializable{
 	// Allows agents to remove amount of resources from building
 	public void agentRemoveCapacity(ResourceType resource, int amount) {
 		int newResourceAmount = currentAmount.get(resource) - amount;
-		if(newResourceAmount < 0)throw new RuntimeException("Cannot remove that many resources!");
+		if(newResourceAmount < 0){
+			throw new RuntimeException("Cannot remove that many resources!");
+		}
 		else{
 			currentAmount.replace(resource, newResourceAmount);
 		}
@@ -180,7 +203,9 @@ public abstract class AbstractBuilding implements Serializable{
 	// Allows agents to add their resource to the building
 	public void agentAddCapacity(ResourceType resource, int amount) {
 		int newResourceAmount = currentAmount.get(resource) + amount;
-		if(newResourceAmount < 0)throw new RuntimeException("Added too much resources!");
+		if(newResourceAmount < 0){
+			throw new RuntimeException("Added too much resources!");
+		}
 		else{
 			currentAmount.replace(resource, newResourceAmount);
 		}
@@ -207,6 +232,10 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	public HashMap<ResourceType, Integer> getCost() {
 		return buildingCost;
+	}
+	
+	public String getErrorMessage(){
+		return errorMessage;
 	}
 	
 	protected abstract void initCostHashMap();

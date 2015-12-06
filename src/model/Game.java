@@ -47,6 +47,8 @@ public class Game extends Observable implements Serializable {
 	private Point resourcePointClicked = null;
 
 	private boolean haveWon = false;
+	private String errorMessage;
+	private boolean error = false;
 
 	public static synchronized Game getInstance() {
 		if (game == null) {
@@ -118,6 +120,8 @@ public class Game extends Observable implements Serializable {
 				min = a.getAI().getActionQueue().size();
 			}
 		}
+		
+		if(agentToSend == null) return;
 
 		switch (resourceTypeClicked) {
 		case COAL:
@@ -286,16 +290,13 @@ public class Game extends Observable implements Serializable {
 	public void createBuilding(AbstractBuilding b){
 		// TODO Refactor once functionality is figured out
 		Point p = b.getLocation();
-		boolean flag = false;
-		for (AbstractBuilding tb : buildings) {
+		
+		boolean flag = true;
+		for (AbstractBuilding tb : buildings){
 			Set<ResourceType> resources = b.getCost().keySet();
-			for (ResourceType trt : resources) {
-				if (tb.getResources().contains(trt)) {
-					flag = true;
-				}
-				if (!flag) {
+			for(ResourceType trt: resources){
+				if(!tb.getResources().contains(trt)){
 					flag = false;
-					break;
 				}
 			}
 			if (flag) {
@@ -393,14 +394,11 @@ public class Game extends Observable implements Serializable {
 		}
 
 	}
-
-	// recursive, going through the blob formed by -1's in the array, adding
-	// them to the mapResources
-	private int[][] generationHelper(int array[][], int x, int y, ResourceType resource) {
-		if (array[x][y] == -1) {
-			if (Tile.values()[this.map.get(x, y)].isPassible()) {
-				mapResources.add(new Resource((int) (Math.random() + 1) * 1000 * GlobalSettings.MAP_RICHNESS,
-						new Point(x, y), resource));
+	// recursive, going through the blob formed by -1's in the array, adding them to the mapResources
+	private int[][] generationHelper(int array[][], int x, int y, ResourceType resource){
+		if(array[x][y] == -1){
+			if(Tile.values()[this.map.get(x, y)].isPassible()){
+				mapResources.add(new Resource(((int) ((Math.random()+5.0) * 1000.0 * GlobalSettings.MAP_RICHNESS)), new Point(x,y), resource));
 			}
 			// base case
 			array[x][y] = 0;
@@ -431,7 +429,7 @@ public class Game extends Observable implements Serializable {
 	}
 
 	public void addBuildingInProcess(AbstractBuilding b) {
-
+		buildingsInProcess.add(b);
 	}
 
 	public void addAgents(AbstractAgent agent) {
@@ -474,12 +472,36 @@ public class Game extends Observable implements Serializable {
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
 	}
-
+	
+	public void killEnemy(int enemyID) {
+		for(int i = 0; i < enemies.size(); i++) {
+			if(enemies.get(i).getID() == enemyID)
+				enemies.remove(i);
+		}
+	}
+	
+	private void errorMessages(){
+		for (AbstractBuilding b: buildings){
+			if (b.hasError()){
+				errorMessage = b.getErrorMessage();
+				error = true;
+			}
+		}
+	}
+	
+	public String getErrorMessage(){
+		return errorMessage;
+	}
+	public boolean hasError(){
+		return error;
+	}
 	private class TickActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
+			
+			errorMessages();
+			
 			// Updates agents
 			if (!agents.isEmpty()) {
 				for (int i = 0; i < agents.size(); i++) {
@@ -491,6 +513,7 @@ public class Game extends Observable implements Serializable {
 				}
 			} else { // LOSE CONDITION
 				System.out.println("All of your agents are dead!");
+				System.exit(0);
 			}
 
 			// Updates enemies
@@ -546,6 +569,10 @@ public class Game extends Observable implements Serializable {
 						}
 					}
 				}
+			}
+			if(Math.random()<0.001){
+				Point p = new Point((int)(map.getXLength()*Math.random()), (int) (map.getYLength() *Math.random()));
+				if(Tile.values()[map.get(p.x, p.y)].isPassible())enemies.add(new Enemy(p));
 			}
 
 			setChanged();

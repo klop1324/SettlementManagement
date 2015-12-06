@@ -1,15 +1,13 @@
 package model.agents;
 
 import java.awt.Point;
-
-import model.tools.ToolType;
+import model.agents.AbstractAgent.AgentLogic;
 
 public class WorkerAgent extends AbstractAgent {
 	public WorkerAgent(Point position) {
 		super(position);
-		filename = "???";
+		AI = new AgentLogic(WorkerAgent.class);
 		MAX_RESOURCES = 1000;
-		tool = ToolType.WELDINGGUN;
 	}
 
 	@Override

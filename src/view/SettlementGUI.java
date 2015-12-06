@@ -46,6 +46,7 @@ import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
 import model.agents.*;
+import model.tools.*;
 
 class SettlementGUI extends JFrame implements Observer {
 
@@ -95,7 +96,7 @@ class SettlementGUI extends JFrame implements Observer {
 
 	//private String selected = "select agent type";
 	private boolean duringTutorial = true;
-	String[] agentOrBuilding = {"select one", "create agent", "build building"};
+	String[] agentOrBuilding = {"select one", "build building", "create agent", "create tool"};
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
 
@@ -123,7 +124,7 @@ class SettlementGUI extends JFrame implements Observer {
 		int width = screensize.width / 2 - this.getSize().width / 2;
 		int height = screensize.height / 2 - this.getSize().height / 2;
 		this.setLocation(width, height);
-		
+				
 		Font courier = new Font("Courier", Font.PLAIN, 12);
 		Font courier2 = new Font("Courier", Font.PLAIN, 6);
 		
@@ -305,9 +306,9 @@ class SettlementGUI extends JFrame implements Observer {
 		}
 	}
 	
-	public void dialogBoxs(){
-		if (game.get){
-			JOptionPane.showMessageDialog(this, "You don't have enough resources to build this!");
+	public void dialogBoxes(){
+		if (game.hasError()){
+			JOptionPane.showMessageDialog(this, game.getErrorMessage());
 		}
 	}
 
@@ -407,6 +408,15 @@ class SettlementGUI extends JFrame implements Observer {
 				selectAgent.addItem("victory monument");
 				selectAgent.addItem("BACK TO MAIN");
 			}
+			else if (selected.equals("create tool")) {
+				System.out.println(selected);
+				selectAgent.removeAllItems();
+				selectAgent.addItem("armor");
+				selectAgent.addItem("pickaxe");
+				selectAgent.addItem("rocket");
+				selectAgent.addItem("welding gun");
+				selectAgent.addItem("BACK TO MAIN");
+			}
 			else if (selected.equals("BACK TO MAIN")) {
 				System.out.println(selected);
 				selectAgent.removeAllItems();
@@ -424,8 +434,9 @@ class SettlementGUI extends JFrame implements Observer {
 			String selected = "" + selectAgent.getSelectedItem();
 			selectAgent.removeAllItems();
 			selectAgent.addItem("select one");
-			selectAgent.addItem("create agent");
 			selectAgent.addItem("build building");
+			selectAgent.addItem("create agent");
+			selectAgent.addItem("create tool");
 			if (selected.equals("select agent type"))
 				return;
 			else if (selected.equals("builder")) {
@@ -469,6 +480,7 @@ class SettlementGUI extends JFrame implements Observer {
 					if(game.canBuildBuilding(userClick, new HomeDepot(userClick))){
 						game.createBuilding(new HomeDepot(userClick));
 						System.out.println(selected);
+						System.out.println(game.getBuildingsInProcess());
 					}
 					else{
 						System.out.println("You dont have enough resources to build a(n)"+selected);
@@ -536,6 +548,30 @@ class SettlementGUI extends JFrame implements Observer {
 					return;
 				}
 			}
+			else if (selected.equals("armor")) {
+				if (userClick != null){
+					System.out.println(selected);
+					return;
+				}
+			}
+			else if (selected.equals("pickaxe")) {
+				if (userClick != null){
+					System.out.println(selected);
+					return;
+				}
+			}
+			else if (selected.equals("rocket")) {
+				if (userClick != null){
+					System.out.println(selected);
+					return;
+				}
+			}
+			else if (selected.equals("welding gun")) {
+				if (userClick != null){
+					System.out.println(selected);
+					return;
+				}
+			}
 		}
 	}
 	
@@ -546,6 +582,8 @@ class SettlementGUI extends JFrame implements Observer {
 			clickX = (int) Math.floor(e.getPoint().x/50);
 			clickY = (int) Math.floor(e.getPoint().y/50);
 			userClick = new Point(clickX, clickY);
+			individual.update(userClick);
+
 			
 			individual.update(userClick);
 			
@@ -706,7 +744,7 @@ class SettlementGUI extends JFrame implements Observer {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
 		individual.update(userClick);
-
+		dialogBoxes();
 		//SUPER HACKY CODE
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
 		labels.add(electricityAmount);

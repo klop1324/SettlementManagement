@@ -16,8 +16,8 @@ public abstract class AbstractAgent implements Serializable {
 			moveDelay, numberOfTasks;
 	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	AgentLogic AI;
-	String filename;
 	ResourceType carriedResourceType;
+	double buildRate;
 
 	/**
 	 * Creates a new AbstractAgent at a given position.
@@ -31,12 +31,12 @@ public abstract class AbstractAgent implements Serializable {
 		oil = 10000;
 		MAX_NEED = 10000;
 		carriedResources = 0;
-		AI = new AgentLogic();
 		destination = null;
 		this.position = position;
 		gatherRate = 10;
 		damageFromEnemies = 500;
 		moveDelay = 10;
+		buildRate = 0.1;
 	}
 	
 	public AgentLogic getAI() {
@@ -52,14 +52,6 @@ public abstract class AbstractAgent implements Serializable {
 		return condition;
 	}
 
-	public void setCondition(int n) {
-		if ((n + condition) > 2000) {
-			condition = 2000;
-		} else {
-			condition += n;
-		}
-	}
-
 	/**
 	 * Adds a tool. This actually just changes certain fixed instance variables.
 	 * 
@@ -72,7 +64,7 @@ public abstract class AbstractAgent implements Serializable {
 		case PICKAXE:
 			gatherRate = 50;
 		case WELDINGGUN:
-			// TODO blah blah build rate
+			buildRate = 0.5;
 		case ROCKETS:
 			moveDelay = 5;
 		}
@@ -224,7 +216,6 @@ public abstract class AbstractAgent implements Serializable {
 	}
 
 	private void checkClosestBuildings() {
-		// TODO --- SINNING CODE ZONE ---
 		Game g = Game.getInstance();
 		double chargeDistance, depotDistance, oilDistance, junkDistance;
 		chargeDistance = 999999999;
@@ -257,7 +248,7 @@ public abstract class AbstractAgent implements Serializable {
 
 	abstract void decrementOil();
 
-	public class AgentLogic implements Serializable{
+	public class AgentLogic implements Serializable {
 
 		/*
 		 * Agent should be doing things in this priority: 1. Addressing
@@ -280,9 +271,11 @@ public abstract class AbstractAgent implements Serializable {
 		 */
 
 		private ArrayList<AgentCommandWithDestination> actionQueue;
+		private Class agentClass;
 
-		public AgentLogic() {
+		public AgentLogic(Class agentClass) {
 			actionQueue = new ArrayList<AgentCommandWithDestination>();
+			this.agentClass = BuilderAgent.class;
 		}
 
 		public void recieveCommand(AgentCommandWithDestination c) {
@@ -294,7 +287,9 @@ public abstract class AbstractAgent implements Serializable {
 		}
 
 		public void assessCurrentDestination() {
-			ArrayList<Enemy> enemyList = Game.getInstance().getEnemies();
+			Game g = Game.getInstance();
+			ArrayList<Enemy> enemyList = g.getEnemies();
+			ArrayList<AbstractBuilding> incompleteBuildingList = g.getBuildingsInProcess();
 			
 			// Need low
 			if (oil < 500) {
@@ -315,6 +310,12 @@ public abstract class AbstractAgent implements Serializable {
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 			}
+			
+			// Builders need to check for buildings to build
+			if(agentClass == BuilderAgent.class && actionQueue.isEmpty() && !incompleteBuildingList.isEmpty()) {
+				actionQueue.add(new AgentCommandWithDestination(AgentCommand.BUILD,
+						incompleteBuildingList.get(0).getLocation()));
+			}
 
 			// Sets destination
 			if (!actionQueue.isEmpty()) {
@@ -323,8 +324,8 @@ public abstract class AbstractAgent implements Serializable {
 						if(e.getID() == actionQueue.get(0).getEnemyID())
 							setDestination(e.getPosition());
 					}
-				}
-				setDestination(actionQueue.get(0).getCommandDestination());
+				} else
+					setDestination(actionQueue.get(0).getCommandDestination());
 			}
 			else
 				setDestination(null);
@@ -388,11 +389,22 @@ public abstract class AbstractAgent implements Serializable {
 					}
 				}
 			}
+			
+			if(actionQueue.get(0).getAgentCommand().equals(AgentCommand.BUILD)) {
+				for(AbstractBuilding b : g.getBuildingsInProcess()) {
+					if(b.getLocation().equals(position)) {
+						if(b.isCompleted())
+							return false;
+						else
+							b.incrementCompletionAmount(buildRate);
+					}
+				}
+			}
 
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
-				for (Enemy e : g.getEnemies()) {
-					if (e.getPosition().equals(position)) {
-						e.kill();
+				for (int i = 0; i < g.getEnemies().size(); i++) {
+					if (g.getEnemies().get(0).getPosition().equals(position)) {
+						g.killEnemy(g.getEnemies().get(0).getID());
 						condition -= damageFromEnemies;
 					}
 				}
