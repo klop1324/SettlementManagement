@@ -120,10 +120,11 @@ public abstract class AbstractBuilding implements Serializable{
 			currentAmount.replace(resource, currentAmount.get(resource) + amount);
 		}
 	}
-	public void addResource(ResourceType resource, double amount){
+	
+	public void passiveAddResource(ResourceType resource, double amount){
 		grow += amount;
 		System.out.println(grow);
-		if (grow == 1.0000000000000007){
+		if (Math.floor(grow) == 1){
 			remaining += grow;
 			int temp = (int)remaining;
 			remaining -= temp;
@@ -134,6 +135,17 @@ public abstract class AbstractBuilding implements Serializable{
 			else{
 				currentAmount.replace(resource, currentAmount.get(resource) + temp);
 			}
+		}
+	}
+	
+	public void addResource(ResourceType resource, double amount){
+		int temp = (int)remaining;
+		remaining -= temp;
+		if(!holdableResources.contains(resource)){
+			throw new RuntimeException("does not contain This Resource!");
+		}
+		else{
+			currentAmount.replace(resource, currentAmount.get(resource) + temp);
 		}
 	}
 	

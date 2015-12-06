@@ -491,7 +491,7 @@ public class Game extends Observable implements Serializable {
 			for (AbstractBuilding b: buildings){
 				if (b.isPassiveProvider()){
 					System.out.println(b.getResources());
-					b.addResource(b.getPassiveResource(), b.getPassiveRate());
+					b.passiveAddResource(b.getPassiveResource(), b.getPassiveRate());
 					System.out.println("I have passively generated in " + b.getName() + "!");
 				}
 			}
