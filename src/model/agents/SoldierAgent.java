@@ -2,11 +2,13 @@ package model.agents;
 
 import java.awt.Point;
 
+import model.agents.AbstractAgent.AgentLogic;
+
 public class SoldierAgent extends AbstractAgent{
 	private int attackPoints = 5;
 	public SoldierAgent(Point position) {
 		super(position);
-		filename = "???";
+		AI = new AgentLogic(SoldierAgent.class);
 		MAX_RESOURCES = 0;
 	}
 	
