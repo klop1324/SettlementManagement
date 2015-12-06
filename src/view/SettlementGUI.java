@@ -251,7 +251,7 @@ class SettlementGUI extends JFrame implements Observer {
 	}
 	
 	private void setupGui(){
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setResizable(false);
 		this.setTitle("Game Name Goes Here");
 		this.setMinimumSize(new Dimension(800, 600));
@@ -367,10 +367,12 @@ class SettlementGUI extends JFrame implements Observer {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
+					System.exit(0);
+				}
+				else if(userSelection == JOptionPane.NO_OPTION){
+					System.exit(0);
 				}
 				
-				System.exit(0);
 			}});
 		collectButton.addActionListener(new CollectButtonListener());
 		attackButton.addActionListener(new AttackButtonListener());
@@ -867,6 +869,14 @@ class SettlementGUI extends JFrame implements Observer {
 				notificationArea.setText(resourceNotification);
 				notificationArea.repaint();
 			}
+		}
+		if(game.haveWonTheGame()){
+			int userSelection = JOptionPane.showConfirmDialog(currentFrame,"You have won the game!", null, JOptionPane.OK_OPTION);
+			System.exit(0);
+		}
+		if(game.haveLost()){
+			int userSelection = JOptionPane.showConfirmDialog(currentFrame,"You have lost the game!", null, JOptionPane.INFORMATION_MESSAGE);
+			System.exit(0);
 		}
 		repaint();
 	}
