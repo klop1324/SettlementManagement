@@ -42,6 +42,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
+import model.GlobalSettings;
 import model.buildings.*;
 import model.resources.Resource;
 import model.resources.ResourceType;
@@ -196,6 +197,7 @@ class SettlementGUI extends JFrame implements Observer {
 		notifierPanel.setFocusable(false);
 		infoPanel.setFocusable(false);
 		
+		mapArea.setPreferredSize(new Dimension(GlobalSettings.MAP_SIZE_X*50, GlobalSettings.MAP_SIZE_Y*50));
 		JPanel temp = new JPanel();
 		temp.setBackground(Color.BLUE);
 		//JScrollPane cs = new JScrollPane(mapArea);
