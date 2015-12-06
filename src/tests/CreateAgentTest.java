@@ -18,8 +18,7 @@ public class CreateAgentTest {
 	public void createAgent(){
 		Game game = new Game();
 		game.getBuildings().get(2).addResource(ResourceType.ELECTRICITY, 1);
-		game.getBuildings().get(1).addResource(ResourceType.IRON, 10000);
-		System.out.println(game.getBuildings().get(1).getCurrentAmount());
+		game.getBuildings().get(1).addResource(ResourceType.IRON, 1);
 		assertFalse(game.canCreateAgent(new BuilderAgent(null)));
 	}
 }

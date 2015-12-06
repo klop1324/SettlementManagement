@@ -44,7 +44,7 @@ public class ViewController extends JPanel implements Observer {
 		this.game = game;
 		try {			
 			agent1 = ImageIO.read(new File("./ImageSet/defender.png"));
-			agent2 = ImageIO.read(new File("./ImageSet/distractor.png"));
+			agent2 = ImageIO.read(new File("./ImageSet/distractor3.png"));
 			agent3 = ImageIO.read(new File("./ImageSet/destroyer.png"));
 			enemy = ImageIO.read(new File("./ImageSet/Agent1.png"));
 			cursor = ImageIO.read(new File("./ImageSet/cursor.png"));

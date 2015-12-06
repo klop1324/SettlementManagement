@@ -2,6 +2,7 @@ package model.agents;
 
 import java.awt.Point;
 import model.agents.AbstractAgent.AgentLogic;
+import model.resources.ResourceType;
 
 public class WorkerAgent extends AbstractAgent {
 	public WorkerAgent(Point position) {
@@ -27,7 +28,9 @@ public class WorkerAgent extends AbstractAgent {
 
 	@Override
 	public void initCostHashMap() {
-		// TODO Auto-generated method stub
+		agentCost.put(ResourceType.ELECTRICITY, 4000);
+		agentCost.put(ResourceType.IRON, 4000);
+		resourceSet = agentCost.keySet();
 		
 	}
 
