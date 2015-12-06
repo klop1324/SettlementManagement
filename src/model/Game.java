@@ -458,6 +458,7 @@ public class Game extends Observable implements Serializable {
 				}
 			} else { // LOSE CONDITION
 				System.out.println("All of your agents are dead!");
+				System.exit(0);
 			}
 
 			// Updates enemies
