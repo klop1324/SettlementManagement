@@ -554,24 +554,28 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("armor")) {
 				if (userClick != null){
+					game.createTool(ToolType.ARMOR);
 					System.out.println(selected);
 					return;
 				}
 			}
 			else if (selected.equals("pickaxe")) {
 				if (userClick != null){
+					game.createTool(ToolType.PICKAXE);
 					System.out.println(selected);
 					return;
 				}
 			}
 			else if (selected.equals("rocket")) {
 				if (userClick != null){
+					game.createTool(ToolType.ROCKETS);
 					System.out.println(selected);
 					return;
 				}
 			}
 			else if (selected.equals("welding gun")) {
 				if (userClick != null){
+					game.createTool(ToolType.WELDINGGUN);
 					System.out.println(selected);
 					return;
 				}
