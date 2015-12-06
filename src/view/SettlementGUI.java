@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -57,7 +58,6 @@ class SettlementGUI extends JFrame implements Observer {
 	private Game game;
 	private TextArea notificationArea = new TextArea();
 	private JButton collectButton = new JButton("Collect");
-	private JButton repairButton = new JButton("Repair");
 	private JButton attackButton = new JButton("Attack");
 	private JButton nextButton = new JButton(">>");
 	private JButton infoButton = new JButton();
@@ -120,7 +120,7 @@ class SettlementGUI extends JFrame implements Observer {
 	
 		setupGui();
 	
-		Font courier2 = new Font("Courier", Font.PLAIN, 6);		
+		Font courier2 = new Font("Courier", Font.PLAIN, 8);		
 		
 		helpPanel.add(helpButton);
 		helpPanel.setBounds(750, 542, 40, 25);
@@ -134,11 +134,9 @@ class SettlementGUI extends JFrame implements Observer {
 		createPanel.add(createButton);
 		dropPanel.add(selectAgent);
 		
-		collectButton.setPreferredSize(new Dimension(65, 15));
+		collectButton.setPreferredSize(new Dimension(70, 16));
 		collectButton.setFont(courier2);
-		repairButton.setPreferredSize(new Dimension(60, 15));
-		repairButton.setFont(courier2);
-		attackButton.setPreferredSize(new Dimension(60, 15));
+		attackButton.setPreferredSize(new Dimension(70, 16));
 		attackButton.setFont(courier2);
 
 		TitledBorder infoBorder = new TitledBorder("Information");
@@ -152,32 +150,37 @@ class SettlementGUI extends JFrame implements Observer {
 		collectPanel.setOpaque(true);
 		collectPanel.setBackground(Color.BLACK);
 		collectPanel.add(collectButton);
-		collectPanel.add(repairButton);
 		collectPanel.add(attackButton);
 		infoPanel.add(collectPanel);
 		infoPanel.add(createPanel);
 		infoPanel.add(dropPanel);
 		JPanel panel1 = new JPanel();
+		panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panel1.setBackground(Color.BLACK);
 		panel1.add(electricityLabel);
 		panel1.add(electricityAmount);
 		JPanel panel2 = new JPanel();
+		panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panel2.setBackground(Color.BLACK);
 		panel2.add(oilLabel);
 		panel2.add(oilAmount);
 		JPanel panel3 = new JPanel();
+		panel3.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panel3.setBackground(Color.BLACK);
 		panel3.add(coalLabel);
 		panel3.add(coalAmount);
 		JPanel panel4 = new JPanel();
+		panel4.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panel4.setBackground(Color.BLACK);
 		panel4.add(copperLabel);
 		panel4.add(copperAmount);
 		JPanel panel5 = new JPanel();
+		panel5.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panel5.setBackground(Color.BLACK);
 		panel5.add(ironLabel);
 		panel5.add(ironAmount);
 		JPanel panel6 = new JPanel();
+		panel6.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panel6.setBackground(Color.BLACK);
 		panel6.add(goldLabel);
 		panel6.add(goldAmount);
@@ -199,16 +202,18 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.setFocusable(false);
 		
 		mapArea.setPreferredSize(new Dimension(GlobalSettings.MAP_SIZE_X*50, GlobalSettings.MAP_SIZE_Y*50));
-		JPanel temp = new JPanel();
-		temp.setBackground(Color.BLUE);
-		//JScrollPane cs = new JScrollPane(mapArea);
 		cs = new JScrollPane();
 		cs.setViewportView(mapArea);
+		Point view = new Point();
+		for (AbstractBuilding b: game.getBuildings()){
+			if (b.getType().equals(BuildingType.HOMEDEPOT))
+				view = b.getLocation();
+		}
+		cs.getViewport().setViewPosition(view);
 		mapArea.setFocusable(true);
 		this.getContentPane().add(cs);
 		
 		cs.setBounds(0, 0, 795, 572);
-		temp.setBounds(cs.getX(), cs.getY(), 2000, 2000);
 		vertical = cs.getVerticalScrollBar();
 		horizontal = cs.getHorizontalScrollBar();
 		cs.setVerticalScrollBarPolicy(cs.VERTICAL_SCROLLBAR_ALWAYS);
@@ -363,7 +368,6 @@ class SettlementGUI extends JFrame implements Observer {
 				System.exit(0);
 			}});
 		collectButton.addActionListener(new CollectButtonListener());
-		repairButton.addActionListener(new RepairButtonListener());
 		attackButton.addActionListener(new AttackButtonListener());
 		nextButton.addActionListener(new NextButtonListener());
 		infoButton.addActionListener(new InfoButtonListener());
@@ -470,9 +474,12 @@ class SettlementGUI extends JFrame implements Observer {
 				return;
 			else if (selected.equals("builder")) {
 				if (userClick != null){
-					game.createAgent(BuilderAgent.class, userClick);
-					System.out.println(selected);
-					return;
+					JOptionPane builderBox = new JOptionPane();
+					builderBox.showMessageDialog(infoPanel, "This robot takes:\n");
+					builderBox.setVisible(true);
+						game.createAgent(BuilderAgent.class, userClick);
+						System.out.println(selected);
+						return;
 				}
 			}
 			else if (selected.equals("soldier")) {
@@ -751,16 +758,6 @@ class SettlementGUI extends JFrame implements Observer {
 				else {
 					//notificationArea.append("Please choose a resource");
 				}
-			}
-		}
-	}
-	
-	private class RepairButtonListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			for(AbstractBuilding b : game.getInstance().getBuildingsInProcess()){
-				System.out.println("Building Type: "+ b.getType() + "Building Point: " + b.getLocation());
 			}
 		}
 	}
