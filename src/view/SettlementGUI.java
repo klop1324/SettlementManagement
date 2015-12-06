@@ -489,7 +489,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("armory")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new Armory(userClick))){
+					if(game.canBuildBuilding(new Armory(userClick))){
 						game.createBuilding(new Armory(userClick));
 						System.out.println(selected);
 					}
@@ -501,7 +501,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("charging station")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new ChargingStation(userClick))){
+					if(game.canBuildBuilding(new ChargingStation(userClick))){
 						game.createBuilding(new ChargingStation(userClick));
 						System.out.println(selected);
 					}
@@ -513,7 +513,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("home depot")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new HomeDepot(userClick))){
+					if(game.canBuildBuilding(new HomeDepot(userClick))){
 						game.createBuilding(new HomeDepot(userClick));
 						System.out.println(selected);
 						System.out.println(game.getBuildingsInProcess());
@@ -526,7 +526,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new JunkYard(userClick))){
+					if(game.canBuildBuilding(new JunkYard(userClick))){
 						game.createBuilding(new JunkYard(userClick));
 						System.out.println(selected);
 					}
@@ -538,7 +538,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("oil tank")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new OilTank(userClick))){
+					if(game.canBuildBuilding(new OilTank(userClick))){
 						game.createBuilding(new OilTank(userClick));
 						System.out.println(selected);
 					}
@@ -550,7 +550,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("oil well")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new OilWell(userClick))){
+					if(game.canBuildBuilding(new OilWell(userClick))){
 						game.createBuilding(new OilWell(userClick));
 						System.out.println(selected);
 					}
@@ -562,7 +562,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("workshop")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new Workshop(userClick))){
+					if(game.canBuildBuilding(new Workshop(userClick))){
 						game.createBuilding(new Workshop(userClick));
 						System.out.println(selected);
 					}
@@ -574,7 +574,7 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 			else if (selected.equals("victory monument")) {
 				if (userClick != null){
-					if(game.canBuildBuilding(userClick, new VictoryMonument(userClick))){
+					if(game.canBuildBuilding(new VictoryMonument(userClick))){
 						game.createBuilding(new VictoryMonument(userClick));
 						System.out.println(selected);
 					}
