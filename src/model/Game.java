@@ -157,6 +157,8 @@ public class Game extends Observable implements Serializable {
 				min = a.getAI().getActionQueue().size();
 			}
 		}
+		
+		if(agentToSend == null) return; // ERROR ERROR ERROR
 
 		switch (resourceTypeClicked) {
 		case COAL:
@@ -181,6 +183,15 @@ public class Game extends Observable implements Serializable {
 		default:
 			break;
 		}
+	}
+	
+	public void createAgent(Class agentClass, Point position) {
+		if(agentClass == WorkerAgent.class)
+			agents.add(new WorkerAgent(position));
+		if(agentClass == SoldierAgent.class)
+			agents.add(new SoldierAgent(position));
+		if(agentClass == BuilderAgent.class)
+			agents.add(new BuilderAgent(position));
 	}
 
 	private Resource getResourceClicked(Point resourcePoint) {
@@ -483,8 +494,16 @@ public class Game extends Observable implements Serializable {
 		timer = new Timer(50, new TickActionListener());
 		timer.start();
 	}
+
 	public void stopGame(){
 		if(timer!=null)timer.stop();
+	}
+	
+	public void killEnemy(int enemyID) {
+		for(int i = 0; i < enemies.size(); i++) {
+			if(enemies.get(i).getID() == enemyID)
+				enemies.remove(i);
+		}
 	}
 
 	private class TickActionListener implements ActionListener {
@@ -512,14 +531,6 @@ public class Game extends Observable implements Serializable {
 					e.tic();
 			}
 
-			if (!buildingsInProcess.isEmpty()) {
-				for (AbstractAgent ba : agents) {
-					if (ba.getClass().equals(BuilderAgent.class)) {
-						ba.setDestination(buildingsInProcess.get(0).getLocation());
-					}
-				}
-			}
-
 			// removal of resources // causes sprite to stop halfway
 			for (int i = 0; i < mapResources.size(); i++) {
 				if (!mapResources.get(i).hasResources()) {
@@ -539,10 +550,10 @@ public class Game extends Observable implements Serializable {
 			// Checks if buildings are completed and adds the completed ones to
 			// the buildings list.
 			if (!buildingsInProcess.isEmpty()) {
-				for (AbstractBuilding b : buildingsInProcess) {
-					if (b.isCompleted()) {
-						buildings.add(b);
-						buildingsInProcess.remove(b);
+				for (int i = 0; i < buildingsInProcess.size(); i++) {
+					if (buildingsInProcess.get(i).isCompleted()) {
+						buildings.add(buildingsInProcess.get(i));
+						buildingsInProcess.remove(i);
 					}
 				}
 			}

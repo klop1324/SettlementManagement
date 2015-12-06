@@ -2,15 +2,18 @@ package model.agents;
 
 import java.awt.Point;
 
+import model.agents.AbstractAgent.AgentLogic;
 import model.buildings.*;
 
 public class BuilderAgent extends AbstractAgent {
 	private int buildAmount = 3;
+	
 	public BuilderAgent(Point position) {
 		super(position);
-		filename = "???";
+		AI = new AgentLogic(BuilderAgent.class);
 		MAX_RESOURCES = 0;
 	}
+	
 	public boolean hasWeldingGun(){
 		return false;
 	}

@@ -22,7 +22,7 @@ public abstract class AbstractBuilding implements Serializable{
 	
 	//Build state stuff
 	protected int buildTime;
-	protected int buildCompletion = 0;
+	protected double buildCompletion = 0;
 	protected int version = 1;
 	protected boolean isBuilt = false;
 	protected HashMap<ResourceType, Integer> buildingCost;
@@ -63,12 +63,12 @@ public abstract class AbstractBuilding implements Serializable{
 		return buildTime;
 	}
 
-	public void incrementCompletionAmount(int n){
-		buildCompletion+=n;
+	public void incrementCompletionAmount(double n){
+		buildCompletion += n;
 	}
-
+	
 	public boolean isCompleted(){
-		if (buildCompletion == 100){
+		if (buildCompletion >= 100) {
 			return true;
 		}
 		else {
@@ -76,7 +76,7 @@ public abstract class AbstractBuilding implements Serializable{
 		}
 	}
 
-	public int getCompletionAmount(){
+	public double getCompletionAmount(){
 		return buildCompletion;
 	}
 	
@@ -179,10 +179,7 @@ public abstract class AbstractBuilding implements Serializable{
 	// Allows agents to add their resource to the building
 	public void agentAddCapacity(ResourceType resource, int amount) {
 		int newResourceAmount = currentAmount.get(resource) + amount;
-		if(newResourceAmount < 0)throw new RuntimeException("Added too much resources!");
-		else{
-			currentAmount.replace(resource, newResourceAmount);
-		}
+		currentAmount.replace(resource, newResourceAmount);
 	}
 
 	public boolean canInsert(ResourceType resource, double amount){
