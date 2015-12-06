@@ -365,6 +365,7 @@ class SettlementGUI extends JFrame implements Observer {
 				selectAgent.addItem("oil tank");
 				selectAgent.addItem("oil well");
 				selectAgent.addItem("workshop");
+				selectAgent.addItem("victory monument");
 				selectAgent.addItem("BACK TO MAIN");
 			}
 			else if (selected.equals("BACK TO MAIN")) {
@@ -476,6 +477,18 @@ class SettlementGUI extends JFrame implements Observer {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new Workshop(userClick))){
 						game.createBuilding(userClick, new Workshop(userClick));
+						System.out.println(selected);
+					}
+					else{
+						System.out.println("You dont have enough resources to build a(n)"+selected);
+					}
+					return;
+				}
+			}
+			else if (selected.equals("victory monument")) {
+				if (userClick != null){
+					if(game.canBuildBuilding(userClick, new VictoryMonument(userClick))){
+						game.createBuilding(userClick, new VictoryMonument(userClick));
 						System.out.println(selected);
 					}
 					else{
