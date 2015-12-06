@@ -70,7 +70,7 @@ public class ViewController extends JPanel implements Observer {
 		Tile tile[] = Tile.values();
 		for (int i = 0; i < map.getXLength(); i++) {
 			for (int j = 0; j < map.getYLength(); j++) {
-				g2.drawImage(tile[map.get(i, j)].getImage(), i*50, j*50, null);
+				g2.drawImage(tile[map.get(i, j)].getImage(), i*Tile.getTileSize(), j*Tile.getTileSize(), null);
 			}
 		}
 		
