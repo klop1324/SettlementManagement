@@ -89,6 +89,8 @@ class SettlementGUI extends JFrame implements Observer {
 	private int selectedEnemyID;
 	private int clickX;
 	private int clickY;
+	//private int viewX;
+	//private int viewY;
 	private JScrollBar vertical = new JScrollBar();
 	private JScrollBar horizontal = new JScrollBar();
 	private Point userClick;
@@ -203,12 +205,15 @@ class SettlementGUI extends JFrame implements Observer {
 		mapArea.setPreferredSize(new Dimension(GlobalSettings.MAP_SIZE_X*50, GlobalSettings.MAP_SIZE_Y*50));
 		cs = new JScrollPane();
 		cs.setViewportView(mapArea);
-		Point view = new Point();
+		int viewX;
+		int viewY;
 		for (AbstractBuilding b: game.getBuildings()){
-			if (b.getType().equals(BuildingType.HOMEDEPOT))
-				view = b.getLocation();
+			if (b.getType().equals(BuildingType.HOMEDEPOT)) {
+				viewX = b.getLocation().x*50-350;
+				viewY = b.getLocation().y*50-250;
+				cs.getViewport().setViewPosition(new Point(viewX, viewY));
+			}
 		}
-		cs.getViewport().setViewPosition(view);
 		mapArea.setFocusable(true);
 		this.getContentPane().add(cs);
 		
