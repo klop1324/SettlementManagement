@@ -19,6 +19,7 @@ public abstract class AbstractAgent implements Serializable {
 	protected AgentLogic AI;
 	protected ResourceType carriedResourceType;
 	protected double buildRate;
+	protected Map map;
 
 	/**
 	 * Creates a new AbstractAgent at a given position.
@@ -131,56 +132,90 @@ public abstract class AbstractAgent implements Serializable {
 	}
 
 	/**
-	 * Moves the Agent a space towards destination. No pathfinding yet, but
-	 * Agent randomly chooses whether to move horizantal or vertical towards a
-	 * diagonal target.
+	 * Moves the Agent a space towards destination. Placeholder terrible
+	 * pathfinding where the Agent will move horizantally until it reaches
+	 * the correct column or gets blocked, at which point it moves vertically
+	 * until it either hits its destination or stops being blocked horizantally.
 	 */
 	private void move() {
 		if (atDestination() || destination == null)
 			return;
-
+		
+		boolean inDestinationColumn = position.x == destination.x;
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
-
-		int direction = (int) (Math.random() * 2);
-
-		if (!pRightOfD && !pBelowD) {
-			if (position.x == destination.x)
-				position = new Point(position.x, position.y + 1);
-			else if (position.y == destination.y)
-				position = new Point(position.x + 1, position.y);
-			else if (direction == 0)
-				position = new Point(position.x, position.y + 1);
-			else if (direction == 1)
-				position = new Point(position.x + 1, position.y);
-		} else if (pRightOfD && !pBelowD) {
-			if (position.x == destination.x)
-				position = new Point(position.x, position.y + 1);
-			else if (position.y == destination.y)
+		
+		// Horizantal movement cases
+		if(!inDestinationColumn) {
+			if(pRightOfD && !map.blocked(new Point(position.x - 1, position.y))) {
 				position = new Point(position.x - 1, position.y);
-			else if (direction == 0)
-				position = new Point(position.x, position.y + 1);
-			else if (direction == 1)
-				position = new Point(position.x - 1, position.y);
-		} else if (pRightOfD && pBelowD) {
-			if (position.x == destination.x)
-				position = new Point(position.x, position.y - 1);
-			else if (position.y == destination.y)
-				position = new Point(position.x - 1, position.y);
-			else if (direction == 0)
-				position = new Point(position.x, position.y - 1);
-			else if (direction == 1)
-				position = new Point(position.x - 1, position.y);
-		} else if (!pRightOfD && pBelowD) {
-			if (position.x == destination.x)
-				position = new Point(position.x, position.y - 1);
-			else if (position.y == destination.y)
+				return;
+			}
+			if(!pRightOfD && !map.blocked(new Point(position.x + 1, position.y))) {
 				position = new Point(position.x + 1, position.y);
-			else if (direction == 0)
-				position = new Point(position.x, position.y - 1);
-			else if (direction == 1)
-				position = new Point(position.x + 1, position.y);
+				return;
+			}
 		}
+		
+		// Vertical movement cases
+		if(pBelowD && !map.blocked(new Point(position.x, position.y - 1))) {
+			position = new Point(position.x, position.y - 1);
+			return;
+		}
+		if(!pBelowD && !map.blocked(new Point(position.x + 1, position.y))) {
+			position = new Point(position.x + 1, position.y);
+			return;
+		}
+		
+		// Movement failed due to block, try this as a last resort
+		if(!map.blocked(new Point(position.x - 1, position.y))) {
+			position = new Point(position.x - 1, position.y);
+			return;
+		}
+		if(!map.blocked(new Point(position.x + 1, position.y))) {
+			position = new Point(position.x + 1, position.y);
+			return;
+		}
+
+//		int direction = (int) (Math.random() * 2);
+//
+//		if (!pRightOfD && !pBelowD) {
+//			if (position.x == destination.x)
+//				position = new Point(position.x, position.y + 1);
+//			else if (position.y == destination.y)
+//				position = new Point(position.x + 1, position.y);
+//			else if (direction == 0)
+//				position = new Point(position.x, position.y + 1);
+//			else if (direction == 1)
+//				position = new Point(position.x + 1, position.y);
+//		} else if (pRightOfD && !pBelowD) {
+//			if (position.x == destination.x)
+//				position = new Point(position.x, position.y + 1);
+//			else if (position.y == destination.y)
+//				position = new Point(position.x - 1, position.y);
+//			else if (direction == 0)
+//				position = new Point(position.x, position.y + 1);
+//			else if (direction == 1)
+//				position = new Point(position.x - 1, position.y);
+//		} else if (pRightOfD && pBelowD) {
+//			if (position.x == destination.x)
+//				position = new Point(position.x, position.y - 1);
+//			else if (position.y == destination.y)
+//				position = new Point(position.x - 1, position.y);
+//			else if (direction == 0)
+//				position = new Point(position.x, position.y - 1);
+//			else if (direction == 1)
+//				position = new Point(position.x - 1, position.y);
+//		} else if (!pRightOfD && pBelowD) {
+//			if (position.x == destination.x)
+//				position = new Point(position.x, position.y - 1);
+//			else if (position.y == destination.y)
+//				position = new Point(position.x + 1, position.y);
+//			else if (direction == 0)
+//				position = new Point(position.x, position.y - 1);
+//			else if (direction == 1)
+//				position = new Point(position.x + 1, position.y);
+//		}
 	}
 
 	/**
