@@ -104,7 +104,7 @@ public class Game extends Observable implements Serializable {
 		if (agentToSend != null)
 			agentToSend.sendCommand(fight);
 	}
-
+	
 	public void agentToResource(Point resourcePointClicked) {
 
 		WorkerAgent agentToSend = null;
@@ -153,8 +153,8 @@ public class Game extends Observable implements Serializable {
 		}
 		return resource;
 	}
-
-	public boolean canCreatTool(ToolType tool) {
+	
+	public boolean canCreatTool(ToolType tool){
 		boolean flag = false;
 		for (AbstractBuilding b : buildings) {
 			Set<ResourceType> resources = tool.getCost().keySet();
@@ -256,8 +256,9 @@ public class Game extends Observable implements Serializable {
 	 * @param b
 	 *            BuildingType of new Building.
 	 */
-	public void createBuilding(Point p, AbstractBuilding b) {
+	public void createBuilding(AbstractBuilding b){
 		// TODO Refactor once functionality is figured out
+		Point p = b.getLocation();
 		boolean flag = false;
 		for (AbstractBuilding tb : buildings) {
 			Set<ResourceType> resources = b.getCost().keySet();
@@ -393,7 +394,7 @@ public class Game extends Observable implements Serializable {
 		}
 		return array;
 	}
-
+	
 	public Map getMap() {
 		return map;
 	}
@@ -417,11 +418,11 @@ public class Game extends Observable implements Serializable {
 	public void addResource(Resource resource) {
 		this.mapResources.add(resource);
 	}
-
+	
 	public ArrayList<AbstractAgent> getAgents() {
 		return agents;
 	}
-
+	
 	public ArrayList<Resource> getResources() {
 		return mapResources;
 	}
@@ -433,7 +434,7 @@ public class Game extends Observable implements Serializable {
 	public ArrayList<AbstractBuilding> getBuildings() {
 		return buildings;
 	}
-
+	
 	public ArrayList<AbstractBuilding> getBuildingsInProcess() {
 		return buildingsInProcess;
 	}
@@ -459,7 +460,7 @@ public class Game extends Observable implements Serializable {
 					// Agent death condition
 					if (agents.get(i).getEnergy() <= 0 || agents.get(i).getOil() <= 0
 							|| agents.get(i).getCondition() <= 0)
-						agents.remove(agents.get(i));
+						agents.remove(i);
 				}
 			} else { // LOSE CONDITION
 				System.out.println("All of your agents are dead!");
@@ -518,4 +519,5 @@ public class Game extends Observable implements Serializable {
 
 		}
 	}
+
 }

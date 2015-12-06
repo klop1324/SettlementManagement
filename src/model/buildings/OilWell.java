@@ -9,7 +9,7 @@ import model.resources.ResourceType;
 public class OilWell extends AbstractBuilding{
 
 	public OilWell(Point location) {
-		super(location, 25000, true, 1.0, ResourceType.OIL, 100, 0, BuildingType.OILWELL);
+		super(location, 25000, true, 15.0, ResourceType.OIL, 100, 0, BuildingType.OILWELL);
 		
 	}
 
