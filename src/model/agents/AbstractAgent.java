@@ -64,7 +64,7 @@ public abstract class AbstractAgent implements Serializable {
 		case ARMOR:
 			damageFromEnemies = 100;
 		case PICKAXE:
-			gatherRate = 500;
+			gatherRate = 1000;
 		case WELDINGGUN:
 			buildRate = 0.5;
 		case ROCKETS:
@@ -141,81 +141,84 @@ public abstract class AbstractAgent implements Serializable {
 		if (atDestination() || destination == null)
 			return;
 		
+//		if(map == null)
+//			map = Game.getInstance().getMap();
+//		
 		boolean inDestinationColumn = position.x == destination.x;
-		boolean pRightOfD = position.x >= destination.x;
-		boolean pBelowD = position.y >= destination.y;
-		
-		// Horizantal movement cases
-		if(!inDestinationColumn) {
-			if(pRightOfD && !map.blocked(new Point(position.x - 1, position.y))) {
-				position = new Point(position.x - 1, position.y);
-				return;
-			}
-			if(!pRightOfD && !map.blocked(new Point(position.x + 1, position.y))) {
-				position = new Point(position.x + 1, position.y);
-				return;
-			}
-		}
-		
-		// Vertical movement cases
-		if(pBelowD && !map.blocked(new Point(position.x, position.y - 1))) {
-			position = new Point(position.x, position.y - 1);
-			return;
-		}
-		if(!pBelowD && !map.blocked(new Point(position.x + 1, position.y))) {
-			position = new Point(position.x + 1, position.y);
-			return;
-		}
-		
-		// Movement failed due to block, try this as a last resort
-		if(!map.blocked(new Point(position.x - 1, position.y))) {
-			position = new Point(position.x - 1, position.y);
-			return;
-		}
-		if(!map.blocked(new Point(position.x + 1, position.y))) {
-			position = new Point(position.x + 1, position.y);
-			return;
-		}
-
-//		int direction = (int) (Math.random() * 2);
-//
-//		if (!pRightOfD && !pBelowD) {
-//			if (position.x == destination.x)
-//				position = new Point(position.x, position.y + 1);
-//			else if (position.y == destination.y)
-//				position = new Point(position.x + 1, position.y);
-//			else if (direction == 0)
-//				position = new Point(position.x, position.y + 1);
-//			else if (direction == 1)
-//				position = new Point(position.x + 1, position.y);
-//		} else if (pRightOfD && !pBelowD) {
-//			if (position.x == destination.x)
-//				position = new Point(position.x, position.y + 1);
-//			else if (position.y == destination.y)
+		boolean pRightOfD = position.x > destination.x;
+		boolean pBelowD = position.y > destination.y;
+//		
+//		// Horizantal movement cases
+//		if(!inDestinationColumn) {
+//			if(pRightOfD && !map.blocked(new Point(position.x - 1, position.y))) {
 //				position = new Point(position.x - 1, position.y);
-//			else if (direction == 0)
-//				position = new Point(position.x, position.y + 1);
-//			else if (direction == 1)
-//				position = new Point(position.x - 1, position.y);
-//		} else if (pRightOfD && pBelowD) {
-//			if (position.x == destination.x)
-//				position = new Point(position.x, position.y - 1);
-//			else if (position.y == destination.y)
-//				position = new Point(position.x - 1, position.y);
-//			else if (direction == 0)
-//				position = new Point(position.x, position.y - 1);
-//			else if (direction == 1)
-//				position = new Point(position.x - 1, position.y);
-//		} else if (!pRightOfD && pBelowD) {
-//			if (position.x == destination.x)
-//				position = new Point(position.x, position.y - 1);
-//			else if (position.y == destination.y)
+//				return;
+//			}
+//			if(!pRightOfD && !map.blocked(new Point(position.x + 1, position.y))) {
 //				position = new Point(position.x + 1, position.y);
-//			else if (direction == 0)
-//				position = new Point(position.x, position.y - 1);
-//			else if (direction == 1)
-//				position = new Point(position.x + 1, position.y);
+//				return;
+//			}
 //		}
+//		
+//		// Vertical movement cases
+//		if(pBelowD && !map.blocked(new Point(position.x, position.y - 1))) {
+//			position = new Point(position.x, position.y - 1);
+//			return;
+//		}
+//		if(!pBelowD && !map.blocked(new Point(position.x + 1, position.y))) {
+//			position = new Point(position.x + 1, position.y);
+//			return;
+//		}
+//		
+//		// Movement failed due to block, try this as a last resort
+//		if(!map.blocked(new Point(position.x - 1, position.y))) {
+//			position = new Point(position.x - 1, position.y);
+//			return;
+//		}
+//		if(!map.blocked(new Point(position.x + 1, position.y))) {
+//			position = new Point(position.x + 1, position.y);
+//			return;
+//		}
+
+		int direction = (int) (Math.random() * 2);
+
+		if (!pRightOfD && !pBelowD) {
+			if (position.x == destination.x)
+				position = new Point(position.x, position.y + 1);
+			else if (position.y == destination.y)
+				position = new Point(position.x + 1, position.y);
+			else if (direction == 0)
+				position = new Point(position.x, position.y + 1);
+			else if (direction == 1)
+				position = new Point(position.x + 1, position.y);
+		} else if (pRightOfD && !pBelowD) {
+			if (position.x == destination.x)
+				position = new Point(position.x, position.y + 1);
+			else if (position.y == destination.y)
+				position = new Point(position.x - 1, position.y);
+			else if (direction == 0)
+				position = new Point(position.x, position.y + 1);
+			else if (direction == 1)
+				position = new Point(position.x - 1, position.y);
+		} else if (pRightOfD && pBelowD) {
+			if (position.x == destination.x)
+				position = new Point(position.x, position.y - 1);
+			else if (position.y == destination.y)
+				position = new Point(position.x - 1, position.y);
+			else if (direction == 0)
+				position = new Point(position.x, position.y - 1);
+			else if (direction == 1)
+				position = new Point(position.x - 1, position.y);
+		} else if (!pRightOfD && pBelowD) {
+			if (position.x == destination.x)
+				position = new Point(position.x, position.y - 1);
+			else if (position.y == destination.y)
+				position = new Point(position.x + 1, position.y);
+			else if (direction == 0)
+				position = new Point(position.x, position.y - 1);
+			else if (direction == 1)
+				position = new Point(position.x + 1, position.y);
+		}
 	}
 
 	/**
