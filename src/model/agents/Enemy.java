@@ -16,7 +16,7 @@ import model.resources.ResourceType;
  * @author mirandamots
  *
  */
-public class Enemy implements Serializable{
+public class Enemy implements Serializable {
 	int ticCounter, carriedResources, MAX_RESOURCES, ID;
 	Point position, destination, home, targetBuildingLocation;
 	ResourceType stealingResource;
@@ -36,38 +36,38 @@ public class Enemy implements Serializable{
 		this.position = position;
 		ID = this.hashCode();
 	}
-	
+
 	public int getID() {
 		return ID;
 	}
-	
+
 	/**
-	 * Run only right after initialization. Determines what Building the Enemy is
-	 * going to and what Resource it's going to steal.
+	 * Run only right after initialization. Determines what Building the Enemy
+	 * is going to and what Resource it's going to steal.
 	 */
 	private void determineTargetBuilding() {
 		Game g = Game.getInstance();
 		boolean buildingFound = false;
-		
+
 		// Searches for an appropriate target building
-		while(!buildingFound) {
+		while (!buildingFound) {
 			int buildingIndex = (int) Math.random() * g.getBuildings().size();
 			AbstractBuilding targetBuildingTemp = g.getBuildings().get(buildingIndex);
-			
-			if(targetBuildingTemp.getType() == BuildingType.CHARGINGSTATION) {
+
+			if (targetBuildingTemp.getType() == BuildingType.CHARGINGSTATION) {
 				buildingFound = true;
 				stealingResource = ResourceType.ELECTRICITY;
 				targetBuildingLocation = targetBuildingTemp.getLocation();
-			} else if(targetBuildingTemp.getType() == BuildingType.HOMEDEPOT) {
+			} else if (targetBuildingTemp.getType() == BuildingType.HOMEDEPOT) {
 				buildingFound = true;
 				stealingResource = ResourceType.COAL;
 				targetBuildingLocation = targetBuildingTemp.getLocation();
-			} else if(targetBuildingTemp.getType() == BuildingType.JUNKYARD) {
+			} else if (targetBuildingTemp.getType() == BuildingType.JUNKYARD) {
 				buildingFound = true;
 				targetBuildingLocation = targetBuildingTemp.getLocation();
 
 				// Randomly picks a junkyard resource
-				switch((int) Math.random() * 3) {
+				switch ((int) Math.random() * 3) {
 				case 0:
 					stealingResource = ResourceType.COPPER;
 					break;
@@ -80,10 +80,9 @@ public class Enemy implements Serializable{
 				}
 			}
 		}
-		
+
 		destination = targetBuildingLocation;
 	}
-
 
 	/**
 	 * Returns position for drawing purposes.
@@ -93,43 +92,44 @@ public class Enemy implements Serializable{
 	public Point getPosition() {
 		return position;
 	}
-	
+
 	/**
 	 * Basic update method. Call this from Game whenever Game ticks.
 	 */
 	public void tic() {
-		if(ticCounter == -1) determineTargetBuilding();
-		
+		if (ticCounter == -1)
+			determineTargetBuilding();
+
 		ticCounter++;
-		
-		if(position.equals(destination))
+
+		if (position.equals(destination))
 			actionAtDestination();
-		else if(ticCounter >= 20) {
+		else if (ticCounter >= 20) {
 			move();
 			ticCounter = 0;
 		}
 	}
 
 	/**
-	 * Determines enemy action at destination. If it's at targetBuilding,
-	 * it should steal. If it's at max capacity or player has no more of
-	 * that resource, it should head home. If it's at home, it should dump
-	 * its resources and head back to the building.
+	 * Determines enemy action at destination. If it's at targetBuilding, it
+	 * should steal. If it's at max capacity or player has no more of that
+	 * resource, it should head home. If it's at home, it should dump its
+	 * resources and head back to the building.
 	 */
 	private void actionAtDestination() {
 		Game g = Game.getInstance();
 		AbstractBuilding thisBuilding = null;
-		for(AbstractBuilding b : g.getBuildings()) {
-			if(b.getLocation().equals(destination))
+		for (AbstractBuilding b : g.getBuildings()) {
+			if (b.getLocation().equals(destination))
 				thisBuilding = b;
 		}
-		
+
 		// At target building
-		if(destination.equals(targetBuildingLocation)) {
-			if(atResourceCapacity() || thisBuilding.getResourceAmount(stealingResource) == 0) {
+		if (destination.equals(targetBuildingLocation)) {
+			if (atResourceCapacity() || thisBuilding.getResourceAmount(stealingResource) == 0) {
 				destination = home;
 				return;
-			} else if(thisBuilding.getResourceAmount(stealingResource) < 10) {
+			} else if (thisBuilding.getResourceAmount(stealingResource) < 10) {
 				carriedResources += thisBuilding.getResourceAmount(stealingResource);
 				thisBuilding.removeResource(stealingResource, thisBuilding.getResourceAmount(stealingResource));
 				destination = home;
@@ -140,9 +140,9 @@ public class Enemy implements Serializable{
 				return;
 			}
 		}
-		
+
 		// At home
-		if(destination.equals(home)) {
+		if (destination.equals(home)) {
 			carriedResources = 0;
 			destination = targetBuildingLocation;
 		}
@@ -150,10 +150,11 @@ public class Enemy implements Serializable{
 
 	/**
 	 * Checks if Enemy is carrying max resources
+	 * 
 	 * @return
 	 */
 	private boolean atResourceCapacity() {
-		if(carriedResources == MAX_RESOURCES)
+		if (carriedResources == MAX_RESOURCES)
 			return true;
 		return false;
 	}
@@ -205,13 +206,4 @@ public class Enemy implements Serializable{
 				position = new Point(position.x + 1, position.y);
 		}
 	}
-
-	/**
-	 * Hooray! They're dead!
-	 */
-	public void kill() {
-		Game g = Game.getInstance();
-		g.getEnemies().remove(this);
-	}
-
 }
