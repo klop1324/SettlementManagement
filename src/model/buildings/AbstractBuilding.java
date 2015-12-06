@@ -155,9 +155,9 @@ public abstract class AbstractBuilding implements Serializable{
 		else{
 			int result = currentAmount.get(resource) - amount;
 			if(result > capacity) throw new RuntimeException("Cannot Add Resource! We would go over Capacity!");
-//			if (result < 0){
-//				throw new RuntimeException("Can't take more than you have.");
-//			}
+			if (result < 0){
+				throw new RuntimeException("Can't take more than you have.");
+			}
 			currentAmount.replace(resource, result);
 		}
 	}
