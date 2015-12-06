@@ -4,15 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -20,7 +17,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,11 +25,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javafx.scene.control.ComboBox;
-
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.DefaultListModel;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -45,11 +36,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
-
-import com.sun.prism.image.ViewPort;
 
 import model.Game;
 import model.buildings.AbstractBuilding;
@@ -411,7 +399,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("armory")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new Armory(userClick))){
-						game.createBuilding(userClick, new Armory(userClick));
+						game.createBuilding(new Armory(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -423,7 +411,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("charging station")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new ChargingStation(userClick))){
-						game.createBuilding(userClick, new ChargingStation(userClick));
+						game.createBuilding(new ChargingStation(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -435,7 +423,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("home depot")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new HomeDepot(userClick))){
-						game.createBuilding(userClick, new HomeDepot(userClick));
+						game.createBuilding(new HomeDepot(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -447,7 +435,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new JunkYard(userClick))){
-						game.createBuilding(userClick, new JunkYard(userClick));
+						game.createBuilding(new JunkYard(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -459,7 +447,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("oil tank")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new OilTank(userClick))){
-						game.createBuilding(userClick, new OilTank(userClick));
+						game.createBuilding(new OilTank(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -471,7 +459,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("oil well")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new OilWell(userClick))){
-						game.createBuilding(userClick, new OilWell(userClick));
+						game.createBuilding(new OilWell(userClick));
 						System.out.println(selected);
 					}
 					else{
@@ -483,7 +471,7 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("workshop")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(userClick, new Workshop(userClick))){
-						game.createBuilding(userClick, new Workshop(userClick));
+						game.createBuilding(new Workshop(userClick));
 						System.out.println(selected);
 					}
 					else{
