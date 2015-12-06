@@ -48,6 +48,7 @@ public class Resource implements Serializable{
 			agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources);
 			if (!hasResources()){
 				agentResourceNotify = ("Agent removed: " + removeAmount + " " + resources + " \nYou have used all of this " + resources + " resource");
+				return;
 			}
 			else {
 				//agentResourceNotify = ("You've used up all of this resource. D:");

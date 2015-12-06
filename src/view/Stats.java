@@ -125,27 +125,21 @@ public class Stats extends JPanel {
 				for (ResourceType r: b.getResources()){
 					if (r == ResourceType.COAL) {
 						resourceAmount += b.getResourceAmount(ResourceType.COAL);
-						resource.setText("Resource: Coal");
 					}
 					if (r == ResourceType.COPPER) {
 						resourceAmount += b.getResourceAmount(ResourceType.COPPER);
-						resource.setText("Resource: Copper");
 					}
 					if (r == ResourceType.IRON) {
 						resourceAmount += b.getResourceAmount(ResourceType.IRON);
-						resource.setText("Resource: Iron");
 					}
 					if (r == ResourceType.GOLD) {
 						resourceAmount += b.getResourceAmount(ResourceType.GOLD);
-						resource.setText("Resource: Gold");
 					}
 					if (r == ResourceType.OIL) {
 						resourceAmount += b.getResourceAmount(ResourceType.OIL);
-						resource.setText("Resource: Oil");
 					}
 					if (r == ResourceType.ELECTRICITY) {
 						resourceAmount += b.getResourceAmount(ResourceType.ELECTRICITY);
-						resource.setText("Resource: Electricity");
 					}
 				}
 				amount.setText("Carrying: " + resourceAmount);
@@ -157,6 +151,25 @@ public class Stats extends JPanel {
 				isResource = true;
 				isAgent = false;
 				isBuilding = false;
+				ResourceType type = r.getType();
+				if (type == ResourceType.COAL) {
+					resource.setText("Resource: Coal");
+				}
+				else if (type == ResourceType.COPPER) {
+					resource.setText("Resource: Copper");
+				}
+				else if (type == ResourceType.IRON) {
+					resource.setText("Resource: Iron");
+				}
+				else if (type == ResourceType.GOLD) {
+					resource.setText("Resource: Gold");
+				}
+				else if (type == ResourceType.OIL) {
+					resource.setText("Resource: Oil");
+				}
+				else if (type == ResourceType.ELECTRICITY) {
+					resource.setText("Resource: Electricity");
+				}
 				amountLeft.setText("Amount: " + r.getAmount());
 				resource.setText("Resource: "+ r.getType().name());
 				

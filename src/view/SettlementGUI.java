@@ -543,6 +543,8 @@ class SettlementGUI extends JFrame implements Observer {
 			individual.update(userClick);
 
 			
+			individual.update(userClick);
+			
 			for(Enemy m : game.getEnemies()) {
 				if(m.getPosition().equals(userClick))
 					selectedEnemyID = m.getID();
