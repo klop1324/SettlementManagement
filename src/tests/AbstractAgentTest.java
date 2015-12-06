@@ -11,24 +11,6 @@ import org.junit.Test;
 public class AbstractAgentTest {
 
 	@Test
-	public void testHasPickAxe() {
-		BuilderAgent a = new BuilderAgent(new Point(0,0));
-		assertFalse(a.hasPickAxe());
-	}
-	
-	@Test
-	public void testHasArmor() {
-		BuilderAgent a = new BuilderAgent(new Point(0,0));
-		assertFalse(a.hasArmor());
-	}
-	
-	@Test
-	public void testHasSpear() {
-		BuilderAgent a = new BuilderAgent(new Point(0,0));
-		assertFalse(a.hasSpear());
-	}
-
-	@Test
 	public void testHasWeldingGun() {
 		BuilderAgent a = new BuilderAgent(new Point(0,0));
 		assertFalse(a.hasWeldingGun());

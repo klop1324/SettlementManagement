@@ -23,7 +23,7 @@ public class BuildingTest {
 		Resource coal = new Resource(10, null, ResourceType.COAL);
 		Resource gold = new Resource(10, new Point(12, 3), ResourceType.GOLD);
 		Resource iron = new Resource(10, new Point(12, 7), ResourceType.IRON);
-		game.addBuilding(home);
+		game.addBuildingInProcess(home);
 		home.agentAddCapacity(coal.getType(), 100);
 		home.agentAddCapacity(gold.getType(), 100);
 		home.agentAddCapacity(iron.getType(), 100);
@@ -31,16 +31,14 @@ public class BuildingTest {
 		game.createBuilding(new Armory(new Point(12, 3)));
 		bobTheBuilder.incrementCompletionAmount(game.getBuildingsInProcess().get(0));
 		assertEquals(game.getBuildingsInProcess().get(0).getCompletionAmount(), 3);
-		game.createBuilding(new Point(12, 3), BuildingType.CHARGINGSTATION);
-		System.out.println(game.getBuildingsInProcess());
-		
-		
+		game.createBuilding(new ChargingStation(new Point(12,3)));
 	}
+	
 	@Test
 	public void junkYardTest() {
 		JunkYard junkyard = new JunkYard(new Point(5,5));
 		Resource oil = new Resource(10, new Point(12, 3), ResourceType.OIL);
-		Resource iron = new Resource(10, new Point(12, 3), ResourceType.IRON);0
+		Resource iron = new Resource(10, new Point(12, 3), ResourceType.IRON);
 		assertFalse(junkyard.getResources().contains(oil.getType()));
 		assertTrue(junkyard.getResources().contains(iron.getType()));
 		junkyard.agentAddCapacity(iron.getType(), 20);

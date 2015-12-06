@@ -98,7 +98,7 @@ public class Map extends Observable implements Serializable{
 	 * @return true if blocked, false if passable
 	 */
 	public boolean blocked(Point p) {
-		if(map[p.x][p.y] == 1 || map[p.x][p.y] == 3)
+		if(map[p.x][p.y] == 3)
 			return true;
 		
 		return false;
