@@ -33,7 +33,7 @@ public abstract class AbstractAgent implements Serializable {
 		carriedResources = 0;
 		destination = null;
 		this.position = position;
-		gatherRate = 10;
+		gatherRate = 50;
 		damageFromEnemies = 500;
 		moveDelay = 10;
 		buildRate = 0.1;
@@ -62,7 +62,7 @@ public abstract class AbstractAgent implements Serializable {
 		case ARMOR:
 			damageFromEnemies = 100;
 		case PICKAXE:
-			gatherRate = 50;
+			gatherRate = 500;
 		case WELDINGGUN:
 			buildRate = 0.5;
 		case ROCKETS:
@@ -127,6 +127,7 @@ public abstract class AbstractAgent implements Serializable {
 	 */
 	public void sendCommand(AgentCommandWithDestination c) {
 		AI.recieveCommand(c);
+		System.out.println("Command recieved: " + c);
 	}
 
 	/**
@@ -135,8 +136,11 @@ public abstract class AbstractAgent implements Serializable {
 	 * diagonal target.
 	 */
 	private void move() {
+		// TODO DIJKSTRA'S, BABY
 		if (atDestination() || destination == null)
 			return;
+		
+//		Game g = Game.getInstance();
 
 		boolean pRightOfD = position.x >= destination.x;
 		boolean pBelowD = position.y >= destination.y;
@@ -284,6 +288,7 @@ public abstract class AbstractAgent implements Serializable {
 
 		public void recieveCommand(AgentCommandWithDestination c) {
 			actionQueue.add(c);
+			System.out.println("Command recieved @ AgentLogic: " + c);
 		}
 
 		public ArrayList<AgentCommandWithDestination> getActionQueue() {
@@ -298,19 +303,19 @@ public abstract class AbstractAgent implements Serializable {
 			// Need low
 			if (oil < 500) {
 				if(actionQueue.isEmpty())
-					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
+					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
 			}
 			if (energy < 500) {
 				if(actionQueue.isEmpty())
-					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
+					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 			}
 			if (condition < 500) {
 				if(actionQueue.isEmpty())
-					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
+					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 			}
@@ -325,8 +330,10 @@ public abstract class AbstractAgent implements Serializable {
 			if (!actionQueue.isEmpty()) {
 				if(actionQueue.get(0).getAgentCommand() == AgentCommand.FIGHT) {
 					for(Enemy e : enemyList) {
-						if(e.getID() == actionQueue.get(0).getEnemyID())
+						if(e.getID() == actionQueue.get(0).getEnemyID()) {
 							setDestination(e.getPosition());
+							System.out.println("Destination set to enemy");
+						}
 					}
 				} else
 					setDestination(actionQueue.get(0).getCommandDestination());
@@ -370,11 +377,13 @@ public abstract class AbstractAgent implements Serializable {
 					&& energy <= MAX_NEED - 100) {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
-						if(b.getResourceAmount(ResourceType.ELECTRICITY) < 100)
+						if(b.getResourceAmount(ResourceType.ELECTRICITY) < 100) {
+							energy += b.getResourceAmount(ResourceType.ELECTRICITY);
+							b.agentRemoveCapacity(ResourceType.ELECTRICITY, b.getResourceAmount(ResourceType.ELECTRICITY));
 							return false;
-						else {
-							b.agentRemoveCapacity(ResourceType.ELECTRICITY, 100);
+						} else {
 							energy += 100;
+							b.agentRemoveCapacity(ResourceType.ELECTRICITY, 100);
 							return true;
 						}
 					}
@@ -407,8 +416,8 @@ public abstract class AbstractAgent implements Serializable {
 
 			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.FIGHT)) {
 				for (int i = 0; i < g.getEnemies().size(); i++) {
-					if (g.getEnemies().get(0).getPosition().equals(position)) {
-						g.killEnemy(g.getEnemies().get(0).getID());
+					if (g.getEnemies().get(i).getPosition().equals(position)) {
+						g.killEnemy(g.getEnemies().get(i).getID());
 						condition -= damageFromEnemies;
 					}
 				}

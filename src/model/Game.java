@@ -79,7 +79,6 @@ public class Game extends Observable implements Serializable {
 		agents.add(new WorkerAgent(new Point(6, 4)));
 		agents.add(new SoldierAgent(new Point(7, 7)));
 		agents.add(new BuilderAgent(new Point(8, 7)));
-		enemies.add(new Enemy(new Point(10, 10)));
 
 		// TODO temp building generation for testing
 
@@ -631,9 +630,11 @@ public class Game extends Observable implements Serializable {
 					}
 				}
 			}
-			if(Math.random()<0.001){
+			
+			if(Math.random()<0.01){
 				Point p = new Point((int)(map.getXLength()*Math.random()), (int) (map.getYLength() *Math.random()));
-				if(Tile.values()[map.get(p.x, p.y)].isPassible())enemies.add(new Enemy(p));
+				if(Tile.values()[map.get(p.x, p.y)].isPassible())
+					enemies.add(new Enemy(p));
 			}
 
 			setChanged();
