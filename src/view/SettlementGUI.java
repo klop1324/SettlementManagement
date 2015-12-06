@@ -251,7 +251,7 @@ class SettlementGUI extends JFrame implements Observer {
 	}
 	
 	private void setupGui(){
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setResizable(false);
 		this.setTitle("Game Name Goes Here");
 		this.setMinimumSize(new Dimension(800, 600));
@@ -369,9 +369,10 @@ class SettlementGUI extends JFrame implements Observer {
 					}
 					System.exit(0);
 				}
-				if(userSelection == JOptionPane.NO_OPTION){
+				else if(userSelection == JOptionPane.NO_OPTION){
 					System.exit(0);
 				}
+				
 			}});
 		collectButton.addActionListener(new CollectButtonListener());
 		attackButton.addActionListener(new AttackButtonListener());
