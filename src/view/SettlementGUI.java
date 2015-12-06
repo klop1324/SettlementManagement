@@ -580,6 +580,7 @@ class SettlementGUI extends JFrame implements Observer {
 			clickY = (int) Math.floor(e.getPoint().y/50);
 			userClick = new Point(clickX, clickY);
 			individual.update(userClick);
+			mapArea.setCursorLocation(userClick);
 
 			
 			individual.update(userClick);

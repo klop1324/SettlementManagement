@@ -3,6 +3,7 @@ package view;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,8 +29,9 @@ public class ViewController extends JPanel implements Observer {
 	private Map map;
 	private Image agent1, enemy, oilTank, charge, oil, solar, ground, water, sand, grass;
 	private Image junkYard, armory, homeDepot, coal, copper, iron, gold, oilWell, workShop, 
-	agent2, agent3;
+	agent2, agent3, cursor;
 	private ArrayList<AbstractAgent> agents;
+	private Point cursorLocation;
 	private int tic = 0;
 
 	private boolean isAnimating = false;
@@ -45,7 +47,7 @@ public class ViewController extends JPanel implements Observer {
 			agent2 = ImageIO.read(new File("./ImageSet/distractor.png"));
 			agent3 = ImageIO.read(new File("./ImageSet/destroyer.png"));
 			enemy = ImageIO.read(new File("./ImageSet/Agent1.png"));
-			
+			cursor = ImageIO.read(new File("./ImageSet/cursor.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,6 +56,10 @@ public class ViewController extends JPanel implements Observer {
 
 	public boolean isAnimating() {
 		return isAnimating;
+	}
+	
+	public void setCursorLocation(Point p) {
+		this.cursorLocation = p;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -79,7 +85,6 @@ public class ViewController extends JPanel implements Observer {
 			g2.drawImage(b.getType().getUnbuiltImage(), b.getLocation().x*50, b.getLocation().y*50, null);
 		}
 		
-		// TODO all agents look the same lol
 		for (AbstractAgent a: game.getAgents()){
 			if (a.getClass().equals(BuilderAgent.class)){
 				g2.drawImage(agent1, a.getPosition().x*50, a.getPosition().y*50, null);
@@ -95,6 +100,10 @@ public class ViewController extends JPanel implements Observer {
 		for (Enemy e : game.getEnemies()) {
 			g2.drawImage(enemy, e.getPosition().x*50, e.getPosition().y*50, null);
 		}
+		
+		// Draw cursor at the end
+		if(cursorLocation != null)
+			g2.drawImage(cursor, cursorLocation.x*50, cursorLocation.y*50, null);
 	}
 
 	@Override
