@@ -492,116 +492,104 @@ class SettlementGUI extends JFrame implements Observer {
 			else if (selected.equals("armory")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new Armory(userClick))){
-						try {
-							game.createBuilding(new Armory(userClick));
-							System.out.println(selected);
-							System.out.println(game.getBuildingsInProcess());
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new Armory(userClick));
+						System.out.println(selected);
+						System.out.println(game.getBuildingsInProcess());
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
+		
 			else if (selected.equals("charging station")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new ChargingStation(userClick))){
-						try {
-							game.createBuilding(new ChargingStation(userClick));
-							System.out.println(selected);
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new ChargingStation(userClick));
+						System.out.println(selected);
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
+
 			else if (selected.equals("home depot")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new HomeDepot(userClick))){
-						try {
-							game.createBuilding(new HomeDepot(userClick));
-							System.out.println(selected);
-							System.out.println(game.getBuildingsInProcess());
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new HomeDepot(userClick));
+						System.out.println(selected);
+						System.out.println(game.getBuildingsInProcess());
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
 			else if (selected.equals("junkyard")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new JunkYard(userClick))){
-						try {
-							game.createBuilding(new JunkYard(userClick));
-							System.out.println(selected);
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new JunkYard(userClick));
+						System.out.println(selected);
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
+
 			else if (selected.equals("oil tank")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new OilTank(userClick))){
-						try {
-							game.createBuilding(new OilTank(userClick));
-							System.out.println(selected);
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new OilTank(userClick));
+						System.out.println(selected);
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
+
 			else if (selected.equals("oil well")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new OilWell(userClick))){
-						try {
-							game.createBuilding(new OilWell(userClick));
-							System.out.println(selected);
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new OilWell(userClick));
+						System.out.println(selected);
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
 			else if (selected.equals("workshop")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new Workshop(userClick))){
-						try {
-							game.createBuilding(new Workshop(userClick));
-							System.out.println(selected);
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new Workshop(userClick));
+						System.out.println(selected);
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
 			else if (selected.equals("victory monument")) {
 				if (userClick != null){
 					if(game.canBuildBuilding(new VictoryMonument(userClick))){
-						try {
-							game.createBuilding(new VictoryMonument(userClick));
-							System.out.println(selected);
-						}
-						catch(RuntimeException e){
-							JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
-						}
+						game.createBuilding(new VictoryMonument(userClick));
+						System.out.println(selected);
 					}
-					return;
+					else{
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources to build a(n) "+selected);
+					}
 				}
+				return;
 			}
 			else if (selected.equals("armor")) {
 				if (userClick != null){
