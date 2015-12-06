@@ -1,6 +1,6 @@
 package model;
 
-import java.util.ArrayList;
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.Observable;
 
@@ -77,6 +77,11 @@ public class Map extends Observable implements Serializable{
 	public int get(int x, int y){
 		if(x<0 || x>= xLength || y<0 || y >= yLength) throw new RuntimeException("crap");
 		return map[x][y];
+	}
+	
+	public int get(Point p){
+		if(p.x<0 || p.x>= xLength || p.y<0 || p.y >= yLength) throw new RuntimeException("crap");
+		return map[p.x][p.y];
 	}
 	
 	public int getXLength(){
