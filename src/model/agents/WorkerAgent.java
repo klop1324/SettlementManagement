@@ -1,7 +1,6 @@
 package model.agents;
 
 import java.awt.Point;
-
 import model.agents.AbstractAgent.AgentLogic;
 
 public class WorkerAgent extends AbstractAgent {

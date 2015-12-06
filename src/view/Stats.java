@@ -111,7 +111,7 @@ public class Stats extends JPanel {
 				energy.setText("Energy: " + a.getEnergy());
 				condition.setText("Condition: " + a.getCondition());
 				oil.setText("Oil: " + a.getOil());
-				//carriedResources.setText("Carrying: " + a.get);
+				carriedResources.setText("Carrying: " + a.getCarriedResources());
 			}
 		}
 		for (AbstractBuilding b: game.getBuildings()){
