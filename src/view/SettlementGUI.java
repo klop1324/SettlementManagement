@@ -428,8 +428,9 @@ class SettlementGUI extends JFrame implements Observer {
 			String selected = "" + selectAgent.getSelectedItem();
 			selectAgent.removeAllItems();
 			selectAgent.addItem("select one");
-			selectAgent.addItem("create agent");
 			selectAgent.addItem("build building");
+			selectAgent.addItem("create agent");
+			selectAgent.addItem("create tool");
 			if (selected.equals("select agent type"))
 				return;
 			else if (selected.equals("builder")) {
