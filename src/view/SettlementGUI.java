@@ -541,6 +541,8 @@ class SettlementGUI extends JFrame implements Observer {
 			clickY = (int) Math.floor(e.getPoint().y/50);
 			userClick = new Point(clickX, clickY);
 			
+			individual.update(userClick);
+			
 			for(Enemy m : game.getEnemies()) {
 				if(m.getPosition().equals(userClick))
 					selectedEnemyID = m.getID();
