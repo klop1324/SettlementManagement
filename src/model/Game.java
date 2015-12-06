@@ -87,8 +87,31 @@ public class Game extends Observable implements Serializable {
 		buildings.add(new OilTank(new Point(4, 6)));
 		buildings.add(new HomeDepot(new Point(4, 7)));
 
+		Point temp;
+		do{
+			temp = new Point((int)(Math.random() * GlobalSettings.MAP_SIZE_X),(int) (Math.random() * GlobalSettings.MAP_SIZE_Y));
+		}
+		while(!canInitBuildings(temp));
+		initBuildings(temp);
+		
 		this.startGame();
 
+	}
+	
+	private void initBuildings(Point p){
+		if(!canInitBuildings(p)) throw new RuntimeException("y u no check if you can build");
+		
+		System.out.println("generated at point:"+ p.toString());
+		
+		buildings.add(new HomeDepot(p));
+		buildings.add(new JunkYard(new Point(p.x+1, p.y+1)));
+		buildings.add(new ChargingStation(new Point(p.x-1, p.y-1)));
+		buildings.add(new OilTank(new Point(p.x-1, p.y+1)));
+		for(AbstractBuilding b: buildings){
+			b.incrementCompletionAmount(b.getBuildTime()+1);
+		}
+		
+		
 	}
 	
 	private boolean canInitBuildings(Point p){
@@ -96,37 +119,42 @@ public class Game extends Observable implements Serializable {
 		boolean flag = true;
 		//mess to check is there's a empty square around p.x,p.y
 		Point tempP = p;
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x+1, p.y);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x+1, p.y+1);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x+1, p.y-1);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x, p.y);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x, p.y+1);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x, p.y-1);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x-1, p.y);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x-1, p.y+1);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		tempP = new Point(p.x-1, p.y-1);
-		if(!values[map.get(p)].isPassible()) flag = false;
+		if(!canPlace(p)) flag = false;
 		
-		if(flag){
-			buildings.add(new HomeDepot(p));
-			buildings.add(new JunkYard(p));
-			buildings.add(new ChargingStation(p));
-			buildings.add(new OilTank(p));
-			for(AbstractBuilding b: buildings){
-				b.incrementCompletionAmount(b.getBuildTime()+1);
+		return flag;
+	}
+	
+	public boolean canPlace(Point p){
+		for(AbstractBuilding b: buildings){
+			if(b.getLocation().equals(p)){
+				return false;
 			}
 		}
-		
-		return false;
+		for(Resource r : mapResources){
+			if(r.getLocation().equals(p)){
+				return false;
+			}
+		}
+		if(!Tile.values()[map.get(p)].isPassible()) return false; 
+		return true;
 	}
 
 	public void agentToEnemy(int enemyIDClicked) {

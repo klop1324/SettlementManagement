@@ -139,6 +139,7 @@ public abstract class AbstractBuilding implements Serializable{
 	}
 	
 	public void addResource(ResourceType resource, double amount){
+		if(amount + currentAmount.get(resource) > capacity) return;
 		int temp = (int)remaining;
 		remaining -= temp;
 		if(!holdableResources.contains(resource)){
