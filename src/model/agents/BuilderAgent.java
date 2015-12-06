@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import model.agents.AbstractAgent.AgentLogic;
 import model.buildings.*;
+import model.resources.ResourceType;
 
 public class BuilderAgent extends AbstractAgent {
 	private int buildAmount = 3;
@@ -41,6 +42,14 @@ public class BuilderAgent extends AbstractAgent {
 	@Override
 	void decrementOil() {
 		oil -= 2;	
+	}
+
+	@Override
+	public void initCostHashMap() {
+		agentCost.put(ResourceType.ELECTRICITY, 3000);
+		agentCost.put(ResourceType.IRON, 4000);
+		resourceSet = agentCost.keySet();
+		
 	}
 
 

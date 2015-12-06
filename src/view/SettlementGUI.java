@@ -481,23 +481,38 @@ class SettlementGUI extends JFrame implements Observer {
 				return;
 			else if (selected.equals("builder")) {
 				if (userClick != null){
-					game.createAgent(BuilderAgent.class, userClick);
-					System.out.println(selected);
-					return;
+					if (game.canCreateAgent(new BuilderAgent(userClick))){
+						game.createAgent(new BuilderAgent(userClick));
+						System.out.println(selected);
+						return;
+					}
+					else {
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources!");
+					}
 				}
 			}
 			else if (selected.equals("soldier")) {
 				if (userClick != null){
-					game.createAgent(SoldierAgent.class, userClick);
-					System.out.println(selected);
-					return;
+					if (game.canCreateAgent(new SoldierAgent(userClick))){
+						game.createAgent(new SoldierAgent(userClick));
+						System.out.println(selected);
+						return;
+					}
+					else {
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources!");
+					}
 				}
 			}
 			else if (selected.equals("worker")) {
 				if (userClick != null){
-					game.createAgent(WorkerAgent.class, userClick);
-					System.out.println(selected);
-					return;
+					if (game.canCreateAgent(new WorkerAgent(userClick))){
+						game.createAgent(new WorkerAgent(userClick));
+						System.out.println(selected);
+						return;
+					}
+					else {
+						JOptionPane.showMessageDialog(currentFrame, "You dont have enough resources!");
+					}
 				}
 			}
 			else if (selected.equals("armory")) {
