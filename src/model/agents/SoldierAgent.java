@@ -2,6 +2,8 @@ package model.agents;
 
 import java.awt.Point;
 
+import model.tools.ToolType;
+
 public class SoldierAgent extends AbstractAgent{
 	private int attackPoints = 5;
 	public SoldierAgent(Point position) {

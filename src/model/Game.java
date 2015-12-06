@@ -183,7 +183,34 @@ public class Game extends Observable implements Serializable {
 	 * @param a
 	 *            agent
 	 */
-	public void createTool(ToolType tool, AbstractAgent a) {
+	public void createTool(ToolType tool) {
+		AbstractAgent agent = null;
+		for (AbstractAgent a : agents){
+			switch (tool){
+			case ARMOR:
+				if (a.getClass().equals(SoldierAgent.class)){
+					agent = a;
+				}
+				break;
+			case PICKAXE:
+				if (a.getClass().equals(WorkerAgent.class)){
+					agent = a;
+				}
+				break;
+			case ROCKETS:
+				agent = a;
+				break;
+			case WELDINGGUN:
+				if (a.getClass().equals(BuilderAgent.class)){
+					agent = a;
+				}
+				break;
+			default:
+				break;
+			
+			}
+		}
+		
 		boolean flag = false;
 		for (AbstractBuilding b : buildings) {
 			Set<ResourceType> resources = tool.getCost().keySet();
@@ -202,7 +229,7 @@ public class Game extends Observable implements Serializable {
 						b.removeResource(trt, tool.getCost().get(trt));
 					}
 				}
-				a.addTool(tool);
+				agent.addTool(tool);
 				break;
 			}
 		}
@@ -504,6 +531,7 @@ public class Game extends Observable implements Serializable {
 					}
 				}
 			}
+			
 			
 			// Win condition
 			if (!buildings.isEmpty()) {

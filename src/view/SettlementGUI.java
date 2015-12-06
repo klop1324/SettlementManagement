@@ -304,6 +304,12 @@ class SettlementGUI extends JFrame implements Observer {
 			System.exit(0);
 		}
 	}
+	
+	public void dialogBoxs(){
+		if (game.get){
+			JOptionPane.showMessageDialog(this, "You don't have enough resources to build this!");
+		}
+	}
 
 	public void registerListeners() {
 		this.addWindowListener(new WindowAdapter() {
