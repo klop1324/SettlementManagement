@@ -34,6 +34,4 @@ public class HomeDepot extends AbstractBuilding{
 		buildingCost.put(ResourceType.IRON, 10000);
 	}
 
-
-
 }

@@ -15,32 +15,12 @@ import model.resources.ResourceType;
 
 public class BuildingTest {
 	WorkerAgent agent = new WorkerAgent(new Point(1,2));
-	@Test
-	public void newBuildingTest(){
-		Game game = new Game(); // turn the constructor back into private when done
-		BuilderAgent bobTheBuilder = new BuilderAgent(null);
-		AbstractBuilding home = new HomeDepot(new Point(5,5));
-		Resource coal = new Resource(10, null, ResourceType.COAL);
-		Resource gold = new Resource(10, new Point(12, 3), ResourceType.GOLD);
-		Resource iron = new Resource(10, new Point(12, 7), ResourceType.IRON);
-		game.addBuilding(home);
-		home.agentAddCapacity(coal.getType(), 100);
-		home.agentAddCapacity(gold.getType(), 100);
-		home.agentAddCapacity(iron.getType(), 100);
-		game.addBuildingInProcess(new Armory(new Point(5,5)));
-		game.createBuilding(new Armory(new Point(12, 3)));
-		bobTheBuilder.incrementCompletionAmount(game.getBuildingsInProcess().get(0));
-		assertEquals(game.getBuildingsInProcess().get(0).getCompletionAmount(), 3);
-		game.createBuilding(new Point(12, 3), BuildingType.CHARGINGSTATION);
-		System.out.println(game.getBuildingsInProcess());
-		
-		
-	}
+	
 	@Test
 	public void junkYardTest() {
 		JunkYard junkyard = new JunkYard(new Point(5,5));
 		Resource oil = new Resource(10, new Point(12, 3), ResourceType.OIL);
-		Resource iron = new Resource(10, new Point(12, 3), ResourceType.IRON);0
+		Resource iron = new Resource(10, new Point(12, 3), ResourceType.IRON);
 		assertFalse(junkyard.getResources().contains(oil.getType()));
 		assertTrue(junkyard.getResources().contains(iron.getType()));
 		junkyard.agentAddCapacity(iron.getType(), 20);
@@ -61,7 +41,7 @@ public class BuildingTest {
 		assertEquals((int) charge.getResourceAmount(electricSlide.getType()), 6);
 		charge.agentAddCapacity(electricSlide.getType(), 10000);
 		assertEquals((int) charge.getResourceAmount(electricSlide.getType()), 10006);
-		assertFalse(charge.isPassiveProvider());
+		assertTrue(charge.isPassiveProvider());
 	}
 	
 	@Test

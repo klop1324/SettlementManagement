@@ -8,13 +8,13 @@ import javax.imageio.ImageIO;
 
 public enum ResourceType {
 	
-	COAL(1,true, "coal"),
-	COPPER(2,true, "copper"),
-	ELECTRICITY(3,true, "solar"),
-	GOLD(4,true, "gold"),
-	IRON(5,true, "iron"),
-	OIL(6,true, "oil"),
-	TOOL(7,false);
+	COAL(0,true, "coal"),
+	COPPER(1,true, "copper"),
+	ELECTRICITY(2,true, "solar"),
+	GOLD(3,true, "gold"),
+	IRON(4,true, "iron"),
+	OIL(5,true, "oil"),
+	TOOL(6,false);
 	
 	private int value;
 	private boolean spawns;

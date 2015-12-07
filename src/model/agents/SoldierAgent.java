@@ -2,6 +2,7 @@ package model.agents;
 
 import java.awt.Point;
 import model.agents.AbstractAgent.AgentLogic;
+import model.resources.ResourceType;
 
 public class SoldierAgent extends AbstractAgent{
 	private int attackPoints = 5;
@@ -39,6 +40,13 @@ public class SoldierAgent extends AbstractAgent{
 	@Override
 	void decrementOil() {
 		oil = oil - 3;
+	}
+
+	@Override
+	public void initCostHashMap() {
+		agentCost.put(ResourceType.ELECTRICITY, 3000);
+		agentCost.put(ResourceType.IRON, 7000);
+		
 	}
 
 }

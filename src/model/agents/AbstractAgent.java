@@ -3,8 +3,11 @@ package model.agents;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import model.Game;
+import model.Map;
 import model.buildings.AbstractBuilding;
 import model.buildings.BuildingType;
 import model.resources.Resource;
@@ -12,12 +15,14 @@ import model.resources.ResourceType;
 import model.tools.ToolType;
 
 public abstract class AbstractAgent implements Serializable {
-	int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
+	protected int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
 			moveDelay, numberOfTasks;
-	Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
-	AgentLogic AI;
-	ResourceType carriedResourceType;
-	double buildRate;
+	protected HashMap<ResourceType, Integer> agentCost = new HashMap<ResourceType, Integer>();
+	protected Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
+	protected AgentLogic AI;
+	protected ResourceType carriedResourceType;
+	protected double buildRate;
+	protected Map map;
 
 	/**
 	 * Creates a new AbstractAgent at a given position.
@@ -37,6 +42,7 @@ public abstract class AbstractAgent implements Serializable {
 		damageFromEnemies = 500;
 		moveDelay = 10;
 		buildRate = 0.1;
+		initCostHashMap();
 	}
 	
 	public AgentLogic getAI() {
@@ -62,14 +68,20 @@ public abstract class AbstractAgent implements Serializable {
 		case ARMOR:
 			damageFromEnemies = 100;
 		case PICKAXE:
-			gatherRate = 500;
+			gatherRate = 1000;
 		case WELDINGGUN:
 			buildRate = 0.5;
 		case ROCKETS:
 			moveDelay = 5;
 		}
 	}
-
+	
+	public abstract void initCostHashMap();
+	
+	public HashMap<ResourceType, Integer> getCostMap(){
+		return agentCost;
+	}
+	
 	/**
 	 * Sets carriedResources. Used by AI only.
 	 * 
@@ -130,19 +142,53 @@ public abstract class AbstractAgent implements Serializable {
 	}
 
 	/**
-	 * Moves the Agent a space towards destination. No pathfinding yet, but
-	 * Agent randomly chooses whether to move horizantal or vertical towards a
-	 * diagonal target.
+	 * Moves the Agent a space towards destination. Placeholder terrible
+	 * pathfinding where the Agent will move horizantally until it reaches
+	 * the correct column or gets blocked, at which point it moves vertically
+	 * until it either hits its destination or stops being blocked horizantally.
 	 */
 	private void move() {
-		// TODO DIJKSTRA'S, BABY
 		if (atDestination() || destination == null)
 			return;
 		
-//		Game g = Game.getInstance();
-
-		boolean pRightOfD = position.x >= destination.x;
-		boolean pBelowD = position.y >= destination.y;
+//		if(map == null)
+//			map = Game.getInstance().getMap();
+//		
+		boolean inDestinationColumn = position.x == destination.x;
+		boolean pRightOfD = position.x > destination.x;
+		boolean pBelowD = position.y > destination.y;
+//		
+//		// Horizantal movement cases
+//		if(!inDestinationColumn) {
+//			if(pRightOfD && !map.blocked(new Point(position.x - 1, position.y))) {
+//				position = new Point(position.x - 1, position.y);
+//				return;
+//			}
+//			if(!pRightOfD && !map.blocked(new Point(position.x + 1, position.y))) {
+//				position = new Point(position.x + 1, position.y);
+//				return;
+//			}
+//		}
+//		
+//		// Vertical movement cases
+//		if(pBelowD && !map.blocked(new Point(position.x, position.y - 1))) {
+//			position = new Point(position.x, position.y - 1);
+//			return;
+//		}
+//		if(!pBelowD && !map.blocked(new Point(position.x + 1, position.y))) {
+//			position = new Point(position.x + 1, position.y);
+//			return;
+//		}
+//		
+//		// Movement failed due to block, try this as a last resort
+//		if(!map.blocked(new Point(position.x - 1, position.y))) {
+//			position = new Point(position.x - 1, position.y);
+//			return;
+//		}
+//		if(!map.blocked(new Point(position.x + 1, position.y))) {
+//			position = new Point(position.x + 1, position.y);
+//			return;
+//		}
 
 		int direction = (int) (Math.random() * 2);
 
@@ -299,19 +345,19 @@ public abstract class AbstractAgent implements Serializable {
 			ArrayList<AbstractBuilding> incompleteBuildingList = g.getBuildingsInProcess();
 			
 			// Need low
-			if (oil < 500) {
+			if (oil < 1000) {
 				if(actionQueue.isEmpty())
 					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_OIL, nearestOilTank));
 			}
-			if (energy < 500) {
+			if (energy < 1000) {
 				if(actionQueue.isEmpty())
 					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
 					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_ENERGY, nearestChargingStation));
 			}
-			if (condition < 500) {
+			if (condition < 1000) {
 				if(actionQueue.isEmpty())
 					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
@@ -357,42 +403,46 @@ public abstract class AbstractAgent implements Serializable {
 
 			Game g = Game.getInstance();
 
-			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 100) {
+			if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_OIL) && oil <= MAX_NEED - 500) {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
-						if(b.getResourceAmount(ResourceType.OIL) < 100)
+						if(b.getResourceAmount(ResourceType.OIL) < 500) {
+							energy += b.getResourceAmount(ResourceType.OIL);
+							b.agentRemoveCapacity(ResourceType.OIL, b.getResourceAmount(ResourceType.OIL));
 							return false;
-						else {
-							b.agentRemoveCapacity(ResourceType.OIL, 100);
-							oil += 100;
+						} else {
+							b.agentRemoveCapacity(ResourceType.OIL, 500);
+							oil += 500;
 							return true;
 						}
 					}
 				}
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_ENERGY)
-					&& energy <= MAX_NEED - 100) {
+					&& energy <= MAX_NEED - 500) {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
-						if(b.getResourceAmount(ResourceType.ELECTRICITY) < 100) {
+						if(b.getResourceAmount(ResourceType.ELECTRICITY) < 500) {
 							energy += b.getResourceAmount(ResourceType.ELECTRICITY);
 							b.agentRemoveCapacity(ResourceType.ELECTRICITY, b.getResourceAmount(ResourceType.ELECTRICITY));
 							return false;
 						} else {
-							energy += 100;
-							b.agentRemoveCapacity(ResourceType.ELECTRICITY, 100);
+							energy += 500;
+							b.agentRemoveCapacity(ResourceType.ELECTRICITY, 500);
 							return true;
 						}
 					}
 				}
 			} else if (actionQueue.get(0).getAgentCommand().equals(AgentCommand.REFILL_CONDITION)
-					&& condition <= MAX_NEED - 100) {
+					&& condition <= MAX_NEED - 500) {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
-						if(b.getResourceAmount(ResourceType.IRON) < 100)
+						if(b.getResourceAmount(ResourceType.IRON) < 500) {
+							energy += b.getResourceAmount(ResourceType.IRON);
+							b.agentRemoveCapacity(ResourceType.IRON, b.getResourceAmount(ResourceType.IRON));
 							return false;
-						else {
-							b.agentRemoveCapacity(ResourceType.IRON, 100);
-							condition += 100;
+						} else {
+							b.agentRemoveCapacity(ResourceType.IRON, 500);
+							condition += 500;
 							return true;
 						}
 					}
@@ -425,7 +475,7 @@ public abstract class AbstractAgent implements Serializable {
 				boolean resourceDepleted = false;
 
 				Resource collectingResource = null;
-				for (Resource r : g.getResources()) {
+				for (Resource r : g.getMapResources()) {
 					if (r.getLocation().x == position.x && r.getLocation().y == position.y)
 						collectingResource = r;
 				}
