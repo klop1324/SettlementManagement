@@ -47,11 +47,9 @@ public class Game extends Observable implements Serializable {
 	private Map map;
 
 	private Timer timer;
-	private Point resourcePointClicked = null;
 
 	private boolean haveWon = false;
 	private boolean haveLost = false;
-	private AbstractAgent a;
 
 	public static synchronized Game getInstance() {
 		if (game == null) {
@@ -111,7 +109,6 @@ public class Game extends Observable implements Serializable {
 	public void agentToResource(Point resourcePointClicked) {
 
 		WorkerAgent agentToSend = null;
-		this.resourcePointClicked = resourcePointClicked;
 		ResourceType resourceTypeClicked = getResourceClicked(resourcePointClicked).getType();
 
 		int min = 0;

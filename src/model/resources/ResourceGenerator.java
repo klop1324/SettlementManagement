@@ -24,13 +24,14 @@ public class ResourceGenerator {
 	}
 	
 	private void generate() {
-		// magic numbers, i know.
+		// generates log(sqrt(MapSizeX*MapSizeY))* MapRichness\
+		// magic numbers, i know.\
 		int size = 32;
 		PerlinNoise noise = new PerlinNoise(size, size);
-		int generationArray[][] = new int[xLength][yLength];
+		int generationArray[][] = new int[GlobalSettings.MAP_SIZE_X][GlobalSettings.MAP_SIZE_Y];
 
-		for (int y = 0; y < yLength; y++) {
-			for (int x = 0; x < xLength; x++) {
+		for (int y = 0; y < GlobalSettings.MAP_SIZE_X; y++) {
+			for (int x = 0; x < GlobalSettings.MAP_SIZE_Y; x++) {
 
 				float xx = (float) x / generationArray.length * size; 
 				float yy = (float) y / generationArray[0].length * size; 
@@ -78,7 +79,7 @@ public class ResourceGenerator {
 	// recursive, going through the blob formed by -1's in the array, adding them to the mapResources
 	private int[][] generationHelper(int array[][], int x, int y, ResourceType resource){
 		if(array[x][y] == -1){
-			if(Tile.values()[map.get(x, y)].isPassible()){
+			if(Tile.values()[this.map.get(x, y)].isPassible()){
 				mapResources.add(new Resource(((int) ((Math.random()+5.0) * 1000.0 * GlobalSettings.MAP_RICHNESS)), new Point(x,y), resource));
 			}
 			// base case
