@@ -920,7 +920,8 @@ class SettlementGUI extends JFrame implements Observer {
 				int input = JOptionPane.showOptionDialog(currentFrame,
 						"Your agents tried to add too much to " + b.getName() + "!\n"
 								+ "They quickly dropped all that they carried and it's no longer usable!\n"
-								+ "Such a waste... ",
+								+ "Such a waste... "
+								+ "Build another building to make sure you can hold it all next time!",
 								null,
 								JOptionPane.YES_NO_CANCEL_OPTION,
 								JOptionPane.QUESTION_MESSAGE,
@@ -937,6 +938,7 @@ class SettlementGUI extends JFrame implements Observer {
 			notificationArea.setText(resourceNotification);
 			notificationArea.repaint();
 		}
+		//String agentsLeft = 
 		if(game.haveWonTheGame()){
 			JOptionPane.showConfirmDialog(this,"You have won the game!", null, JOptionPane.OK_OPTION);
 			System.exit(0);
