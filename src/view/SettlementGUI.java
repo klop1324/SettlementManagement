@@ -103,6 +103,7 @@ class SettlementGUI extends JFrame implements Observer {
 	String[] agentOrBuilding = {"select one", "build building", "create agent", "create tool"};
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
+	private String resourceNotification = "";
 
 	public static void main(String[] args) {
 		(new SettlementGUI()).setVisible(true);
@@ -877,13 +878,29 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 		// END SUPER HACKY CODE
 		}
-		String resourceNotification = "";
-		for (Resource r: game.getMapResources()) {
-			if (r.getNotification() != null){
-				resourceNotification += r.getNotification() + "\n";
-				notificationArea.setText(resourceNotification);
-				notificationArea.repaint();
+		
+		for (AbstractBuilding b: game.getBuildings()){
+			if(b.getErrors()){
+				Object[] options = {"OK"};
+				int input = JOptionPane.showOptionDialog(currentFrame,
+						"Your agents tried to add too much to " + b.getName() + "!\n"
+								+ "They quickly dropped all that they carried and it's no longer usable!\n"
+								+ "Such a waste... ",
+								null,
+								JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,
+								null,
+								options,
+								options[0]);
+				if(input == JOptionPane.OK_OPTION || input == JOptionPane.CLOSED_OPTION){
+					b.resetErrors();
+				}
 			}
+		}
+		if (game.getNotification() != null){
+			resourceNotification = game.getNotification();
+			notificationArea.setText(resourceNotification);
+			notificationArea.repaint();
 		}
 		if(game.haveWonTheGame()){
 			int userSelection = JOptionPane.showConfirmDialog(currentFrame,"You have won the game!", null, JOptionPane.OK_OPTION);
