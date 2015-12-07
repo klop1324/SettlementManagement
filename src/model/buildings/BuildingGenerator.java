@@ -86,14 +86,14 @@ public class BuildingGenerator implements Serializable{
 		return flag;
 	}
 	
-	public boolean canPlace(Point p){
+	private boolean canPlace(Point p){
 		for(AbstractBuilding b: buildings){
-			if(b.getLocation().equals(p)){
+			if(b.getLocation().x == p.x && b.getLocation().y == p.y){
 				return false;
 			}
 		}
 		for(Resource r : mapResources){
-			if(r.getLocation().equals(p)){
+			if(r.getLocation().x == p.x && r.getLocation().y == p.y){
 				return false;
 			}
 		}
