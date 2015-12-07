@@ -62,6 +62,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private JButton nextButton = new JButton(">>");
 	private JButton infoButton = new JButton();
 	private JButton notifierButton = new JButton();
+	private JButton miniMapButton = new JButton();
 	private JButton individualButton = new JButton();
 	private JButton createButton = new JButton("Create/Build");
 	private JButton helpButton = new JButton("Help");
@@ -81,17 +82,18 @@ class SettlementGUI extends JFrame implements Observer {
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
 	private JPanel helpPanel = new JPanel();
+	private JPanel miniMapPanel = new JPanel();
 	private JComboBox selectAgent;
 	private Stats individual = new Stats();
 	private HelpMenu helpMenu = new HelpMenu();
 	private int one = 0;
 	private int two = 0;
+	private int three = 0;
 	private int next = 0;
 	private int selectedEnemyID;
 	private int clickX;
 	private int clickY;
-	//private int viewX;
-	//private int viewY;
+	private MiniMap miniMap = new MiniMap();
 	private JScrollBar vertical = new JScrollBar();
 	private JScrollBar horizontal = new JScrollBar();
 	private Point userClick;
@@ -193,6 +195,11 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.add(panel5);
 		infoPanel.add(panel6);
 		
+		miniMap.setBounds(595, 372, 200, 200);
+		//miniMapPanel.setBounds(540, 332, 210, 210);
+		//miniMapPanel.add(miniMap);
+		miniMap.setVisible(false);
+		
 		registerListeners();
 		
 //		JOptionPane tutorial = new JOptionPane();
@@ -237,11 +244,15 @@ class SettlementGUI extends JFrame implements Observer {
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.PGDN);
 		input.put(key, vertical.getActionForKeyStroke(KeyStroke.getKeyStroke("DOWN")));
 		backgroundPanel.add(cs, new Integer(0), 0);
-		
+
 		infoButton.setBounds(635, 20, 10, 40);
 		notifierButton.setBounds(20, 392, 40, 10);
+		miniMapButton.setBounds(600, 562, 40, 10);
+		miniMapButton.setVisible(false);
 						
 		this.add(backgroundPanel);
+		backgroundPanel.add(miniMap, new Integer(2), 0);
+		backgroundPanel.add(miniMapButton, new Integer(2), 0);
 		backgroundPanel.add(individual, new Integer(1), 0);
 		backgroundPanel.add(infoButton, new Integer(1), 0);
 		backgroundPanel.add(notifierButton, new Integer(1), 0);
@@ -379,6 +390,7 @@ class SettlementGUI extends JFrame implements Observer {
 		nextButton.addActionListener(new NextButtonListener());
 		infoButton.addActionListener(new InfoButtonListener());
 		notifierButton.addActionListener(new NotifierButtonListener());
+		miniMapButton.addActionListener(new MiniMapButtonListener());
 		createButton.addActionListener(new CreateListener());
 		selectAgent.addActionListener(new DropDownListener());
 		helpButton.addActionListener(new HelpButtonListener());
@@ -412,11 +424,36 @@ class SettlementGUI extends JFrame implements Observer {
 				notifierPanel.setVisible(false);
 				notifierButton.setBounds(20, 562, 40, 10);
 				helpPanel.setVisible(false);
+				miniMapButton.setVisible(true);
+				if (!miniMap.isVisible()) {
+					//three++;
+					miniMapButton.setBounds(615, 562, 40, 10);
+				}
 			}
 			else {
 				notifierPanel.setVisible(true);
 				notifierButton.setBounds(20, 392, 40, 10);
 				helpPanel.setVisible(true);
+				miniMap.setVisible(false);
+				miniMapButton.setVisible(false);
+				if (miniMap.isVisible())
+					three++;
+			}
+		}
+	}
+	
+	private class MiniMapButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			three++;
+			if (three % 2 != 0) {
+				miniMap.setVisible(true);
+				miniMapButton.setBounds(600, 362, 40, 10);
+			}
+			else {
+				miniMap.setVisible(false);
+				miniMapButton.setBounds(600, 562, 40, 10);
 			}
 		}
 	}
@@ -886,11 +923,11 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 		}
 		if(game.haveWonTheGame()){
-			int userSelection = JOptionPane.showConfirmDialog(currentFrame,"You have won the game!", null, JOptionPane.OK_OPTION);
+			int userSelection = JOptionPane.showConfirmDialog(this,"You have won the game!", null, JOptionPane.OK_OPTION);
 			System.exit(0);
 		}
 		if(game.haveLost()){
-			int userSelection = JOptionPane.showConfirmDialog(currentFrame,"You have lost the game!", null, JOptionPane.INFORMATION_MESSAGE);
+			int userSelection = JOptionPane.showConfirmDialog(this,"You have lost the game!", null, JOptionPane.INFORMATION_MESSAGE);
 			System.exit(0);
 		}
 		repaint();
