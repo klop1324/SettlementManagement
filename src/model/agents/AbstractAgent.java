@@ -86,6 +86,7 @@ public abstract class AbstractAgent implements Serializable {
 	public Set<ResourceType> getResourceSet(){
 		return resourceSet;
 	}
+	
 	/**
 	 * Sets carriedResources. Used by AI only.
 	 * 
