@@ -157,10 +157,6 @@ public abstract class AbstractBuilding implements Serializable{
 		}
 		else{
 			int result = currentAmount.get(resource) - amount;
-			if(result > capacity){
-				System.out.println("Cannot Add Resource! We would go over Capacity!");
-				return;
-			}
 			// Comment this out if you need to test creating when you don't have enough resources
 			if (result < 0){
 				System.out.println("Can't take more than you have.");
