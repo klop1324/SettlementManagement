@@ -18,7 +18,6 @@ public abstract class AbstractAgent implements Serializable {
 	protected int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
 			moveDelay, numberOfTasks;
 	protected HashMap<ResourceType, Integer> agentCost = new HashMap<ResourceType, Integer>();
-	protected Set<ResourceType> resourceSet;
 	protected Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	protected AgentLogic AI;
 	protected ResourceType carriedResourceType;
@@ -84,7 +83,7 @@ public abstract class AbstractAgent implements Serializable {
 	}
 	
 	public Set<ResourceType> getResourceSet(){
-		return resourceSet;
+		return agentCost.keySet();
 	}
 	/**
 	 * Sets carriedResources. Used by AI only.

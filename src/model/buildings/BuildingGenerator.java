@@ -1,6 +1,7 @@
 package model.buildings;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.GlobalSettings;
@@ -8,7 +9,7 @@ import model.Map;
 import model.Tile;
 import model.resources.Resource;
 
-public class BuildingGenerator {
+public class BuildingGenerator implements Serializable{
 	
 	ArrayList<AbstractBuilding> buildings;
 	ArrayList<Resource> mapResources;
