@@ -48,7 +48,6 @@ public class BuilderAgent extends AbstractAgent {
 	public void initCostHashMap() {
 		agentCost.put(ResourceType.ELECTRICITY, 3000);
 		agentCost.put(ResourceType.IRON, 4000);
-		resourceSet = agentCost.keySet();
 		
 	}
 

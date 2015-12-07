@@ -30,7 +30,6 @@ public class WorkerAgent extends AbstractAgent {
 	public void initCostHashMap() {
 		agentCost.put(ResourceType.ELECTRICITY, 4000);
 		agentCost.put(ResourceType.IRON, 4000);
-		resourceSet = agentCost.keySet();
 		
 	}
 

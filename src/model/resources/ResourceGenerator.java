@@ -1,6 +1,7 @@
 package model.resources;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.GlobalSettings;
@@ -8,7 +9,7 @@ import model.Map;
 import model.PerlinNoise;
 import model.Tile;
 
-public class ResourceGenerator {
+public class ResourceGenerator implements Serializable{
 	
 	Map map;
 	int xLength,yLength;
