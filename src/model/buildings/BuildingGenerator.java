@@ -59,29 +59,28 @@ public class BuildingGenerator implements Serializable{
 	private boolean canInitBuildings(Point p){
 		if(!(p.x< GlobalSettings.MAP_SIZE_X-1) || !(p.x>1)) return false;
 		if(!(p.y< GlobalSettings.MAP_SIZE_Y-1) || !(p.y>1)) return false;
-		Tile values[] = Tile.values();
 		boolean flag = true;
 		//mess to check is there's a empty square around p.x,p.y
 		Point tempP = p;
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x+1, p.y);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x+1, p.y+1);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x+1, p.y-1);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x, p.y);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x, p.y+1);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x, p.y-1);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x-1, p.y);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x-1, p.y+1);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		tempP = new Point(p.x-1, p.y-1);
-		if(!canPlace(p)) flag = false;
+		if(!canPlace(tempP)) flag = false;
 		
 		return flag;
 	}
