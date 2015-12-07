@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -16,7 +15,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
@@ -28,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,6 +38,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
@@ -53,6 +51,10 @@ import model.tools.*;
 
 class SettlementGUI extends JFrame implements Observer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JFrame currentFrame = this;
 	private ViewController mapArea;
 	private Game game;
@@ -102,6 +104,7 @@ class SettlementGUI extends JFrame implements Observer {
 	String[] agentOrBuilding = {"select one", "build building", "create agent", "create tool"};
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
+	private String resourceNotification = "";
 
 	public static void main(String[] args) {
 		(new SettlementGUI()).setVisible(true);
@@ -223,8 +226,8 @@ class SettlementGUI extends JFrame implements Observer {
 		cs.setBounds(0, 0, 795, 572);
 		vertical = cs.getVerticalScrollBar();
 		horizontal = cs.getHorizontalScrollBar();
-		cs.setVerticalScrollBarPolicy(cs.VERTICAL_SCROLLBAR_ALWAYS);
-		cs.setHorizontalScrollBarPolicy(cs.HORIZONTAL_SCROLLBAR_ALWAYS);
+		cs.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		cs.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		vertical.setUnitIncrement(10);
 		horizontal.setUnitIncrement(10);
 		vertical.setPreferredSize(new Dimension(0, 0));
@@ -334,16 +337,15 @@ class SettlementGUI extends JFrame implements Observer {
 			ObjectInputStream objectStream = new ObjectInputStream(input);
 			try {
 				Game.onLoad((Game) objectStream.readObject());
-				game.getInstance().startGame();
+				Game.getInstance().startGame();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			input.close();
 			objectStream.close();
 			}
 			finally{
-				game.getInstance();
+				Game.getInstance();
 			}
 		}
 	}
@@ -364,7 +366,7 @@ class SettlementGUI extends JFrame implements Observer {
 					try {
 						FileOutputStream outputStream = new FileOutputStream("SettlementManagement");
 						ObjectOutputStream objectStream = new ObjectOutputStream(outputStream);
-						game.getInstance().stopGame();
+						Game.getInstance().stopGame();
 						objectStream.writeObject(Game.getInstance());
 						
 						objectStream.close();
@@ -720,25 +722,21 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 		
@@ -856,24 +854,42 @@ class SettlementGUI extends JFrame implements Observer {
 					currAmount = Integer.parseInt(oilAmount.getText());
 					oilAmount.setText(b.getResourceAmount(resource)+currAmount+"");
 					break;
+				default:
+					break;
 				}
 			}
 		// END SUPER HACKY CODE
 		}
-		String resourceNotification = "";
-		for (Resource r: game.getMapResources()) {
-			if (r.getNotification() != null){
-				resourceNotification += r.getNotification() + "\n";
-				notificationArea.setText(resourceNotification);
-				notificationArea.repaint();
+		
+		for (AbstractBuilding b: game.getBuildings()){
+			if(b.getErrors()){
+				Object[] options = {"OK"};
+				int input = JOptionPane.showOptionDialog(currentFrame,
+						"Your agents tried to add too much to " + b.getName() + "!\n"
+								+ "They quickly dropped all that they carried and it's no longer usable!\n"
+								+ "Such a waste... ",
+								null,
+								JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,
+								null,
+								options,
+								options[0]);
+				if(input == JOptionPane.OK_OPTION || input == JOptionPane.CLOSED_OPTION){
+					b.resetErrors();
+				}
 			}
 		}
+		if (game.getNotification() != null){
+			resourceNotification = game.getNotification();
+			notificationArea.setText(resourceNotification);
+			notificationArea.repaint();
+		}
 		if(game.haveWonTheGame()){
-			int userSelection = JOptionPane.showConfirmDialog(this,"You have won the game!", null, JOptionPane.OK_OPTION);
+			JOptionPane.showConfirmDialog(this,"You have won the game!", null, JOptionPane.OK_OPTION);
 			System.exit(0);
 		}
 		if(game.haveLost()){
-			int userSelection = JOptionPane.showConfirmDialog(this,"You have lost the game!", null, JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showConfirmDialog(this,"You have lost the game!", null, JOptionPane.INFORMATION_MESSAGE);
 			System.exit(0);
 		}
 		repaint();

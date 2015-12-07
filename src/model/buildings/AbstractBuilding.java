@@ -19,6 +19,7 @@ public abstract class AbstractBuilding implements Serializable{
 	protected ArrayList<ResourceType> holdableResources;
 	protected HashMap<ResourceType, Integer> currentAmount;
 	protected int remaining = 0; //SUPER SKETCHY HACKY CODE
+	protected boolean error = false;
 	
 	//Build state stuff
 	protected int buildTime;
@@ -116,6 +117,10 @@ public abstract class AbstractBuilding implements Serializable{
 			throw new RuntimeException("does not contain This Resource!");
 		}
 		else{
+			if (amount > capacity){
+				System.out.println("You must build another building to hold all this!");
+				return;
+			}
 			currentAmount.replace(resource, currentAmount.get(resource) + amount);
 		}
 	}
@@ -131,6 +136,9 @@ public abstract class AbstractBuilding implements Serializable{
 				System.out.println("does not contain This Resource!");
 				return;
 			}
+			if (remaining > capacity){
+				currentAmount.replace(resource, capacity);
+			}
 			else{
 				currentAmount.replace(resource, currentAmount.get(resource) + temp);
 			}
@@ -138,7 +146,10 @@ public abstract class AbstractBuilding implements Serializable{
 	}
 	
 	public void addResource(ResourceType resource, double amount){
-		if(amount + currentAmount.get(resource) > capacity) return;
+		if(amount + currentAmount.get(resource) > capacity){
+			error = true;
+			return;
+		}
 		int temp = (int)remaining;
 		remaining -= temp;
 		if(!holdableResources.contains(resource)){
@@ -190,6 +201,10 @@ public abstract class AbstractBuilding implements Serializable{
 	// Allows agents to add their resource to the building
 	public void agentAddCapacity(ResourceType resource, int amount) {
 		int newResourceAmount = currentAmount.get(resource) + amount;
+		if (newResourceAmount > capacity){
+			error = true;
+			return;
+		}
 		currentAmount.replace(resource, newResourceAmount);
 	}
 
@@ -199,6 +214,14 @@ public abstract class AbstractBuilding implements Serializable{
 		else{
 			return true;
 		}	
+	}
+	
+	public boolean getErrors(){
+		return error;
+	}
+	
+	public void resetErrors(){
+		error = false;
 	}
 	
 	public Image getImage(){
