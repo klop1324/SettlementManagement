@@ -6,10 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Observable;
-import java.util.Set;
-
 import javax.swing.Timer;
 
 import model.agents.AbstractAgent;
@@ -20,16 +17,8 @@ import model.agents.Enemy;
 import model.agents.SoldierAgent;
 import model.agents.WorkerAgent;
 import model.buildings.AbstractBuilding;
-import model.buildings.Armory;
 import model.buildings.BuildingGenerator;
-import model.buildings.BuildingType;
-import model.buildings.ChargingStation;
-import model.buildings.HomeDepot;
-import model.buildings.JunkYard;
-import model.buildings.OilTank;
-import model.buildings.OilWell;
 import model.buildings.VictoryMonument;
-import model.buildings.Workshop;
 import model.resources.Resource;
 import model.resources.ResourceGenerator;
 import model.resources.ResourceType;
@@ -37,6 +26,10 @@ import model.tools.ToolType;
 
 public class Game extends Observable implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Game game;
 	private ArrayList<AbstractBuilding> buildings;
 	private ArrayList<Resource> mapResources;
@@ -254,6 +247,7 @@ public class Game extends Observable implements Serializable {
 				}
 			}
 		}
+		
 		// checks for every resource that the there are more resources total than required
 		for(ResourceType r: reqResources.keySet()){
 			if(!(resourceValues.get(r.getValue()) >= reqResources.get(r))) flag = false;
@@ -277,10 +271,7 @@ public class Game extends Observable implements Serializable {
 	 *            BuildingType of new Building.
 	 */
 	public void createBuilding(AbstractBuilding b){
-		// TODO Refactor once functionality is figured out
-		Point p = b.getLocation();
 		if(!canBuildBuilding(b)) throw new RuntimeException("cannot create!");
-		
 		removeResources(b.getCost());
 		buildingsInProcess.add(b);
 	}
