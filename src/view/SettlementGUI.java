@@ -79,11 +79,9 @@ class SettlementGUI extends JFrame implements Observer {
 	private JLabel copperAmount = new JLabel("");
 	private JLabel ironAmount = new JLabel("");
 	private JLabel goldAmount = new JLabel("");
-	private JLabel name = new JLabel("Click Something");
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
 	private JPanel helpPanel = new JPanel();
-	private JPanel miniMapPanel = new JPanel();
 	private JComboBox selectAgent;
 	private Stats individual = new Stats();
 	private HelpMenu helpMenu = new HelpMenu();
@@ -198,8 +196,6 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.add(panel6);
 		
 		miniMap.setBounds(595, 372, 200, 200);
-		//miniMapPanel.setBounds(540, 332, 210, 210);
-		//miniMapPanel.add(miniMap);
 		miniMap.setVisible(false);
 		
 		registerListeners();
@@ -396,7 +392,6 @@ class SettlementGUI extends JFrame implements Observer {
 		selectAgent.addActionListener(new DropDownListener());
 		helpButton.addActionListener(new HelpButtonListener());
 		mapArea.addMouseListener(new ClickerListener());
-		this.addKeyListener(new ArrowKeyListener());
 		addObservers();
 	}
 	
@@ -427,7 +422,6 @@ class SettlementGUI extends JFrame implements Observer {
 				helpPanel.setVisible(false);
 				miniMapButton.setVisible(true);
 				if (!miniMap.isVisible()) {
-					//three++;
 					miniMapButton.setBounds(615, 562, 40, 10);
 				}
 			}
@@ -748,56 +742,6 @@ class SettlementGUI extends JFrame implements Observer {
 		
 	}
 	
-	private class ArrowKeyListener implements KeyListener{
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-			/*if (e.isActionKey())
-				System.out.println("hello");
-			InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-			InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-			
-			int key = e.getKeyCode();
-			if (key == KeyEvent.VK_UP) {
-				//System.out.println("up");
-				imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
-				if(cs.getViewport().getHeight()-5 >= 0){
-					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()-5));
-					currentFrame.repaint();
-				}
-				
-				System.out.println("up");
-			}
-			else if (key == KeyEvent.VK_DOWN) {
-				imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
-				if(cs.getViewport().getHeight()+5 >= 0){
-					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()+5));
-					currentFrame.repaint();
-				}
-				System.out.println("down");
-			}
-			else if (key == KeyEvent.VK_RIGHT) {
-				imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
-				System.out.println("right");
-			}
-			else if (key == KeyEvent.VK_LEFT) {
-				imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
-				System.out.println("left");
-			}*/
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-			
-		}
-		
-	}
-	
 	private class CollectButtonListener implements ActionListener {
 
 		@Override
@@ -863,6 +807,10 @@ class SettlementGUI extends JFrame implements Observer {
 		gameBuildings = game.getBuildings();
 		individual.update(userClick);
 		dialogBoxes();
+		miniMap.setViewX(cs.getViewport().getViewPosition().x);
+		miniMap.setViewY(cs.getViewport().getViewPosition().y);
+		miniMap.setViewWidth(cs.getWidth());
+		miniMap.setViewHeight(cs.getHeight());
 		//SUPER HACKY CODE
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
 		labels.add(electricityAmount);
@@ -872,7 +820,6 @@ class SettlementGUI extends JFrame implements Observer {
 		labels.add(ironAmount);
 		labels.add(oilAmount);
 		
-		// l.setText(l.getText() + "0");
 		for(JLabel l: labels){
 			l.setText("0");
 		}

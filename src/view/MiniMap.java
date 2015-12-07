@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +33,10 @@ public class MiniMap extends JPanel {
 	private Map map;
 	private ArrayList<AbstractAgent> agents;
 	private int counter = 0;
+	private int viewPortX;
+	private int viewPortY;
+	private int viewPortWidth;
+	private int viewPortHeight;
 
 	public static void main(String[] args) {
 		(new MiniMap()).setVisible(true);
@@ -50,6 +55,7 @@ public class MiniMap extends JPanel {
 		map = game.getMap();
 		Tile tile[] = Tile.values();
 		int tileNum;
+		Color transparent = new Color(0, 0, 0, 50);
 		if (counter == 1) {
 			for (int i = 0; i < map.getXLength(); i++) {
 				for (int j = 0; j < map.getYLength(); j++) {
@@ -89,12 +95,25 @@ public class MiniMap extends JPanel {
 			g2.setColor(Color.GREEN);
 			g2.fillOval(e.getPosition().x * 2, e.getPosition().y * 2, 4, 4);
 		}
+		g2.setColor(Color.BLACK.brighter());
+		g2.drawRect((viewPortX/50)*2, (viewPortY/50)*2, (viewPortWidth/50)*2, (viewPortHeight/50)*2);
+		g2.setColor(transparent);
+		g2.fillRect((viewPortX/50)*2, (viewPortY/50)*2, (viewPortWidth/50)*2, (viewPortHeight/50)*2);
 	}
-
-	// @Override
-	// public void update(Observable observable, Object arg1) {
-	// game = (Game) observable;
-	// agents = game.getAgents();
-	// repaint();
-	// }
+	
+	public void setViewX(int num) {
+		viewPortX = num;
+	}
+	
+	public void setViewY(int num) {
+		viewPortY = num;
+	}
+	
+	public void setViewWidth(int num) {
+		viewPortWidth = num;
+	}
+	
+	public void setViewHeight(int num) {
+		viewPortHeight = num;
+	}
 }
