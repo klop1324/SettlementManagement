@@ -427,7 +427,7 @@ public abstract class AbstractAgent implements Serializable {
 				boolean resourceDepleted = false;
 
 				Resource collectingResource = null;
-				for (Resource r : g.getResources()) {
+				for (Resource r : g.getMapResources()) {
 					if (r.getLocation().x == position.x && r.getLocation().y == position.y)
 						collectingResource = r;
 				}

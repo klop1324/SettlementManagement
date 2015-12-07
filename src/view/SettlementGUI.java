@@ -754,7 +754,7 @@ class SettlementGUI extends JFrame implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			System.out.println(userClick);
-			for (Resource r: game.getResources()){
+			for (Resource r: game.getMapResources()){
 				if (r.getLocation().equals(userClick)){
 					game.agentToResource(userClick);
 				}
@@ -863,7 +863,7 @@ class SettlementGUI extends JFrame implements Observer {
 		// END SUPER HACKY CODE
 		}
 		String resourceNotification = "";
-		for (Resource r: game.getResources()) {
+		for (Resource r: game.getMapResources()) {
 			if (r.getNotification() != null){
 				resourceNotification += r.getNotification() + "\n";
 				notificationArea.setText(resourceNotification);

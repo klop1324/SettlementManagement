@@ -74,7 +74,7 @@ public class ViewController extends JPanel implements Observer {
 			}
 		}
 		
-		for (Resource r: game.getResources()){
+		for (Resource r: game.getMapResources()){
 			g2.drawImage(r.getType().getImage(), r.getLocation().x *50, r.getLocation().y*50, null);
 		}
 		

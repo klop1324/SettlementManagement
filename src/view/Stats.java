@@ -145,7 +145,7 @@ public class Stats extends JPanel {
 				amount.setText("Carrying: " + resourceAmount);
 			}
 		}
-		for (Resource r: game.getResources()){
+		for (Resource r: game.getMapResources()){
 			if (r.getLocation().equals(userClick)){
 				this.removeAll();
 				isResource = true;
