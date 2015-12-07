@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -16,7 +15,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
@@ -28,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,6 +38,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 import model.Game;
@@ -53,6 +51,10 @@ import model.tools.*;
 
 class SettlementGUI extends JFrame implements Observer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JFrame currentFrame = this;
 	private ViewController mapArea;
 	private Game game;
@@ -62,7 +64,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private JButton nextButton = new JButton(">>");
 	private JButton infoButton = new JButton();
 	private JButton notifierButton = new JButton();
-	private JButton individualButton = new JButton();
+	private JButton miniMapButton = new JButton();
 	private JButton createButton = new JButton("Create/Build");
 	private JButton helpButton = new JButton("Help");
 	private JLabel electricityLabel = new JLabel("Electricity: ");
@@ -81,17 +83,18 @@ class SettlementGUI extends JFrame implements Observer {
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
 	private JPanel helpPanel = new JPanel();
+	private JPanel miniMapPanel = new JPanel();
 	private JComboBox selectAgent;
 	private Stats individual = new Stats();
 	private HelpMenu helpMenu = new HelpMenu();
 	private int one = 0;
 	private int two = 0;
+	private int three = 0;
 	private int next = 0;
 	private int selectedEnemyID;
 	private int clickX;
 	private int clickY;
-	//private int viewX;
-	//private int viewY;
+	private MiniMap miniMap = new MiniMap();
 	private JScrollBar vertical = new JScrollBar();
 	private JScrollBar horizontal = new JScrollBar();
 	private Point userClick;
@@ -194,6 +197,11 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.add(panel5);
 		infoPanel.add(panel6);
 		
+		miniMap.setBounds(595, 372, 200, 200);
+		//miniMapPanel.setBounds(540, 332, 210, 210);
+		//miniMapPanel.add(miniMap);
+		miniMap.setVisible(false);
+		
 		registerListeners();
 		
 //		JOptionPane tutorial = new JOptionPane();
@@ -222,8 +230,8 @@ class SettlementGUI extends JFrame implements Observer {
 		cs.setBounds(0, 0, 795, 572);
 		vertical = cs.getVerticalScrollBar();
 		horizontal = cs.getHorizontalScrollBar();
-		cs.setVerticalScrollBarPolicy(cs.VERTICAL_SCROLLBAR_ALWAYS);
-		cs.setHorizontalScrollBarPolicy(cs.HORIZONTAL_SCROLLBAR_ALWAYS);
+		cs.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		cs.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		vertical.setUnitIncrement(10);
 		horizontal.setUnitIncrement(10);
 		vertical.setPreferredSize(new Dimension(0, 0));
@@ -238,11 +246,15 @@ class SettlementGUI extends JFrame implements Observer {
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.PGDN);
 		input.put(key, vertical.getActionForKeyStroke(KeyStroke.getKeyStroke("DOWN")));
 		backgroundPanel.add(cs, new Integer(0), 0);
-		
+
 		infoButton.setBounds(635, 20, 10, 40);
 		notifierButton.setBounds(20, 392, 40, 10);
+		miniMapButton.setBounds(600, 562, 40, 10);
+		miniMapButton.setVisible(false);
 						
 		this.add(backgroundPanel);
+		backgroundPanel.add(miniMap, new Integer(2), 0);
+		backgroundPanel.add(miniMapButton, new Integer(2), 0);
 		backgroundPanel.add(individual, new Integer(1), 0);
 		backgroundPanel.add(infoButton, new Integer(1), 0);
 		backgroundPanel.add(notifierButton, new Integer(1), 0);
@@ -329,16 +341,15 @@ class SettlementGUI extends JFrame implements Observer {
 			ObjectInputStream objectStream = new ObjectInputStream(input);
 			try {
 				Game.onLoad((Game) objectStream.readObject());
-				game.getInstance().startGame();
+				Game.getInstance().startGame();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			input.close();
 			objectStream.close();
 			}
 			finally{
-				game.getInstance();
+				Game.getInstance();
 			}
 		}
 	}
@@ -359,7 +370,7 @@ class SettlementGUI extends JFrame implements Observer {
 					try {
 						FileOutputStream outputStream = new FileOutputStream("SettlementManagement");
 						ObjectOutputStream objectStream = new ObjectOutputStream(outputStream);
-						game.getInstance().stopGame();
+						Game.getInstance().stopGame();
 						objectStream.writeObject(Game.getInstance());
 						
 						objectStream.close();
@@ -380,6 +391,7 @@ class SettlementGUI extends JFrame implements Observer {
 		nextButton.addActionListener(new NextButtonListener());
 		infoButton.addActionListener(new InfoButtonListener());
 		notifierButton.addActionListener(new NotifierButtonListener());
+		miniMapButton.addActionListener(new MiniMapButtonListener());
 		createButton.addActionListener(new CreateListener());
 		selectAgent.addActionListener(new DropDownListener());
 		helpButton.addActionListener(new HelpButtonListener());
@@ -413,11 +425,36 @@ class SettlementGUI extends JFrame implements Observer {
 				notifierPanel.setVisible(false);
 				notifierButton.setBounds(20, 562, 40, 10);
 				helpPanel.setVisible(false);
+				miniMapButton.setVisible(true);
+				if (!miniMap.isVisible()) {
+					//three++;
+					miniMapButton.setBounds(615, 562, 40, 10);
+				}
 			}
 			else {
 				notifierPanel.setVisible(true);
 				notifierButton.setBounds(20, 392, 40, 10);
 				helpPanel.setVisible(true);
+				miniMap.setVisible(false);
+				miniMapButton.setVisible(false);
+				if (miniMap.isVisible())
+					three++;
+			}
+		}
+	}
+	
+	private class MiniMapButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			three++;
+			if (three % 2 != 0) {
+				miniMap.setVisible(true);
+				miniMapButton.setBounds(600, 362, 40, 10);
+			}
+			else {
+				miniMap.setVisible(false);
+				miniMapButton.setBounds(600, 562, 40, 10);
 			}
 		}
 	}
@@ -691,25 +728,21 @@ class SettlementGUI extends JFrame implements Observer {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 		
@@ -874,6 +907,8 @@ class SettlementGUI extends JFrame implements Observer {
 					currAmount = Integer.parseInt(oilAmount.getText());
 					oilAmount.setText(b.getResourceAmount(resource)+currAmount+"");
 					break;
+				default:
+					break;
 				}
 			}
 		// END SUPER HACKY CODE
@@ -903,11 +938,11 @@ class SettlementGUI extends JFrame implements Observer {
 			notificationArea.repaint();
 		}
 		if(game.haveWonTheGame()){
-			int userSelection = JOptionPane.showConfirmDialog(currentFrame,"You have won the game!", null, JOptionPane.OK_OPTION);
+			JOptionPane.showConfirmDialog(this,"You have won the game!", null, JOptionPane.OK_OPTION);
 			System.exit(0);
 		}
 		if(game.haveLost()){
-			int userSelection = JOptionPane.showConfirmDialog(currentFrame,"You have lost the game!", null, JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showConfirmDialog(this,"You have lost the game!", null, JOptionPane.INFORMATION_MESSAGE);
 			System.exit(0);
 		}
 		repaint();

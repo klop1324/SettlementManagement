@@ -41,7 +41,7 @@ public class BuildingTest {
 		assertEquals((int) charge.getResourceAmount(electricSlide.getType()), 6);
 		charge.agentAddCapacity(electricSlide.getType(), 10000);
 		assertEquals((int) charge.getResourceAmount(electricSlide.getType()), 10006);
-		assertFalse(charge.isPassiveProvider());
+		assertTrue(charge.isPassiveProvider());
 	}
 	
 	@Test
