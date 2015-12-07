@@ -70,7 +70,7 @@ public class MiniMap extends JPanel {
 				}
 			}
 		}
-		for (Resource r : game.getResources()) {
+		for (Resource r : game.getMapResources()) {
 			g2.setColor(Color.YELLOW);
 			g2.fillOval(r.getLocation().x * 2, r.getLocation().y * 2, 3, 3);
 		}
