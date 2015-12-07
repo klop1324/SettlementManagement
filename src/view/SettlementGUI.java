@@ -349,11 +349,20 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 		}
 	}
-	
-	public void dialogBoxes(){
-//		if (game.hasError()){
-//			JOptionPane.showMessageDialog(this, game.getErrorMessage());
-//		}
+	// Trying to get information in notification panel
+	public void notificationPanel(){
+		notificationArea.setText(resourceNotification + "\nYou have " + game.getAgents().size() + " agents:" + "\n");
+		for (AbstractAgent a: game.getAgents()){
+			if (a.getClass().equals(WorkerAgent.class)){
+				notificationArea.append("Worker Agent \n");
+			}
+			if (a.getClass().equals(BuilderAgent.class)){
+				notificationArea.append("Builder Agent \n");
+			}
+			if (a.getClass().equals(SoldierAgent.class)){
+				notificationArea.append("Soldier Agent \n");
+			}
+		}
 	}
 
 	public void registerListeners() {
@@ -806,7 +815,6 @@ class SettlementGUI extends JFrame implements Observer {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
 		individual.update(userClick);
-		dialogBoxes();
 		miniMap.setViewX(cs.getViewport().getViewPosition().x);
 		miniMap.setViewY(cs.getViewport().getViewPosition().y);
 		miniMap.setViewWidth(cs.getWidth());
@@ -882,10 +890,10 @@ class SettlementGUI extends JFrame implements Observer {
 		}
 		if (game.getNotification() != null){
 			resourceNotification = game.getNotification();
-			notificationArea.setText(resourceNotification);
+			notificationPanel();
 			notificationArea.repaint();
 		}
-		//String agentsLeft = 
+		
 		if(game.haveWonTheGame()){
 			JOptionPane.showConfirmDialog(this,"You have won the game!", null, JOptionPane.OK_OPTION);
 			System.exit(0);

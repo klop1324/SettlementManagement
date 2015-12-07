@@ -141,7 +141,6 @@ public abstract class AbstractBuilding implements Serializable{
 			}
 			else{
 				currentAmount.replace(resource, currentAmount.get(resource) + temp);
-				System.out.println(currentAmount);
 			}
 		}
 	}
