@@ -3,6 +3,8 @@ package model.agents;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import model.Game;
 import model.Map;
@@ -15,10 +17,13 @@ import model.tools.ToolType;
 public abstract class AbstractAgent implements Serializable {
 	protected int energy, condition, oil, carriedResources, MAX_RESOURCES, MAX_NEED, ticInt, gatherRate, damageFromEnemies,
 			moveDelay, numberOfTasks;
+	protected HashMap<ResourceType, Integer> agentCost = new HashMap<ResourceType, Integer>();
+	protected Set<ResourceType> resourceSet;
 	protected Point position, destination, nearestOilTank, nearestHomeDepot, nearestChargingStation, nearestJunkYard;
 	protected AgentLogic AI;
 	protected ResourceType carriedResourceType;
 	protected double buildRate;
+	protected Map map;
 
 	/**
 	 * Creates a new AbstractAgent at a given position.
@@ -38,6 +43,7 @@ public abstract class AbstractAgent implements Serializable {
 		damageFromEnemies = 500;
 		moveDelay = 10;
 		buildRate = 0.1;
+		initCostHashMap();
 	}
 	
 	public AgentLogic getAI() {
@@ -63,14 +69,23 @@ public abstract class AbstractAgent implements Serializable {
 		case ARMOR:
 			damageFromEnemies = 100;
 		case PICKAXE:
-			gatherRate = 500;
+			gatherRate = 1000;
 		case WELDINGGUN:
 			buildRate = 0.5;
 		case ROCKETS:
 			moveDelay = 5;
 		}
 	}
-
+	
+	public abstract void initCostHashMap();
+	
+	public HashMap<ResourceType, Integer> getCostMap(){
+		return agentCost;
+	}
+	
+	public Set<ResourceType> getResourceSet(){
+		return resourceSet;
+	}
 	/**
 	 * Sets carriedResources. Used by AI only.
 	 * 
@@ -131,16 +146,53 @@ public abstract class AbstractAgent implements Serializable {
 	}
 
 	/**
-	 * Moves the Agent a space towards destination. No pathfinding yet, but
-	 * Agent randomly chooses whether to move horizantal or vertical towards a
-	 * diagonal target.
+	 * Moves the Agent a space towards destination. Placeholder terrible
+	 * pathfinding where the Agent will move horizantally until it reaches
+	 * the correct column or gets blocked, at which point it moves vertically
+	 * until it either hits its destination or stops being blocked horizantally.
 	 */
 	private void move() {
 		if (atDestination() || destination == null)
 			return;
-
-		boolean pRightOfD = position.x >= destination.x;
-		boolean pBelowD = position.y >= destination.y;
+		
+//		if(map == null)
+//			map = Game.getInstance().getMap();
+//		
+		boolean inDestinationColumn = position.x == destination.x;
+		boolean pRightOfD = position.x > destination.x;
+		boolean pBelowD = position.y > destination.y;
+//		
+//		// Horizantal movement cases
+//		if(!inDestinationColumn) {
+//			if(pRightOfD && !map.blocked(new Point(position.x - 1, position.y))) {
+//				position = new Point(position.x - 1, position.y);
+//				return;
+//			}
+//			if(!pRightOfD && !map.blocked(new Point(position.x + 1, position.y))) {
+//				position = new Point(position.x + 1, position.y);
+//				return;
+//			}
+//		}
+//		
+//		// Vertical movement cases
+//		if(pBelowD && !map.blocked(new Point(position.x, position.y - 1))) {
+//			position = new Point(position.x, position.y - 1);
+//			return;
+//		}
+//		if(!pBelowD && !map.blocked(new Point(position.x + 1, position.y))) {
+//			position = new Point(position.x + 1, position.y);
+//			return;
+//		}
+//		
+//		// Movement failed due to block, try this as a last resort
+//		if(!map.blocked(new Point(position.x - 1, position.y))) {
+//			position = new Point(position.x - 1, position.y);
+//			return;
+//		}
+//		if(!map.blocked(new Point(position.x + 1, position.y))) {
+//			position = new Point(position.x + 1, position.y);
+//			return;
+//		}
 
 		int direction = (int) (Math.random() * 2);
 

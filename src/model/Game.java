@@ -51,6 +51,7 @@ public class Game extends Observable implements Serializable {
 
 	private boolean haveWon = false;
 	private boolean haveLost = false;
+	private AbstractAgent a;
 
 	public static synchronized Game getInstance() {
 		if (game == null) {
@@ -148,13 +149,24 @@ public class Game extends Observable implements Serializable {
 		}
 	}
 	
-	public void createAgent(Class agentClass, Point position) {
-		if(agentClass == WorkerAgent.class)
-			agents.add(new WorkerAgent(position));
-		if(agentClass == SoldierAgent.class)
-			agents.add(new SoldierAgent(position));
-		if(agentClass == BuilderAgent.class)
-			agents.add(new BuilderAgent(position));
+	public boolean canCreateAgent(AbstractAgent a){
+		return canRemoveResources(a.getCostMap());
+	}
+
+	
+	public void createAgent(AbstractAgent agentClass) {
+		if(agentClass.getClass().equals(WorkerAgent.class)){
+			removeResources(agentClass.getCostMap());
+			agents.add(new WorkerAgent(agentClass.getPosition()));
+		}
+		if(agentClass.getClass().equals(SoldierAgent.class)){
+			removeResources(agentClass.getCostMap());
+			agents.add(new SoldierAgent(agentClass.getPosition()));
+		}
+		if(agentClass.getClass().equals(BuilderAgent.class)){
+			removeResources(agentClass.getCostMap());
+			agents.add(new BuilderAgent(agentClass.getPosition()));
+		}
 	}
 
 	public void addAgents(AbstractAgent agent) {
