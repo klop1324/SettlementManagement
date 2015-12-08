@@ -13,7 +13,7 @@ import model.resources.ResourceType;
 
 public enum BuildingType {
 	ARMORY("Armory"),
-	SOLARPANEL("Solar Panel"),
+	VICTORYMONUMENT("Victory Monument"),
 	CHARGINGSTATION("Charging Station"),
 	HOMEDEPOT("Home Depot"),
 	JUNKYARD("JunkYard"),

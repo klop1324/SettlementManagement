@@ -38,6 +38,7 @@ public class Game extends Observable implements Serializable {
 	private ArrayList<Enemy> enemies;
 	private HashMap<ResourceType, Integer> playerResources;
 	private Map map;
+	private String notification;
 
 	private Timer timer;
 
@@ -166,7 +167,10 @@ public class Game extends Observable implements Serializable {
 	public ArrayList<AbstractAgent> getAgents() {
 		return agents;
 	}
-
+	
+	public String getNotification(){
+		return notification;
+	}
 	public void killEnemy(int enemyID) {
 		for(int i = 0; i < enemies.size(); i++) {
 			if(enemies.get(i).getID() == enemyID)
@@ -368,10 +372,11 @@ public class Game extends Observable implements Serializable {
 	}
 
 	private class TickActionListener implements ActionListener {
+		
+		
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
 			// Updates agents
 			if (!agents.isEmpty()) {
 				for (int i = 0; i < agents.size(); i++) {
@@ -403,6 +408,17 @@ public class Game extends Observable implements Serializable {
 				if (b.isPassiveProvider()){
 					if(b.canInsert(b.getPassiveResource(), b.getPassiveRate())){
 						b.passiveAddResource(b.getPassiveResource(), b.getPassiveRate());
+					}
+				}
+			}
+			
+			// Notification panel for resources being consumed
+			for (AbstractAgent a: agents){
+				for (Resource r: mapResources){
+					if (a.getPosition().equals(r.getLocation()) && a.getPosition().equals(a.getDestination())){
+						if (a.getClass().equals(WorkerAgent.class)){
+							notification = "Agent has picked up " + a.getCarriedResources() + " " + r.getType();
+						}
 					}
 				}
 			}

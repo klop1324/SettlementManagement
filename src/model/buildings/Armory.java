@@ -8,7 +8,10 @@ import model.resources.ResourceType;
 public class Armory extends AbstractBuilding {
 	public Armory(Point location){
 	super(location, 25000, false, 0.0, null, 100, 0, BuildingType.ARMORY);
-		
+	holdableResources.add(ResourceType.COAL);
+	currentAmount.put(ResourceType.COAL, 0);
+	holdableResources.add(ResourceType.IRON);
+	currentAmount.put(ResourceType.IRON, 0);
 	}
 	
 	@Override

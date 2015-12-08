@@ -79,11 +79,9 @@ class SettlementGUI extends JFrame implements Observer {
 	private JLabel copperAmount = new JLabel("");
 	private JLabel ironAmount = new JLabel("");
 	private JLabel goldAmount = new JLabel("");
-	private JLabel name = new JLabel("Click Something");
 	private JPanel notifierPanel = new JPanel();
 	private JPanel infoPanel = new JPanel();
 	private JPanel helpPanel = new JPanel();
-	private JPanel miniMapPanel = new JPanel();
 	private JComboBox selectAgent;
 	private Stats individual = new Stats();
 	private HelpMenu helpMenu = new HelpMenu();
@@ -106,6 +104,7 @@ class SettlementGUI extends JFrame implements Observer {
 	String[] agentOrBuilding = {"select one", "build building", "create agent", "create tool"};
 	// add keyListener and mouseMotionListener for the map
 	private ArrayList<AbstractBuilding> gameBuildings;
+	private String resourceNotification = "";
 
 	public static void main(String[] args) {
 		(new SettlementGUI()).setVisible(true);
@@ -197,8 +196,6 @@ class SettlementGUI extends JFrame implements Observer {
 		infoPanel.add(panel6);
 		
 		miniMap.setBounds(595, 372, 200, 200);
-		//miniMapPanel.setBounds(540, 332, 210, 210);
-		//miniMapPanel.add(miniMap);
 		miniMap.setVisible(false);
 		
 		registerListeners();
@@ -265,7 +262,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private void setupGui(){
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setResizable(false);
-		this.setTitle("Game Name Goes Here");
+		this.setTitle("ROBOTS: A NEW WORLD");
 		this.setMinimumSize(new Dimension(800, 600));
 		this.setMaximumSize(new Dimension(800, 600));
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -301,8 +298,10 @@ class SettlementGUI extends JFrame implements Observer {
 		notificationArea.setEditable(false);
 		notificationArea.setFont(courier);
 		notificationArea.setForeground(Color.GREEN);
-		notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
-				"button to continue this tutorial.\n");
+//		notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
+//				"button to continue this tutorial.\n");
+		notificationArea.setText("Welcome to ROBOTS: A NEW WORLD!\nTo get an understanding " +
+				"of how the game works, click \"Help\" in the lower right corner.\n");
 		
 	}
 	
@@ -352,11 +351,20 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 		}
 	}
-	
-	public void dialogBoxes(){
-//		if (game.hasError()){
-//			JOptionPane.showMessageDialog(this, game.getErrorMessage());
-//		}
+	// Trying to get information in notification panel
+	public void notificationPanel(){
+		notificationArea.setText(resourceNotification + "\nYou have " + game.getAgents().size() + " agents:" + "\n");
+		for (AbstractAgent a: game.getAgents()){
+			if (a.getClass().equals(WorkerAgent.class)){
+				notificationArea.append("Worker Agent \n");
+			}
+			if (a.getClass().equals(BuilderAgent.class)){
+				notificationArea.append("Builder Agent \n");
+			}
+			if (a.getClass().equals(SoldierAgent.class)){
+				notificationArea.append("Soldier Agent \n");
+			}
+		}
 	}
 
 	public void registerListeners() {
@@ -395,7 +403,6 @@ class SettlementGUI extends JFrame implements Observer {
 		selectAgent.addActionListener(new DropDownListener());
 		helpButton.addActionListener(new HelpButtonListener());
 		mapArea.addMouseListener(new ClickerListener());
-		this.addKeyListener(new ArrowKeyListener());
 		addObservers();
 	}
 	
@@ -426,7 +433,6 @@ class SettlementGUI extends JFrame implements Observer {
 				helpPanel.setVisible(false);
 				miniMapButton.setVisible(true);
 				if (!miniMap.isVisible()) {
-					//three++;
 					miniMapButton.setBounds(615, 562, 40, 10);
 				}
 			}
@@ -747,56 +753,6 @@ class SettlementGUI extends JFrame implements Observer {
 		
 	}
 	
-	private class ArrowKeyListener implements KeyListener{
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-			/*if (e.isActionKey())
-				System.out.println("hello");
-			InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-			InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-			
-			int key = e.getKeyCode();
-			if (key == KeyEvent.VK_UP) {
-				//System.out.println("up");
-				imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
-				if(cs.getViewport().getHeight()-5 >= 0){
-					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()-5));
-					currentFrame.repaint();
-				}
-				
-				System.out.println("up");
-			}
-			else if (key == KeyEvent.VK_DOWN) {
-				imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
-				if(cs.getViewport().getHeight()+5 >= 0){
-					cs.getViewport().setLocation(new Point(cs.getViewport().getWidth(), cs.getViewport().getHeight()+5));
-					currentFrame.repaint();
-				}
-				System.out.println("down");
-			}
-			else if (key == KeyEvent.VK_RIGHT) {
-				imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
-				System.out.println("right");
-			}
-			else if (key == KeyEvent.VK_LEFT) {
-				imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
-				System.out.println("left");
-			}*/
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-			
-		}
-		
-	}
-	
 	private class CollectButtonListener implements ActionListener {
 
 		@Override
@@ -861,7 +817,10 @@ class SettlementGUI extends JFrame implements Observer {
 		game = (Game) o;
 		gameBuildings = game.getBuildings();
 		individual.update(userClick);
-		dialogBoxes();
+		miniMap.setViewX(cs.getViewport().getViewPosition().x);
+		miniMap.setViewY(cs.getViewport().getViewPosition().y);
+		miniMap.setViewWidth(cs.getWidth());
+		miniMap.setViewHeight(cs.getHeight());
 		//SUPER HACKY CODE
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
 		labels.add(electricityAmount);
@@ -871,7 +830,6 @@ class SettlementGUI extends JFrame implements Observer {
 		labels.add(ironAmount);
 		labels.add(oilAmount);
 		
-		// l.setText(l.getText() + "0");
 		for(JLabel l: labels){
 			l.setText("0");
 		}
@@ -912,14 +870,32 @@ class SettlementGUI extends JFrame implements Observer {
 			}
 		// END SUPER HACKY CODE
 		}
-		String resourceNotification = "";
-		for (Resource r: game.getMapResources()) {
-			if (r.getNotification() != null){
-				resourceNotification += r.getNotification() + "\n";
-				notificationArea.setText(resourceNotification);
-				notificationArea.repaint();
+		
+		for (AbstractBuilding b: game.getBuildings()){
+			if(b.getErrors()){
+				Object[] options = {"OK"};
+				int input = JOptionPane.showOptionDialog(currentFrame,
+						"Your agents tried to add too much to " + b.getName() + "!\n"
+								+ "They quickly dropped all that they carried and it's no longer usable!\n"
+								+ "Such a waste... "
+								+ "Build another building to make sure you can hold it all next time!",
+								null,
+								JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,
+								null,
+								options,
+								options[0]);
+				if(input == JOptionPane.OK_OPTION || input == JOptionPane.CLOSED_OPTION){
+					b.resetErrors();
+				}
 			}
 		}
+		if (game.getNotification() != null){
+			resourceNotification = game.getNotification();
+			notificationPanel();
+			notificationArea.repaint();
+		}
+		
 		if(game.haveWonTheGame()){
 			JOptionPane.showConfirmDialog(this,"You have won the game!", null, JOptionPane.OK_OPTION);
 			System.exit(0);
