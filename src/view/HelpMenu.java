@@ -7,12 +7,16 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
+
+import model.buildings.BuildingType;
 
 public class HelpMenu extends JFrame {
 
@@ -21,6 +25,7 @@ public class HelpMenu extends JFrame {
 	private JTextArea panelArea = new JTextArea();
 	private JTextArea howToArea = new JTextArea();
 	private JTextArea robots = new JTextArea();
+	private JTextPane costs = new JTextPane();
 
 	public static void main(String[] args) {
 		(new HelpMenu()).setVisible(true);
@@ -69,13 +74,20 @@ public class HelpMenu extends JFrame {
 		robots.setLineWrap(true);
 		JScrollPane four = new JScrollPane(robots);
 		four.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
+		
+		costs.setBackground(Color.BLACK);
+		costs.setForeground(Color.WHITE);
+		costs.setEditable(false);
+		JScrollPane five = new JScrollPane(costs);
+		five.setBounds(0, 0, multiPanels.getWidth(), multiPanels.getHeight());
 
 		multiPanels.setBackground(Color.BLACK);
 		multiPanels.setForeground(Color.WHITE);
 		multiPanels.addTab("game objective", one);
 		multiPanels.addTab("game panels", two);
 		multiPanels.addTab("how to's", three);
-		multiPanels.addTab("robots/resources/buildings", four);
+		multiPanels.addTab("more info", four);
+		multiPanels.addTab("costs", five);
 		multiPanels.setSize(680, 480);
 		multiPanels.setLocation(10, 10);
 		this.add(multiPanels);
@@ -91,12 +103,11 @@ public class HelpMenu extends JFrame {
 				+ "TO WIN\n"
 				+ "The objective of this game is to build up a population of robots who specialize "
 				+ "in three areas and collect resources to build buildings and tools. To win, you "
-				+ "must collect enough resources to upgrade the Home Base to level six.\n\n"
+				+ "must collect enough resources to build the Victory Monument.\n\n"
 				+ "TO LOSE\n"
 				+ "The game will be over and you will lose if there are no worker robots left. "
 				+ "Without them, resources cannot be collected and building materials will get used "
-				+ "up without a way for more to be collected. This means the last level of the Home "
-				+ "Base cannot be reached.\n\n"
+				+ "up without a way for more to be collected. This means the Victory Monument cannot be built.\n\n"
 				+ "TO SAVE\n"
 				+ "To save the game, simply click the exit button at the top corner of the window. "
 				+ "A pop up will appear asking if you would like to save. Click \"Yes\" if you want "
@@ -123,78 +134,138 @@ public class HelpMenu extends JFrame {
 						+ "\tBUILDING - for buildings, the information displayed is the building \t\ttype, "
 						+ "the capacity of the building, and the amount currently stored in it.\n"
 						+ "\tRESOURCES - for resources, the information displayed is the \t\t\tresource type "
-						+ "and the amount left at that location.\n");
+						+ "and the amount left at that location.\n\n"
+						+ "MINI MAP PANEL\n"
+						+ "This panel displays a miniature version of the map. The black square is the map "
+						+ "area that is currently visible to you in the game window. PLATING is light gray. "
+						+ "GRAVEL is black. SAND is dark gray. SHALLOWS are gray. NORMAL ROBOTS are blue. "
+						+ "BUILDINGS are red. RESOURCES are yellow. ENEMY ROBOTS are green.\n"
+						+ "NOTE: this panel can only be accessed when the notification panel is not visible.\n");
 
 		howToArea
 				.setText("HOW TO:\n\n"
 						+ "This is a brief overview of how to perform specific actions.\n\n\n"
 						+ "COLLECT RESOURCES\n"
-						+ "To collect a resource, you must click on the resource and then press the \n"
+						+ "To collect a resource, click on the resource and then press the "
 						+ "\"Collect Resource\" button at the top of the information panel.\n\n"
 						+ "DEFEAT ENEMY ROBOTS\n"
-						+ "To defeat an enemy robot, you must click on the enemy robot you want to attack \n"
+						+ "To defeat an enemy robot, click on the enemy robot you want to attack "
 						+ "and then press the \"Attack\" button at the top of the information panel.\n\n"
-						+ "PERFORM MAINTENANCE\n"
-						+ "To perform maintenance on a robot, you must click on the robot you want to \n"
-						+ "perform maintenance on and then click the \"Fix\" button at the top of the \n"
-						+ "information panel.\n\n"
 						+ "CREATE AGENT\n"
-						+ "To create an agent, you must select \"agents\" from the drop down menu in the \n"
-						+ "information panel and then select the type of agent you want to create. Once you \n"
-						+ "have selected the agent type, you must click the \"Create/Build\" button.\n"
-						+ "    Note: if you want to go back to the agents/buildings selection, click the \n"
-						+ "    \"BACK TO MAIN\" button.\n\n"
+						+ "To create an agent, select \"agents\" from the drop down menu in the "
+						+ "information panel and then select the type of agent you want to create. Once you "
+						+ "have selected the agent type, click the \"Create/Build\" button.\n"
+						+ "NOTE: if you want to go back to the buildings/agents/tools selection, click the "
+						+ "\"BACK TO MAIN\" button.\n\n"
 						+ "BUILD BUILDINGS\n"
-						+ "To build a building, you must select \"buildings\" from the drop down menu in the \n"
-						+ "information panel and then select the type of building you want to create. Once \n"
-						+ "you have selected the building type, you must click the \"Create/Build\" button.\n"
-						+ "    Note: if you want to go back to the agents/buildings selection, click the \n"
-						+ "    \"BACK TO MAIN\" button.\n");
+						+ "To build a building, select \"buildings\" from the drop down menu in the "
+						+ "information panel and then select the type of building you want to create. Once "
+						+ "you have selected the building type, click the \"Create/Build\" button.\n"
+						+ "NOTE: if you want to go back to the buildings/agents/tools selection, click the "
+						+ "\"BACK TO MAIN\" button.\n\n"
+						+ "BUILD TOOLS\n"
+						+ "To build a too, select \"tools\" from the drop down menu in the information panel "
+						+ "and then select the type of tool you want to create. Once you have selected the "
+						+ "tool type, click the \"Create/Build\" button.\n"
+						+ "NOTE: if you want to go back to the buildings/agents/tools selection, click the "
+						+ "\"BACK TO MAIN\" button.\n");
 
-		robots.setText("ROBOTS/RESOURCES/BUILDINGS\n\n\n"
+		robots.setText("ROBOTS/RESOURCES/BUILDINGS:\n\n\n"
 				+ "ROBOTS\n"
-				+ "Robots have different one of the following four purposes. When non-enemy robots \n"
-				+ "are idle or active, there is a deduction on their health.\n\n"
-				+ "    BUILDER\n"
-				+ "    Builder robots are responsible for building all of the building that store \n"
-				+ "    the resources.\n"
-				+ "    SOLDIER\n"
-				+ "    Soldier robots are responsible for fighting off enemy robots.\n"
-				+ "    WORKER\n"
-				+ "    Worker robots are responsible for collecting all the resources.\n"
-				+ "    ENEMY\n"
-				+ "    Enemy robots steal resources from the buildings and will continue to do so \n"
-				+ "    unless soldier robots attack and defeat them. They do not have health \n"
-				+ "    restrictions.\n\n"
+				+ "Robots have one of the following four purposes. Non-enemy robots "
+				+ "have health costs whether they are idle or active. Enemy robots "
+				+ "have no health restrictions.\n\n"
+				+ "\tBUILDER\n"
+				+ "\tBuilder robots are responsible for building all of the buildings that \t\tstore "
+				+ "the resources.\n"
+				+ "\tSOLDIER\n"
+				+ "\tSoldier robots are responsible for fighting off enemy robots.\n"
+				+ "\tWORKER\n"
+				+ "\tWorker robots are responsible for collecting all the resources.\n"
+				+ "\tENEMY\n"
+				+ "\tEnemy robots steal resources from the buildings and will continue to \t\tdo so "
+				+ "unless soldier robots attack and defeat them.\n\n"
 				+ "RESOURCES\n"
-				+ "    Resources are in set places around the game map and can be collected by \n"
-				+ "    worker robots for various uses. The resources available are:\n"
-				+ "    ELECTRICITY/ENERGY*, OIL*, COAL, IRON, COPPER, GOLD\n"
-				+ "    *These resources are a part of robot health.\n\n"
+				+ "Resources are in set places around the game map and can be collected by \n"
+				+ "worker robots for various uses. The resources available are:\n"
+				+ "ELECTRICITY*, OIL*, COAL, IRON, COPPER, GOLD\n"
+				+ "*These resources are a part of robot health.\n\n"
 				+ "BUILDINGS\n"
 				+ "Buildings, with the exception of a few, are places to store resources. It takes \n"
 				+ "a certain amount of resources to build each.\n\n"
-				+ "    JUNKYARD\n"
-				+ "    Junkyards hold all of the metal resources as well as coal.\n"
-				+ "    OIL TANK\n"
-				+ "    Oil tank hold oil.\n"
-				+ "    OIL WELL*\n"
-				+ "    Oil wells need to be built by oil in order for the oil to be collected by \n"
-				+ "    worker robots.\n"
-				+ "    WORK SHOP*\n"
-				+ "    Work shops take resources and transform them into tools that help robots do \n"
-				+ "    their tasks with more efficiency.\n"
-				+ "        TOOLS\n"
-				+ "        List types of tools.\n"
-				+ "    CHARGING STATION\n"
-				+ "    Charging stations hold electricity/energy.\n"
-				+ "    HOME BASE*\n"
-				+ "    The Home Base can only be built once. It is can be placed at the start of \n"
-				+ "    the game when you have acquired enough resources. The Home Base is where \n"
-				+ "    agents are created and is the building that needs to be upgraded in order to \n"
-				+ "    win the game. It can be upgraded when you have the necessary amount of \n"
-				+ "    resources.\n"
-				+ "*These buildings do not strictly store resources.\n");
-
+				+ "\tARMORY\n"
+				+ "\tArmories hold coal and iron.\n"
+				+ "\tJUNKYARD\n"
+				+ "\tJunkyards hold all of the metal resources as well as coal.\n"
+				+ "\tOIL TANK\n"
+				+ "\tOil Tanks hold oil.\n"
+				+ "\tOIL WELL*\n"
+				+ "\tOil Wells hold oil.\n"
+				+ "\tWORKSHOP\n"
+				+ "\tWorkshops hold tools.\n"
+				+ "\tCHARGING STATION*\n"
+				+ "\tCharging Stations hold electricity.\n"
+				+ "\tHOME DEPOT\n"
+				+ "\tThe Home Depots hold coal, iron, and gold.\n"
+				+ "*These buildings do not strictly store resources.\n\n"
+				+ "TOOLS\n"
+				+ "Tools help robots do their tasks more efficiently. The tools "
+				+ "available are:\n\n"
+				+ "\tARMOR - Armor decreases the damage done by enemies.\n"
+				+ "\tPICKAXE - Pickaxes allow worker robots to gather more resources.\n"
+				+ "\tROCKETS - Rockets increase the robots’ speed.\n"
+				+ "\tWELDING GUN - Welding guns increase the build rate of "
+				+ "buildings.\n");
+		
+		costs.setText("COSTS:\n"
+				+ "This shows the amount of each resource it takes to build or create something.\n\n\n"
+				+ "Builder - 3,000 electricity and 4,000 iron\n\n"
+				+ "Soldier - 3,000 electricity and 7,000 iron\n\n"
+				+ "Worker - 4,000 electricity and 4,000 iron\n\n"
+				+ "Enemy - randomly generated\n\n"
+				+ "Armory - 5,000 iron and 100 electricity\n\n"
+				+ "Charging Station - 10 coal, 100 copper, and 5,000 oil\n\n"
+				+ "Home Depot - 5,000 gold, 1,000 electricity, and 10,000 iron\n\n"
+				+ "Junkyard - 20,000 iron and 5,000 coal\n\n"
+				+ "Oil Tank - 9,000 iron\n\n"
+				+ "Oil Well - 500 coal, 5,000 iron, and 100 electricity\n\n"
+				+ "Victory Monument - 100,000 every\n\n"
+				+ "Workshop - 5,000 iron, 1,000 coal, and 6,000 gold\n\n"
+				+ "Armor - 200 iron\n\n"
+				+ "Pickaxe - 100 iron\n\n"
+				+ "Rockets - 400 oil\n\n"
+				+ "Welding Gun - 100 copper\n");
+		costs.setSelectionStart(87);
+		costs.insertIcon(new ImageIcon("./ImageSet/defender.png"));
+		costs.setSelectionStart(132);
+		costs.insertIcon(new ImageIcon("./ImageSet/distractor3.png"));
+		costs.setSelectionStart(177);
+		costs.insertIcon(new ImageIcon("./ImageSet/destroyer.png"));
+		costs.setSelectionStart(221);
+		costs.insertIcon(new ImageIcon("./ImageSet/Agent1.png"));
+		costs.setSelectionStart(250);
+		costs.insertIcon(new ImageIcon(BuildingType.ARMORY.getImage()));
+		costs.setSelectionStart(292);
+		costs.insertIcon(new ImageIcon(BuildingType.CHARGINGSTATION.getImage()));
+		costs.setSelectionStart(348);
+		costs.insertIcon(new ImageIcon(BuildingType.HOMEDEPOT.getImage()));
+		costs.setSelectionStart(410);
+		costs.insertIcon(new ImageIcon(BuildingType.JUNKYARD.getImage()));
+		costs.setSelectionStart(450);
+		costs.insertIcon(new ImageIcon(BuildingType.OILTANK.getImage()));
+		costs.setSelectionStart(474);
+		costs.insertIcon(new ImageIcon(BuildingType.OILWELL.getImage()));
+		costs.setSelectionStart(529);
+		costs.insertIcon(new ImageIcon(BuildingType.SOLARPANEL.getImage()));
+		costs.setSelectionStart(564);
+		costs.insertIcon(new ImageIcon(BuildingType.WORKSHOP.getImage()));
+//		costs.setSelectionStart(632);
+//		costs.insertIcon(new ImageIcon("./ImageSet/defender.png"));
+//		costs.setSelectionStart(632);
+//		costs.insertIcon(new ImageIcon("./ImageSet/defender.png"));
+//		costs.setSelectionStart(653);
+//		costs.insertIcon(new ImageIcon("./ImageSet/defender.png"));
+//		costs.setSelectionStart(673);
+//		costs.insertIcon(new ImageIcon("./ImageSet/defender.png"));
 	}
 }
