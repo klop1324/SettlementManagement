@@ -411,6 +411,7 @@ public class Game extends Observable implements Serializable {
 					}
 				}
 			}
+			
 			// Checks if buildings are completed and adds the completed ones to
 			// the buildings list.
 			if (!buildingsInProcess.isEmpty()) {
