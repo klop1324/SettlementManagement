@@ -263,6 +263,17 @@ public class Game extends Observable implements Serializable {
 	public boolean canBuildBuilding(AbstractBuilding b) {
 		return canRemoveResources(b.getCost()) && canPlaceBuilding(b.getLocation());
 	}
+	
+	public void addResources(ResourceType r, int amount){
+		for(AbstractBuilding b: buildings){
+			if(b.getResources().contains(r)){
+				if(b.canInsert(r, (double) amount)){
+					b.addResource(r, amount);
+					return;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Creates a building by checking if the location is an empty tile and then

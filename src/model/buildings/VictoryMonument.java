@@ -20,7 +20,7 @@ public class VictoryMonument extends AbstractBuilding {
 		buildingCost = new HashMap<ResourceType, Integer>();
 		// inits 100k of every resource to build
 		for(ResourceType r: ResourceType.values()){
-			buildingCost.put(r, 100000);
+			if(r != ResourceType.TOOL)buildingCost.put(r, 5000);
 		}
 	}
 

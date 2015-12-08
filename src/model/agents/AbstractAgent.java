@@ -151,44 +151,9 @@ public abstract class AbstractAgent implements Serializable {
 		if (atDestination() || destination == null)
 			return;
 		
-//		if(map == null)
-//			map = Game.getInstance().getMap();
-//		
 		boolean inDestinationColumn = position.x == destination.x;
 		boolean pRightOfD = position.x > destination.x;
 		boolean pBelowD = position.y > destination.y;
-//		
-//		// Horizantal movement cases
-//		if(!inDestinationColumn) {
-//			if(pRightOfD && !map.blocked(new Point(position.x - 1, position.y))) {
-//				position = new Point(position.x - 1, position.y);
-//				return;
-//			}
-//			if(!pRightOfD && !map.blocked(new Point(position.x + 1, position.y))) {
-//				position = new Point(position.x + 1, position.y);
-//				return;
-//			}
-//		}
-//		
-//		// Vertical movement cases
-//		if(pBelowD && !map.blocked(new Point(position.x, position.y - 1))) {
-//			position = new Point(position.x, position.y - 1);
-//			return;
-//		}
-//		if(!pBelowD && !map.blocked(new Point(position.x + 1, position.y))) {
-//			position = new Point(position.x + 1, position.y);
-//			return;
-//		}
-//		
-//		// Movement failed due to block, try this as a last resort
-//		if(!map.blocked(new Point(position.x - 1, position.y))) {
-//			position = new Point(position.x - 1, position.y);
-//			return;
-//		}
-//		if(!map.blocked(new Point(position.x + 1, position.y))) {
-//			position = new Point(position.x + 1, position.y);
-//			return;
-//		}
 
 		int direction = (int) (Math.random() * 2);
 
@@ -359,9 +324,9 @@ public abstract class AbstractAgent implements Serializable {
 			}
 			if (condition < 1000) {
 				if(actionQueue.isEmpty())
-					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
+					actionQueue.add(new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestJunkYard));
 				else if(!actionQueue.get(0).getAgentCommand().isRefill())
-					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestHomeDepot));
+					actionQueue.add(0, new AgentCommandWithDestination(AgentCommand.REFILL_CONDITION, nearestJunkYard));
 			}
 			
 			// Builders need to check for buildings to build
@@ -437,7 +402,7 @@ public abstract class AbstractAgent implements Serializable {
 				for(AbstractBuilding b : g.getBuildings()) {
 					if(b.getLocation().equals(position)) {
 						if(b.getResourceAmount(ResourceType.IRON) < 500) {
-							energy += b.getResourceAmount(ResourceType.IRON);
+							condition += b.getResourceAmount(ResourceType.IRON);
 							b.agentRemoveCapacity(ResourceType.IRON, b.getResourceAmount(ResourceType.IRON));
 							return false;
 						} else {
