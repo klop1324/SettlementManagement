@@ -262,7 +262,7 @@ class SettlementGUI extends JFrame implements Observer {
 	private void setupGui(){
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setResizable(false);
-		this.setTitle("Game Name Goes Here");
+		this.setTitle("ROBOTS: A NEW WORLD");
 		this.setMinimumSize(new Dimension(800, 600));
 		this.setMaximumSize(new Dimension(800, 600));
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -298,8 +298,10 @@ class SettlementGUI extends JFrame implements Observer {
 		notificationArea.setEditable(false);
 		notificationArea.setFont(courier);
 		notificationArea.setForeground(Color.GREEN);
-		notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
-				"button to continue this tutorial.\n");
+//		notificationArea.setText("Welcome to NAME GOES HERE!\nPlease click on the next " +
+//				"button to continue this tutorial.\n");
+		notificationArea.setText("Welcome to ROBOTS: A NEW WORLD!\nTo get an understanding " +
+				"of how the game works, click \"Help\" in the lower right corner.\n");
 		
 	}
 	

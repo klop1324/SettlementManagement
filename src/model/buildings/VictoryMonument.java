@@ -8,7 +8,7 @@ import model.resources.ResourceType;
 public class VictoryMonument extends AbstractBuilding {
 
 	public VictoryMonument(Point location){
-	super(location, 0, false, 0.0, null, 600, 0, BuildingType.SOLARPANEL);
+	super(location, 0, false, 0.0, null, 600, 0, BuildingType.VICTORYMONUMENT);
 	}
 	@Override
 	public void upgrade() {

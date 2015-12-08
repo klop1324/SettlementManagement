@@ -256,7 +256,7 @@ public class HelpMenu extends JFrame {
 		costs.setSelectionStart(474);
 		costs.insertIcon(new ImageIcon(BuildingType.OILWELL.getImage()));
 		costs.setSelectionStart(529);
-		costs.insertIcon(new ImageIcon(BuildingType.SOLARPANEL.getImage()));
+		costs.insertIcon(new ImageIcon(BuildingType.VICTORYMONUMENT.getImage()));
 		costs.setSelectionStart(564);
 		costs.insertIcon(new ImageIcon(BuildingType.WORKSHOP.getImage()));
 //		costs.setSelectionStart(632);
