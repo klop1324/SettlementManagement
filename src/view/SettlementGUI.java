@@ -115,6 +115,7 @@ class SettlementGUI extends JFrame implements Observer {
 		
 		try {
 			readFromSaveState();
+			individual.updateUI();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
